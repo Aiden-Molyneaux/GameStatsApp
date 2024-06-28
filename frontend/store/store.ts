@@ -1,25 +1,43 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-import counterReducer from './counterReducer';
-import { persistReducer, persistStore } from 'redux-persist';
-import storage from '@react-native-async-storage/async-storage';
+
+import userReducer from './userReducer';
+import gameListReducer from './gameListReducer';
+
+import { 
+  persistReducer, 
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER
+ } from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const persistConfig = {
   key: 'root',
-  storage
+  storage: AsyncStorage,
+  version: 1
 }
 
 export const store = configureStore({
   reducer: {
-    userData: persistReducer(persistConfig, counterReducer)
+    userData: persistReducer(persistConfig, userReducer),
+    gameListData: persistReducer(persistConfig, gameListReducer)
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         // Ignore these action types
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
 })
+
+export const purgeStoredState = () => {
+  persistor.purge();
+};
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

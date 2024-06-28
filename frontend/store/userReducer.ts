@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-export interface CounterState {
+export interface UserState {
   username: string
 }
 
-const initialState: CounterState = {
+const initialState: UserState = {
   username: 'Aiden'
 }
 
-export const counterSlice = createSlice({
+export const userSlice = createSlice({
   name: 'userData',
   initialState,
   reducers: {
@@ -20,6 +20,6 @@ export const counterSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { changeNameAction } = counterSlice.actions
+export const { changeNameAction } = userSlice.actions
 
-export default counterSlice.reducer
+export default userSlice.reducer
