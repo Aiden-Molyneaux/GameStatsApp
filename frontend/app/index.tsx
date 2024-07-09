@@ -1,9 +1,4 @@
-import { Text, View, StyleSheet, Button, TextInput, FlatList, Platform } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '../store/store';
-import { changeNameAction } from "@/store/userReducer";
-
-
+import { View, StyleSheet, Platform } from "react-native";
 import GameList from "@/components/GameList";
 import GameForm from "@/components/GameForm";
 import { Colors } from '@/constants/Constants'

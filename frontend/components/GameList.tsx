@@ -1,7 +1,8 @@
-import { Text, View, StyleSheet, Button, TextInput, FlatList } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../store/store';
-import { Colors, Fonts, FontSizes } from '@/constants/Constants';
+import { Text } from "./Customs";
+import { Colors, FontSizes } from '@/constants/Constants';
 
 export default function GameList() {
   const { games } = useSelector((state: RootState) => state.gameListData);
@@ -9,14 +10,15 @@ export default function GameList() {
   interface Game {
     name: string,
     hours: number,
-    period: number
+    purchased: string,
   }
 
-  const renderItem = ({ item } : { item: Game}) => (
+  const renderItem = ({ item, index} : { item: Game; index: number}) => (
     <View style={styles.gameEntry}>
+      <Text style={styles.gameIndex}>{index + 1}</Text>
       <Text style={styles.gameText}>{item.name}</Text>
       <Text style={styles.hourText}>{item.hours} hours</Text>
-      <Text style={styles.hourText}>over {item.period} years</Text>
+      <Text style={styles.hourText}>Owned since {item.purchased}</Text>
     </View>
   );
 
@@ -44,22 +46,25 @@ const styles = StyleSheet.create({
     borderRadius: 10
     // borderRadius: "2px",
   },
+  gameIndex: {
+    position: 'absolute',
+    top: 5,
+    left: 5,
+    color: Colors.yellow,
+    fontSize: FontSizes.small,
+  },
   gameListText: {
     color: Colors.yellow,
     fontSize: FontSizes.large,
-    fontFamily: Fonts.monospace,
     textAlign: 'center'
   },
   gameText: {
     color: Colors.yellow,
-    fontSize: FontSizes.medium,
-    fontFamily: Fonts.monospace,
     textAlign: 'center'
   },
   hourText: {
     color: Colors.white,
     fontSize: FontSizes.mediumTwo,
-    fontFamily: Fonts.monospace,
     textAlign: 'center'
   }
 });

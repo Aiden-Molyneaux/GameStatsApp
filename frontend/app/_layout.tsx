@@ -1,12 +1,34 @@
 import React from 'react';
-import { Text, View, StyleSheet, Button, SafeAreaView, Platform } from "react-native";
+import { StyleSheet, Button, SafeAreaView, Platform, Dimensions } from "react-native";
 import { Tabs } from 'expo-router';
 import Header from '../components/Header';
 import { persistor, store, purgeStoredState } from '../store/store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { Colors, FontSizes } from '@/constants/Constants';
+import { Colors, FontSizes, Fonts } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
+
+const { width, height } = Dimensions.get('window');
+
+const TabBarScreenOptions = (web: boolean) => {
+  
+  let style = (web) 
+    ? {
+      top: 0,
+      left: '50%',
+      transform: 'translate(-50%, -0%)',
+      width: 300,
+      ...styles.tabBar,
+    } 
+    : {...styles.tabBar, bottom: 0}
+
+  return {
+    headerShown: false,
+    tabBarActiveTintColor: Colors.yellow,
+    tabBarInactiveTintColor: Colors.white,
+    tabBarLabelStyle: {fontSize: FontSizes.medium},
+    tabBarStyle: style,
+}}
 
 export default function RootLayout() {
   return (
@@ -22,6 +44,7 @@ export default function RootLayout() {
               name="index"
               options={{
                 tabBarLabel: "Home",
+                tabBarLabelStyle: styles.tabBarText,
                 tabBarIcon: ({color}) => <FontAwesome size={28} name="home" color={color} />
               }}
             />
@@ -30,6 +53,7 @@ export default function RootLayout() {
               name="Profile"
               options={{
                 tabBarLabel: "Profile",
+                tabBarLabelStyle: styles.tabBarText,
                 tabBarIcon: ({color}) => <FontAwesome size={28} name="user" color={color} />
               }}
             />
@@ -54,25 +78,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabBar: {
+    position: 'absolute',
+
+    // transform: 'translate(-50%, -0%)',
+
+    height: 45,
     backgroundColor: Colors.blue,
+    fontSize: FontSizes.mediumTwo,
     borderTopColor: Colors.yellowPrime,
     borderBottomColor: Colors.yellowPrime,
     borderTopWidth: 2,
     borderBottomWidth: 2,
-    height: 45,
-    position: 'absolute',
   },
+  tabBarText: {
+    fontFamily: Fonts.monospace,
+    fontSize: FontSizes.medium
+  }
 });
-
-const TabBarScreenOptions = (web: boolean) => {
-  
-  let style;
-  (web) ? style = {...styles.tabBar, top: 0} : style = {...styles.tabBar, bottom: 0}
-
-  return {
-    headerShown: false,
-    tabBarActiveTintColor: Colors.yellow,
-    tabBarInactiveTintColor: Colors.white,
-    tabBarLabelStyle: {fontSize: FontSizes.medium},
-    tabBarStyle: style,
-}}
