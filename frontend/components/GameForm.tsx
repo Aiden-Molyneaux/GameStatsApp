@@ -45,7 +45,7 @@ export default function GameList() {
   }
 
   const handleSubmit = () => {
-    if (formData.name && formData.hours && date) {
+    if (formData.name && formData.hours && date != "Date Purchased") {
       let dateStr = date.toLocaleString().split(',')[0]
 
       dispatch(addGameAction({ name: formData.name, hours: parseInt(formData.hours, 10), purchased: dateStr }));
