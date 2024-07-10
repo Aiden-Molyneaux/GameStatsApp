@@ -1,70 +1,76 @@
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from '../store/store';
 import { Text } from "./Customs";
 import { Colors, FontSizes } from '@/constants/Constants';
+import GameEntry from "./GameEntry";
+import { replaceGameAction, Game, addGameAction } from "@/store/gameListReducer";
+
+import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
 export default function GameList() {
   const { games } = useSelector((state: RootState) => state.gameListData);
+  const dispatch = useDispatch()
 
-  interface Game {
-    name: string,
-    hours: number,
-    purchased: string,
+  function handlePlusPress() {
+    dispatch(addGameAction({ name: "", hours: "", purchased: "Date Purchased", mode: "NEW" }))
   }
 
-  const renderItem = ({ item, index} : { item: Game; index: number}) => (
-    <View style={styles.gameEntry}>
-      <Text style={styles.gameIndex}>{index + 1}</Text>
-      <Text style={styles.gameText}>{item.name}</Text>
-      <Text style={styles.hourText}>{item.hours} hours</Text>
-      <Text style={styles.hourText}>Owned since {item.purchased}</Text>
-    </View>
+  const renderItem = ({ item, index} : { item: Game; index: number}) => (    
+    <GameEntry item={item} index={index}></GameEntry>
   );
 
   return (
-    <View>
+    <View style={styles.gameListContainer}>
       <Text style={styles.gameListText}>Your Play-Time</Text>
       <FlatList
         data={games}
         renderItem={renderItem}
         keyExtractor={(item) => item.name}
       />
+
+      <TouchableOpacity style={styles.submitGameBtn} onPress={handlePlusPress}>
+        <FontAwesome size={25} name="plus" color={Colors.white} />
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gameEntry: {
-    margin: 2,
-    padding: "0.5em",
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: Colors.bluePrime,
-    borderColor: Colors.yellowPrime,
-    borderWidth: 2,
-    borderRadius: 10
-    // borderRadius: "2px",
-  },
-  gameIndex: {
-    position: 'absolute',
-    top: 5,
-    left: 5,
-    color: Colors.yellow,
-    fontSize: FontSizes.small,
+  gameListContainer: {
+    alignItems: 'center'
   },
   gameListText: {
     color: Colors.yellow,
     fontSize: FontSizes.large,
     textAlign: 'center'
   },
-  gameText: {
-    color: Colors.yellow,
-    textAlign: 'center'
+  submitGameBtn: {
+    // flex and position properties
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+
+    // size properties
+    width: 50,
+    height: 50,
+
+    // margin and padding properties
+    // padding: 10,
+
+    // background properties
+    backgroundColor: Colors.yellowPrime,
+
+    // text/font properties
+    // fontSize: FontSizes.medium
+
+    // border properties
+    borderColor: Colors.yellow,
+    borderWidth: 2,
+    borderRadius: 5,
+
+    // effect properties
+
+    // z-index and other
   },
-  hourText: {
-    color: Colors.white,
-    fontSize: FontSizes.mediumTwo,
-    textAlign: 'center'
-  }
 });
