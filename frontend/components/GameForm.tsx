@@ -5,6 +5,7 @@ import { RootState } from '../store/store';
 import { addGameAction } from "@/store/gameListReducer";
 import { Colors, Fonts, FontSizes } from '@/constants/Constants';
 import { Text, TextInput} from '@/components/Customs'
+import FontAwesome  from '@expo/vector-icons/FontAwesome';
 // import Calendar from 'react-calendar';
 // import 'react-calendar/dist/Calendar.css';
 // import './temp.css'
@@ -17,7 +18,8 @@ export default function GameList() {
   // type DateValue = DatePiece | [DatePiece, DatePiece];
 
   const [showForm, setShowForm] = useState(false)
-  const [date, setDate] = useState("")
+  const [showCalendar, setShowCalendar]  = useState(false);
+  const [date, setDate] = useState("Date Purchased")
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
@@ -28,6 +30,14 @@ export default function GameList() {
 
   function handlePlusPress() {
     setShowForm(true);
+  }
+
+  function openCalendar() {
+    setShowCalendar(true)
+  }
+
+  function closeCalendar() {
+    setShowCalendar(false)
   }
 
   function handleChange(field: string, value: string) {
@@ -41,6 +51,7 @@ export default function GameList() {
       dispatch(addGameAction({ name: formData.name, hours: parseInt(formData.hours, 10), purchased: dateStr }));
       setFormData({ name: '', hours: '', purchased: '' });
       setShowForm(false);
+      closeCalendar();
     }
   };
 
@@ -66,19 +77,36 @@ export default function GameList() {
             onChangeText={(value) => handleChange('hours', value)}
           />
 
-          <View style={styles.calendar}>
-            {/* <Calendar maxDate={new Date()} minDate={new Date("January 1, 70")} onChange={setDate} value={date}/> */}
+          { showCalendar ? (
+            <View style={styles.calendarContainer}>
+              
+              <Calendar 
+                // headerStyle={styles.calendarHeader}
+                theme={calendarTheme}
+                onDayPress={day => {
+                  setDate(day.dateString)
 
-            <Text>Date purchased</Text>
+                }} 
+                markedDates={{[date]: {selected: true, disableTouchEvent: true}}}
+                maxDate={new Date().toISOString().split('T')[0]}
+                minDate={'1970-01-01'}
+              />
 
-            <Calendar 
-              // headerStyle={styles.calendarHeader}
-              theme={calendarTheme}
-              style={styles.calendar} 
-              onDayPress={day => {setDate(day.dateString)}} markedDates={{[date]: {selected: true, disableTouchEvent: true}}}
-            />
-          </View>
+              <TouchableOpacity style={styles.calendarCloseBtn} onPress={closeCalendar}>
+                <FontAwesome size={15} name="close" color={Colors.yellow} />
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.datePurchasedContainer}>
 
+            <Text style={styles.datePurchasedText}>{date}</Text>
+            <TouchableOpacity style={styles.calendarBtn} onPress={openCalendar}>
+              <FontAwesome size={25} name="calendar" color={Colors.white} />
+            </TouchableOpacity>
+
+            </View>
+          )}
+          
           <TouchableOpacity style={styles.submitGameBtn} onPress={handleSubmit}>
             <Text style={styles.submitGameBtnText}>Submit Game Entry</Text>
           </TouchableOpacity>
@@ -108,6 +136,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     color: Colors.yellow,
   },
+  datePurchasedText: {
+    margin: 5,
+    color: Colors.gray,
+    fontSize: FontSizes.mediumTwo,
+  },
   input: {
     margin: 5,
     padding: 5,
@@ -116,8 +149,25 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 5,
   },
-  calendar: {
+  datePurchasedContainer: {
+    margin: 5,
+    padding: 2,
+    fontSize: FontSizes.mediumTwo,
     borderColor: Colors.yellow,
+    borderWidth: 2,
+    borderRadius: 5,
+
+    // display: 'flex',
+    flexDirection: 'row',
+    // alignContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  calendarContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: Colors.yellow,
+    marginBottom: 5,
     borderWidth: 2,
     borderRadius: 5,
   },
@@ -129,7 +179,6 @@ const styles = StyleSheet.create({
     // width: 200,
 
     // margin and padding properties
-    marginTop: 10,
     padding: 10,
 
     // background properties
@@ -137,6 +186,34 @@ const styles = StyleSheet.create({
 
     // text/font properties
     // fontSize: FontSizes.medium
+
+    // border properties
+    borderColor: Colors.yellow,
+    borderWidth: 2,
+    borderRadius: 5,
+
+    // effect properties
+
+    // z-index and other
+  },
+  calendarCloseBtn: {
+    position: "absolute",
+    top: 5,
+    right: 5,
+  },
+  calendarBtn: {
+    alignItems: 'center',
+
+    // size properties
+
+    // margin and padding properties
+    // margin: 10,
+    padding: 5,
+
+    // background properties
+    backgroundColor: Colors.yellowPrime,
+
+    // text/font properties
 
     // border properties
     borderColor: Colors.yellow,
