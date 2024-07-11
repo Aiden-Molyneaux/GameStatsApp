@@ -1,6 +1,7 @@
-import { View, StyleSheet, Platform } from "react-native";
-import GameList from "@/components/GameList";
-import { Colors } from '@/constants/Constants'
+import React from 'react';
+import { View, StyleSheet, Platform } from 'react-native';
+import GameList from '@/components/GameList';
+import { Colors, Spacing } from '@/constants/Constants';
 
 export default function Games() {
   return (
@@ -10,12 +11,13 @@ export default function Games() {
   );
 }
 
+const isIOS = Platform.OS === 'ios';
+
 const styles = StyleSheet.create({
   gamePage: {
-    paddingTop: Platform.OS === "ios" ? 0 : 60,
+    flexGrow: 1,
     height: '100%',
-    alignItems: 'center',
+    paddingTop: isIOS ? 0 : Spacing.unit2,
     backgroundColor: Colors.blue,
-    color: Colors.yellow
   }
 });

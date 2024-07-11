@@ -1,8 +1,8 @@
-import { Text, View, StyleSheet, Button } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import React from 'react';
+import { Text, View, Button } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import { changeNameAction } from "@/store/userReducer";
-import { Colors } from '@/constants/Constants';
+import { changeNameAction } from '@/store/userReducer';
 
 export default function Profile() {
   const { username } = useSelector((state: RootState) => state.userData);

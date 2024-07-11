@@ -1,6 +1,7 @@
-import { View, StyleSheet, Button } from "react-native";
-import { Text } from "./Customs"; 
-import { Colors, FontSizes } from '@/constants/Constants';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Text } from './Customs'; 
+import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 export default function Header() {
   return (
@@ -12,7 +13,7 @@ export default function Header() {
 
 const styles = StyleSheet.create({
   headerText: {
-    margin: 10,
+    margin: Spacing.unit1o3,
     color: Colors.yellow,
     fontSize: FontSizes.header,
     fontWeight: 'bold',

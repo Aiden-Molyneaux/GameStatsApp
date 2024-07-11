@@ -1,14 +1,36 @@
+import { Dimensions } from 'react-native';
+
+const {width, height} = Dimensions.get('window');
+
+const em1 = height / 24;
+
 export const Fonts = {
   monospace: 'monospace',
-}
+};
 
 export const FontSizes = {
-  header: 30,
-  large: 24,
-  medium: 18,
-  mediumTwo: 16,
-  small: 12
-}
+  header: em1,
+  large: em1 * 3/5,
+  medium: em1 * 1/2,
+  mediumLess: em1 * 2/5,
+  small: em1 * 1/3
+};
+
+export const Spacing = {
+  unit10: em1 * 10,
+  unit5: em1 * 5,
+  unit2: em1 * 2,
+  unit3o2: em1 * 3/2,
+  unit: em1,
+  unit1o2: em1 * 1/2,
+  unit1o3: em1 * 1/3,
+  unit1o5: em1 * 1/5,
+
+  screenWidth: width,
+  screenHeight: height,
+
+  border: 2
+};
 
 export const Colors = {
   white: '#ffffff',

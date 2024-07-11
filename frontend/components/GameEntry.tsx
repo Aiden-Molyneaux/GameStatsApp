@@ -1,27 +1,26 @@
-import { View, StyleSheet, Button, TouchableOpacity } from "react-native";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Colors, FontSizes, Fonts } from '@/constants/Constants';
-import { Text, TextInput} from '@/components/Customs'
+import { View, StyleSheet, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
+import { Text, TextInput} from '@/components/Customs';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
-import { replaceGameAction, Game } from "@/store/gameListReducer";
-import {Calendar, } from 'react-native-calendars';
+import { replaceGameAction, Game } from '@/store/gameListReducer';
+import { Calendar, DateData} from 'react-native-calendars';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
-const NEW = 'NEW';
 
 interface GameEntryProps {
   item: Game,
   index: number,
+  sortMode: string,
 }
 
-export default function GameEntry({item, index}: GameEntryProps) {
+export default function GameEntry({item, index, sortMode}: GameEntryProps) {
   const [showCalendar, setShowCalendar]  = useState(false);
-  
-  const dispatch = useDispatch()
-
+  const [disableSaveBtn, setDisableSaveBtn] = useState(false);
   const [ gameData, setGameData] = useState({
+    id: item.id,
     index: index,
     name: item.name,
     hours: item.hours,
@@ -29,46 +28,61 @@ export default function GameEntry({item, index}: GameEntryProps) {
     mode: item.mode
   });
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.purchased));
+  }, [gameData]);
+
   function openCalendar() {
-    setShowCalendar(true)
+    setShowCalendar(true);
   }
 
   function closeCalendar() {
-    setShowCalendar(false)
+    setShowCalendar(false);
   }
 
   function setModeEdit() {
-    setGameData({...gameData, mode: EDIT})
+    const replacementGame: Game = {
+      id: gameData.id,
+      name: gameData.name,
+      hours: gameData.hours,
+      purchased: gameData.purchased,
+      mode: EDIT
+    };
+
+    setGameData({...gameData, mode: EDIT});
+    dispatch(replaceGameAction({index: gameData.index, game: replacementGame}));
   }
 
   function saveGameEntry() {
     if (gameData.name && gameData.hours && gameData.purchased) {
-      let replacementGame: Game = {
+      const replacementGame: Game = {
+        id: gameData.id,
         name: gameData.name,
         hours: gameData.hours,
         purchased: gameData.purchased,
         mode: VIEW
-      }
+      };
 
-      setGameData({...gameData, mode: VIEW})
-      dispatch(replaceGameAction({index: gameData.index, game: replacementGame}))
+      setGameData({...gameData, mode: VIEW});
+      dispatch(replaceGameAction({index: gameData.index, game: replacementGame}));
     }
   }
 
   function handleTextInputChange(field: string, value: string) {
-    setGameData({...gameData, [field]: field === 'hours' ? parseInt(value, 10) : value })
+    setGameData({...gameData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
   }
-
 
   return (gameData.mode === VIEW) ? (
 
     <View style={styles.gameEntry}>
 
-      <TouchableOpacity style={styles.editBtn} onPress={setModeEdit}>
-        <FontAwesome size={15} name="edit" color={Colors.yellow} />
-      </TouchableOpacity>
+      <Pressable style={styles.editBtn} onPress={setModeEdit}>
+        <FontAwesome size={Spacing.unit1o2} name='edit' color={Colors.yellow} />
+      </Pressable>
 
-      <Text style={styles.gameIndex}>{gameData.index + 1}</Text>
+      <Text style={styles.gameIndex}>{(sortMode === 'entered') ? gameData.id + 1: index + 1}</Text>
       <Text style={styles.gameText}>{gameData.name}</Text>
       <Text style={styles.hourText}>{gameData.hours} hours</Text>
       <Text style={styles.hourText}>Owned since {gameData.purchased}</Text>
@@ -79,15 +93,16 @@ export default function GameEntry({item, index}: GameEntryProps) {
     <View style={styles.gameForm}>
 
       <Text style={styles.addGameText}>
-        {gameData.mode === EDIT ? 'Edit Game Entry' : 'Add Game Entry'}
+        {gameData.mode === EDIT ? 'Edit Game Entry' : 'New Game Entry'}
       </Text>
 
-      <TouchableOpacity style={styles.editBtn} onPress={saveGameEntry}>
-        <FontAwesome size={15} name="save" color={Colors.yellow} />
-      </TouchableOpacity>
+      <Pressable style={styles.editBtn}
+        onPress={saveGameEntry} disabled={disableSaveBtn}>
+        <FontAwesome size={FontSizes.medium} name='save' color={(disableSaveBtn) ? Colors.gray : Colors.yellow}/>
+      </Pressable>
 
       <TextInput
-        placeholder="Title"
+        placeholder='Title'
         placeholderTextColor={Colors.gray}
         style={styles.input}
         value={gameData.name} 
@@ -95,11 +110,12 @@ export default function GameEntry({item, index}: GameEntryProps) {
       />
 
       <TextInput 
-        placeholder="Hours played"
+        placeholder='Hours played'
         placeholderTextColor={Colors.gray}
         style={styles.input}
         value={String(gameData.hours)} 
         onChangeText={(value) => handleTextInputChange('hours', value)}
+        keyboardType='numeric'
       />
 
       { showCalendar ? (
@@ -107,134 +123,133 @@ export default function GameEntry({item, index}: GameEntryProps) {
           
           <Calendar 
             theme={calendarTheme}
-            onDayPress={day => {
-              gameData.purchased = day.dateString
+            onDayPress={(day: DateData) => {
+              setGameData({...gameData, purchased: day.dateString});
+              setShowCalendar(false);
             }} 
             markedDates={{[gameData.purchased]: {selected: true, disableTouchEvent: true}}}
             maxDate={new Date().toISOString().split('T')[0]}
             minDate={'1970-01-01'}
           />
 
-          <TouchableOpacity style={styles.calendarCloseBtn} onPress={closeCalendar}>
-            <FontAwesome size={15} name="close" color={Colors.yellow} />
-          </TouchableOpacity>
+          <Pressable style={styles.calendarCloseBtn} onPress={closeCalendar}>
+            <FontAwesome size={FontSizes.medium} name='close' color={Colors.yellow} />
+          </Pressable>
 
         </View>
       ) : (
         <View style={styles.datePurchasedContainer}>
 
-          <Text style={styles.datePurchasedText}>{gameData.purchased}</Text>
+          <Text style={
+            (/^\d{4}-\d{2}-\d{2}$/.test(gameData.purchased)) 
+              ? {...styles.datePurchasedText, color: Colors.white}
+              : {...styles.datePurchasedText, color: Colors.gray}
+          }
+          >{gameData.purchased}</Text>
 
-          <TouchableOpacity style={styles.calendarBtn} onPress={openCalendar}>
-            <FontAwesome size={25} name="calendar" color={Colors.white} />
-          </TouchableOpacity>
+          <Pressable style={styles.calendarBtn} onPress={openCalendar}>
+            <FontAwesome size={FontSizes.medium} name='calendar' color={Colors.white} />
+          </Pressable>
 
         </View>
       )}
-
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   gameEntry: {
-    margin: 2,
-    padding: "0.5em",
     alignItems: 'center',
     justifyContent: 'center',
+    margin: Spacing.unit1o5,
+    padding: Spacing.unit1o2,
     backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
-    borderWidth: 2,
-    borderRadius: 10
-    // borderRadius: "2px",
+    borderWidth: Spacing.border,
+    borderRadius: Spacing.unit1o5
   },
   gameIndex: {
     position: 'absolute',
-    top: 5,
-    left: 5,
+    top: Spacing.unit1o5,
+    left: Spacing.unit1o5,
     color: Colors.yellow,
     fontSize: FontSizes.small,
   },
   gameText: {
     color: Colors.yellow,
-    textAlign: 'center'
   },
   hourText: {
-    color: Colors.white,
-    fontSize: FontSizes.mediumTwo,
-    textAlign: 'center'
+    fontSize: FontSizes.mediumLess,
   },
   input: {
-    margin: 5,
-    padding: 5,
-    fontSize: FontSizes.mediumTwo,
+    margin: Spacing.unit1o5,
+    padding: Spacing.unit1o5,
+    fontSize: FontSizes.mediumLess,
     borderColor: Colors.yellow,
-    borderWidth: 2,
-    borderRadius: 5,
+    borderWidth: Spacing.border,
+    borderRadius: Spacing.unit1o5,
   },
   gameForm: {
-    margin: 2,
-    padding: "0.5em",
+    margin: Spacing.unit1o5,
+    padding: Spacing.unit1o3,
     backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
-    borderWidth: 2,
-    borderRadius: 10
+    borderWidth: Spacing.border,
+    borderRadius: Spacing.unit1o5
   },
   addGameText: {
-    marginBottom: 5,
+    marginBottom: Spacing.unit1o5,
     color: Colors.yellow,
   },
   editBtn: {
-    position: "absolute",
-    top: 5,
-    right: 5,
+    position: 'absolute',
+    top: Spacing.unit1o5,
+    right: Spacing.unit1o5,
   },
   datePurchasedContainer: {
-    margin: 5,
-    padding: 2,
-    fontSize: FontSizes.mediumTwo,
-    borderColor: Colors.yellow,
-    borderWidth: 2,
-    borderRadius: 5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    margin: Spacing.unit1o5,
+    fontSize: FontSizes.mediumLess,
+    borderColor: Colors.yellow,
+    borderWidth: Spacing.border,
+    borderRadius: Spacing.unit1o5,
   },
   datePurchasedText: {
-    margin: 5,
+    margin: Spacing.unit1o5,
     color: Colors.gray,
-    fontSize: FontSizes.mediumTwo,
+    fontSize: FontSizes.mediumLess,
   },
   calendarContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: Spacing.unit1o5,
     borderColor: Colors.yellow,
-    marginBottom: 5,
-    borderWidth: 2,
-    borderRadius: 5,
+    borderWidth: Spacing.border,
+    borderRadius: Spacing.unit1o5,
   },
   calendarCloseBtn: {
-    position: "absolute",
-    top: 5,
-    right: 5,
+    position: 'absolute',
+    top: Spacing.unit1o5,
+    right: Spacing.unit1o5,
   },
   calendarBtn: {
     alignItems: 'center',
     // size properties
     // margin and padding properties
-    padding: 5,
+    padding: Spacing.unit1o5,
     // background properties
     backgroundColor: Colors.yellowPrime,
     // text/font properties
     // border properties
     borderColor: Colors.yellow,
-    borderWidth: 2,
-    borderRadius: 5,
+    borderWidth: Spacing.border,
+    borderRadius: Spacing.unit1o5,
     // effect properties
     // z-index and other
   },
-
-})
+});
 
 const calendarTheme = {
   monthTextColor: Colors.yellow,
@@ -245,9 +260,9 @@ const calendarTheme = {
   todayTextColor: Colors.yellow,
   arrowColor: Colors.yellow,
   
-  dotColor: Colors.yellow,
+  // dotColor: Colors.yellow,
   indicatorColor: Colors.yellow,
-  selectedDotColor: Colors.yellow,
+  // selectedDotColor: Colors.yellow,
 
   dayTextColor: Colors.white,
   textDisabledColor: Colors.black,
@@ -255,4 +270,4 @@ const calendarTheme = {
   textDayFontFamily: Fonts.monospace,
   textMonthFontFamily: Fonts.monospace,
   textDayHeaderFontFamily: Fonts.monospace,
-}
+};
