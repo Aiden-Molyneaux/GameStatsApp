@@ -48,30 +48,37 @@ export default function GameList() {
       
       <View style={styles.sortBtnContainer}>
         <Pressable 
-          style={ sortMode === 'hours' 
-            ? { ...styles.sortBtn, backgroundColor: Colors.gray } 
+          style={ sortMode === 'hours'
+            ? { ...styles.sortBtn, height: Spacing.unit } 
             : styles.sortBtn
           } 
-          onPress={ () => { handleSortPress('hours'); } }
+          onPress={() => { handleSortPress('hours'); }}
+          onHoverIn={() => setIsHovered(true)}
+          onHoverOut={() => setIsHovered(false)}
         >
           <Text style={styles.sortByText}>Hours</Text>
         </Pressable>
         
         <Pressable 
-          style={(sortMode === 'purchased') 
-            ? {...styles.sortBtn, backgroundColor: Colors.gray} 
-            : styles.sortBtn} 
-          onPress={() => {handleSortPress('purchased');}}
+          style={ sortMode === 'purchased'
+            ? { ...styles.sortBtn, height: Spacing.unit, backgroundColor: Colors.gray } 
+            : styles.sortBtn
+          } 
+          onPress={() => { handleSortPress('purchased'); }}
+          onHoverIn={() => setIsHovered(true)}
+          onHoverOut={() => setIsHovered(false)}
         >
           <Text style={styles.sortByText}>Date Purchased</Text>
         </Pressable>
         
         <Pressable 
-          style={(sortMode === 'entered') 
-            ? {...styles.sortBtn, backgroundColor: Colors.gray} 
+          style={ sortMode === 'entered'
+            ? { ...styles.sortBtn, height: Spacing.unit, backgroundColor: Colors.gray } 
             : styles.sortBtn
           } 
-          onPress={() => {handleSortPress('entered');}}
+          onPress={() => { handleSortPress('entered'); }}
+          onHoverIn={() => setIsHovered(true)}
+          onHoverOut={() => setIsHovered(false)}
         >
           <Text style={styles.sortByText}>Default</Text>
         </Pressable>
@@ -129,7 +136,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     // width: Spacing.unit,
-    height: Spacing.unit1o2 + 8,
+    height: Spacing.unit + 8,
     margin: Spacing.unit1o5,
 
     backgroundColor: Colors.yellowPrime,

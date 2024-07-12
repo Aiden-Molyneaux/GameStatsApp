@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
   gameEntry: {
     alignItems: 'center',
     justifyContent: 'center',
+    width: Spacing.unit7,
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o2,
     backgroundColor: Colors.bluePrime,

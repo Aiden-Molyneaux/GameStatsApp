@@ -18,6 +18,7 @@ export const FontSizes = {
 
 export const Spacing = {
   unit10: em1 * 10,
+  unit7: em1 * 7,
   unit5: em1 * 5,
   unit2: em1 * 2,
   unit3o2: em1 * 3/2,
