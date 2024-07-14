@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Pressable } from 'react-native';
-import { Colors, Spacing } from '@/constants/Constants';
+import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
 interface ToggleModeBtnProps {
@@ -16,7 +16,11 @@ export default function ToggleModeBtn({name, isDisabled = false, submitFunction}
       disabled={isDisabled}
       onPress={submitFunction}
     >
-      <FontAwesome size={Spacing.unit1o2} name={name === 'edit' ? 'edit' : 'save'} color={(isDisabled) ? Colors.gray : Colors.yellow} />
+      <FontAwesome 
+        size={FontSizes.medium} 
+        name={name}
+        color={(isDisabled) ? Colors.gray : Colors.yellow} 
+      />
     </Pressable>
   );
 }

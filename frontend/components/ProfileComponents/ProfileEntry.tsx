@@ -7,7 +7,7 @@ import { GameList, Game } from '@/store/gameListReducer';
 import { User, GamerTag, changeGamerTagAction }  from '@/store/userReducer';
 import { RootState } from '../../store/store';
 import { changeNameAction, changeFavoriteGameAction, addGamerTagAction } from '@/store/userReducer';
-import CustomDropdown from './CustomDropdown';
+import TextDropdown from './TextDropdown';
 import GamerTagForm from './GamertagForm';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
@@ -118,19 +118,16 @@ export default function ProfileEntry() {
           placeholderTextColor={Colors.gray}
           style={styles.input}
           value={userData.username} 
-          onChangeText={(value) => handleTextInputChange('username', value)}
+          onChangeText={(value: string) => handleTextInputChange('username', value)}
         />
 
         <Text style={styles.labelText}>Favorite game:</Text>
-        <CustomDropdown
-          data={gameList.games}
+        <TextDropdown
+          data={gameList.games.map(game => ({label: game.name, value: game.name}))}
           value={userData.favoriteGame}
-          onChange={(item: Game) => {
-            setUserData({ ...userData, favoriteGame: item.name });
+          onChange={(item: {label: string, value: string}) => {
+            setUserData({ ...userData, favoriteGame: item.value });
           }}
-          labelField={'name'}
-          valueField={'name'}
-          style={{}}
         />
 
         <View style={styles.gamerTagEditContainer}>

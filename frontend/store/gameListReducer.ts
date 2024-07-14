@@ -100,7 +100,7 @@ export const gameListSlice = createSlice({
 
     replaceGameAction: (state, action: PayloadAction<{ id: number, game: Game }>) => {
       const { id, game } = action.payload;
-      state.games.map(obj => obj.id === id ? game : obj);
+      state.games = state.games.map(obj => obj.id === id ? game : obj);
     },
 
     sortGamesAction: (state, action: PayloadAction<{sort: string}>) => {

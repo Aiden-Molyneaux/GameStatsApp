@@ -10,7 +10,7 @@ interface AddGameBtnProps {
   gameCount: number
 }
 
-export default function SortBtn({isDisabled, gameCount}: AddGameBtnProps) {
+export default function AddGameBtn({isDisabled, gameCount}: AddGameBtnProps) {
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
 

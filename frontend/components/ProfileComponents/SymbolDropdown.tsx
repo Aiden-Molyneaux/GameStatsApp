@@ -7,46 +7,37 @@ import { Game } from '@/store/gameListReducer';
 import { PlatformData } from '@/store/userReducer';
 
 interface CustomDropdownProps {
-  data: Array<PlatformData> | Array<Game>;
+  data: Array<PlatformData>;
   value: string | null;
   onChange: (item: PlatformData) => void;
-  labelField: string;
-  valueField: string;
-  style?: object;
-  renderItem?: (item: PlatformData) => React.ReactElement;
-  renderLeftIcon?: (item: unknown) => React.ReactElement;
+  selectedLogo: React.JSX.Element;
 }
 
 // export default function GameEntry({item, index, sortMode}: GameEntryProps) {
-function TextDropdown({ data, value, onChange, labelField, valueField, style, renderItem, renderLeftIcon }: CustomDropdownProps ) {
-  const defaultRenderItem = (item: Game) => (
-    <View>
-      <Text style={styles.selectedText}>{item.name}</Text>
-    </View>
-  );
+function SymbolDropdown({ data, value, onChange, selectedLogo }: CustomDropdownProps ) {
+  
+  const renderItem = (item: PlatformData) => {
+    return ( <View>{item.logo}</View> );
+  };
 
-  const defaultRenderLeftIcon = () => (
-    <View>
-    </View>
-  );
+  const defaultRenderLeftIcon = () => ( <View style={styles.selectedLogo}>{selectedLogo}</View> );
 
   return (
     <Dropdown
       data={data}
-      labelField={labelField}
-      valueField={valueField}
+      labelField={'platform'}
+      valueField={'platform'}
       value={value}
       fontFamily={Fonts.monospace}
-      style={{...styles.topBar, ...style}}
-      itemTextStyle={{ color: Colors.white }}
+      style={styles.topBar}
       itemContainerStyle={styles.itemContainer}
       selectedTextStyle={styles.selectedText}
       containerStyle={styles.container}
       showsVerticalScrollIndicator={false}
       activeColor={Colors.blue}
       onChange={onChange}
-      renderItem={renderItem || defaultRenderItem}
-      renderLeftIcon={renderLeftIcon || defaultRenderLeftIcon}
+      renderItem={renderItem}
+      renderLeftIcon={defaultRenderLeftIcon}
       placeholder={''}
     />
   );
@@ -61,11 +52,10 @@ const styles = StyleSheet.create({
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
     color: Colors.white,
-    minWidth: Spacing.unit7,
-    maxWidth: Spacing.unit7 
+    minWidth: Spacing.unit3o2
   },
   container: {
-    width: Spacing.unit7,
+    minWidth: Spacing.unit3o2,
     padding: Spacing.unit1o5,
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,
@@ -73,16 +63,20 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bluePrime
   },
   itemContainer: {
+    alignItems: 'flex-end',
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
     margin: 1, 
-    padding: 0 
+    padding: 5,
   },
-  selectedText: { 
-    color: Colors.white, 
-    fontSize: FontSizes.mediumLess,
-  }
+  selectedText: {
+    fontSize: 0,
+  },
+  selectedLogo: {
+    position: 'absolute',
+    right: Spacing.unit1o2
+  },
 });
 
-export default CustomDropdown;
+export default SymbolDropdown;

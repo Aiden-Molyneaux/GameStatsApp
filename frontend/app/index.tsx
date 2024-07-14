@@ -25,6 +25,8 @@ export default function Home() {
     setGameCount(games.length);
   }, [games]);
 
+  console.log(games);
+
   return (
     <View style={styles.homePage}>
       <Text style={styles.playTimeText}>Your Play-Time</Text>

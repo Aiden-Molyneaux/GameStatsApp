@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, TextInput } from '../Customs'; 
 import { GamerTag, PlatformData, User }  from '@/store/userReducer';
-import CustomDropdown from './CustomDropdown';
+import SymbolDropdown from './SymbolDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSteam, faBattleNet } from '@fortawesome/free-brands-svg-icons';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
@@ -39,25 +39,15 @@ export default function GamerTagForm({item, index, edit = false, handleTextInput
         onChangeText={(value) => handleTextInputChange('gamerTag', value, index)}
       />
 
-      <CustomDropdown
+      <SymbolDropdown
         data={platformData}
-        value={''}
+        value={item.platform}
+        selectedLogo={getSelectedLogo(item.platform)}
         onChange={(item: PlatformData) => {
           const newGamerTags: Array<GamerTag> = JSON.parse(JSON.stringify(userData.gamerTags));
           newGamerTags[index].platform = item.platform;
 
           setUserData({ ...userData, gamerTags: newGamerTags });
-        }}
-        valueField={'platform'}
-        labelField={'platform'}
-        style={{ minWidth: 1, maxWidth: Spacing.unit2 }}
-        renderItem={(item: PlatformData) => { 
-          const selectedLogo =  getSelectedLogo(item.platform);
-          return ( <View>{selectedLogo}</View> );
-        }}
-        renderLeftIcon={() => {
-          const selectedLogo =  getSelectedLogo(userData.gamerTags[index].platform);
-          return ( <View>{selectedLogo}</View> );
         }}
       />
     </View>

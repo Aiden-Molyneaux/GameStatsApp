@@ -1,43 +1,25 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Colors, Fonts, FontSizes, Spacing } from '@/constants/Constants';
-import { Text } from '../Customs';
-import { Game } from '@/store/gameListReducer';
-import { PlatformData } from '@/store/userReducer';
 
 interface CustomDropdownProps {
-  data: Array<PlatformData> | Array<Game>;
+  data: Array<{label: string; value: string}>;
   value: string | null;
-  onChange: (item: PlatformData) => void;
-  labelField: string;
-  valueField: string;
-  style?: object;
-  renderItem?: (item: PlatformData) => React.ReactElement;
-  renderLeftIcon?: (item: unknown) => React.ReactElement;
+  onChange: (item: {label: string; value: string}) => void;
 }
 
 // export default function GameEntry({item, index, sortMode}: GameEntryProps) {
-function TextDropdown({ data, value, onChange, labelField, valueField, style, renderItem, renderLeftIcon }: CustomDropdownProps ) {
-  const defaultRenderItem = (item: Game) => (
-    <View>
-      <Text style={styles.selectedText}>{item.name}</Text>
-    </View>
-  );
-
-  const defaultRenderLeftIcon = () => (
-    <View>
-    </View>
-  );
+function TextDropdown({ data, value, onChange }: CustomDropdownProps ) {
 
   return (
     <Dropdown
       data={data}
-      labelField={labelField}
-      valueField={valueField}
+      labelField={'label'}
+      valueField={'value'}
       value={value}
       fontFamily={Fonts.monospace}
-      style={{...styles.topBar, ...style}}
+      style={styles.topBar}
       itemTextStyle={{ color: Colors.white }}
       itemContainerStyle={styles.itemContainer}
       selectedTextStyle={styles.selectedText}
@@ -45,9 +27,6 @@ function TextDropdown({ data, value, onChange, labelField, valueField, style, re
       showsVerticalScrollIndicator={false}
       activeColor={Colors.blue}
       onChange={onChange}
-      renderItem={renderItem || defaultRenderItem}
-      renderLeftIcon={renderLeftIcon || defaultRenderLeftIcon}
-      placeholder={''}
     />
   );
 };
@@ -85,4 +64,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CustomDropdown;
+export default TextDropdown;
