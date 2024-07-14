@@ -1,73 +1,69 @@
 import React from 'react';
-import { Text, View, StyleSheet, Button, SafeAreaView, Platform } from "react-native";
+import { StyleSheet, SafeAreaView, Platform, Pressable } from 'react-native';
 import { Tabs } from 'expo-router';
 import Header from '../components/Header';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { persistor, store, purgeStoredState } from '../store/store'
-import { Provider } from 'react-redux'
+import { persistor, store, purgeStoredState } from '../store/store';
+import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { Colors, FontSizes } from '@/constants/Constants';
-import { createBottomTabNavigator, BottomTabBar } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
+import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
+import FontAwesome  from '@expo/vector-icons/FontAwesome';
+import { Text } from '../components/Customs';
 
-import Games from './index'
-import Profile from './Profile'
+const TabBarScreenOptions = (web: boolean) => {
+  const style = (web) 
+    ? {
+      top: 0,
+      left: Spacing.screenWidth / 2,
+      transform: 'translate(-50%, -0%)',
+      width: Spacing.unit10,
+      ...styles.tabBar,
+    } 
+    : {...styles.tabBar, bottom: 0};
 
-const Tab = createBottomTabNavigator()
-
-function CustomTabBar(props: any) {
-  return (
-    <View style={Platform.OS === "ios" ? styles.bottomTabBar : styles.topTabBar}>
-      <BottomTabBar {...props} />
-    </View>
-  );
-}
+  return {
+    headerShown: false,
+    tabBarActiveTintColor: Colors.yellow,
+    tabBarInactiveTintColor: Colors.white,
+    tabBarLabelStyle: {fontSize: FontSizes.medium},
+    tabBarStyle: style,
+  };
+};
 
 export default function RootLayout() {
   return (
+
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        {/* <NavigationContainer> */}
-          <SafeAreaView style={styles.container}>
-            <Header/>
-            <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}
-              screenOptions={{
-                tabBarActiveTintColor: Colors.yellow,
-                tabBarInactiveTintColor: Colors.white,
-                tabBarStyle: {
-                  backgroundColor: Colors.blue,
-                  borderTopColor: Colors.yellowPrime,
-                  borderTopWidth: 2,
-                  borderBottomColor: Colors.yellowPrime,
-                  borderBottomWidth: 2,
-                  height: 45,
-                },
-                tabBarLabelStyle: {
-                  fontSize: FontSizes.medium,
-                },
-            }}>
-              <Tab.Screen
-                name="index"
-                component={Games}
-                options={{
-                  title: 'Games',
-                  headerShown: false
-                }}
-              />
-              <Tab.Screen
-                name="Profile"
-                component={Profile}
-                options={{
-                  title: 'Profile',
-                  headerShown: false
-                }}
-              />
-            </Tab.Navigator>
-            <Button title='Reset Storage' onPress={purgeStoredState}/>
-          </SafeAreaView>
-        {/* </NavigationContainer> */}
+        <SafeAreaView style={styles.container}>
+          <Header/>
+
+          <Tabs screenOptions={TabBarScreenOptions(Platform.OS === 'web')}>
+
+            <Tabs.Screen
+              name='index'
+              options={{  
+                tabBarLabel: 'Home',
+                tabBarLabelStyle: styles.tabBarText,
+                tabBarIcon: ({color}) => <FontAwesome size={FontSizes.large} name='home' color={color} />
+              }}
+            />
+
+            <Tabs.Screen
+              name='Profile'
+              options={{
+                tabBarLabel: 'Profile',
+                tabBarLabelStyle: styles.tabBarText,
+                tabBarIcon: ({color}) => <FontAwesome size={FontSizes.large} name='user' color={color} />
+              }}
+            />
+
+          </Tabs>
+
+          <Pressable style={styles.resetBtn} onPress={purgeStoredState}><Text>Reset Storage</Text></Pressable>
+        </SafeAreaView>
       </PersistGate>
     </Provider>
+
   );
 }
 
@@ -81,17 +77,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  topTabBar: {
-    // display: 'flex',
+  tabBar: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
+    height: Spacing.unit3o2,
+    backgroundColor: Colors.blue,
+    borderTopColor: Colors.yellowPrime,
+    borderBottomColor: Colors.yellowPrime,
+    borderTopWidth: Spacing.border,
+    borderBottomWidth: Spacing.border,
   },
-  bottomTabBar: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+  tabBarText: {
+    fontFamily: Fonts.monospace,
+    fontSize: FontSizes.large
   },
+  resetBtn: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    width: Spacing.unit5,
+    height: Spacing.unit,
+    margin: Spacing.unit1o3,
+    backgroundColor: Colors.yellowPrime,
+    borderColor: Colors.yellow,
+    borderWidth: Spacing.border,
+    borderRadius: Spacing.unit1o5
+  }
 });

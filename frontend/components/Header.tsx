@@ -1,13 +1,9 @@
-import { Text, View, StyleSheet, Button } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '../store/store';
-import { changeNameAction } from "@/store/userReducer";
-import { Colors, Fonts, FontSizes } from '@/constants/Constants';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Text } from './Customs'; 
+import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
-export default function Profile() {
-  const { username } = useSelector((state: RootState) => state.userData);
-  const dispatch = useDispatch();
-
+export default function Header() {
   return (
     <View>
       <Text style={styles.headerText}>In-Game</Text>
@@ -17,11 +13,9 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
   headerText: {
-    margin: 10,
+    margin: Spacing.unit1o3,
     color: Colors.yellow,
     fontSize: FontSizes.header,
-    fontFamily: Fonts.monospace,
-    textAlign: 'center',
     fontWeight: 'bold',
     textTransform: 'uppercase',
     letterSpacing: 3,

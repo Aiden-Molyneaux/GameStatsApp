@@ -12,14 +12,14 @@ import {
   PERSIST,
   PURGE,
   REGISTER
- } from 'redux-persist';
+} from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   version: 1
-}
+};
 
 export const store = configureStore({
   reducer: {
@@ -33,7 +33,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
-})
+});
 
 export const purgeStoredState = () => {
   persistor.purge();

@@ -1,18 +1,25 @@
-import { Text, View, StyleSheet, Button } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from '../store/store';
-import { changeNameAction } from "@/store/userReducer";
-import { Colors } from '@/constants/Constants';
+import React from 'react';
+import { View, Platform, StyleSheet } from 'react-native';
+
+import { Colors, Spacing } from '@/constants/Constants';
+import ProfileList from '@/components/ProfileComponents/ProfileList';
 
 export default function Profile() {
-  const { username } = useSelector((state: RootState) => state.userData);
-  const dispatch = useDispatch();
 
   return (
-    <View>
-      <Text>We are in the Profile screen</Text>
-      <Text>{username}</Text>
-      <Button title='change' onPress={() => dispatch(changeNameAction('Kyra'))}/>
+    <View style={styles.gamePage}>
+      <ProfileList/>
     </View>
   );
 }
+
+const isIOS = Platform.OS === 'ios';
+
+const styles = StyleSheet.create({
+  gamePage: {
+    flexGrow: 1,
+    height: '100%',
+    paddingTop: isIOS ? 0 : Spacing.unit2,
+    backgroundColor: Colors.blue,
+  }
+});
