@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Platform } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, StyleSheet, Platform, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { Game } from '@/store/gameListReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
-import SortBtn from '@/components/HomeComponents/SortBtn';
+import SortBar from '@/components/HomeComponents/SortBar';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
 
@@ -16,6 +16,8 @@ export default function Home() {
   const [disableAddBtn, setDisableAddBtn] = useState(false);
   const [sortMode, setSortMode] = useState('entered');
 
+  const gameListRef = useRef<FlatList>(null);
+
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {
     setDisableAddBtn(games.some((game: Game) => (game.mode === 'NEW' || game.mode === 'EDIT')));
@@ -25,42 +27,28 @@ export default function Home() {
     setGameCount(games.length);
   }, [games]);
 
-  console.log(games);
+  function handleAddGame() {
+    setTimeout(() => {
+      gameListRef.current?.scrollToEnd({ animated: true }); // Scroll to the end when a new game is added
+    }, 500);
+  };
 
   return (
     <View style={styles.homePage}>
       <Text style={styles.playTimeText}>Your Play-Time</Text>
 
-      <Text style={styles.filterByText}>Filter by</Text>
+      <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
 
-      <View style={styles.sortBtnContainer}>
-        <SortBtn
-          filterMode={'hours'}
-          label={'Hours'}
-          currentSortMode={sortMode}
-          setSortMode={setSortMode}
-        />
-
-        <SortBtn
-          filterMode={'purchased'}
-          label={'Date purchased'}
-          currentSortMode={sortMode}
-          setSortMode={setSortMode}
-        />
-  
-        <SortBtn
-          filterMode={'entered'}
-          label={'Default'}
-          currentSortMode={sortMode}
-          setSortMode={setSortMode}
-        />
-      </View>
-
-      <GameList games={games} sortMode={sortMode}/>
+      <GameList
+        games={games} 
+        sortMode={sortMode}
+        ref={gameListRef}
+      />
 
       <AddGameBtn
         isDisabled={disableAddBtn}
         gameCount={gameCount}
+        onAddGame={handleAddGame}
       />
     </View>
   );
@@ -73,22 +61,12 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     alignItems: 'center',
-    paddingTop: isIOS ? 0 : Spacing.unit2,
+    paddingTop: isIOS ? 0 : Spacing.unit3o2,
     backgroundColor: Colors.blue,
   },
   playTimeText: {
-    marginBottom: Spacing.unit1o5,
+    marginVertical: Spacing.unit1o3,
     color: Colors.yellow,
     fontSize: FontSizes.large,
-  },
-  filterByText: {
-    paddingBottom: 3, 
-    color: Colors.yellow,
-    fontSize: FontSizes.small,
-    borderBottomWidth: Spacing.border / 2,
-    borderColor: Colors.yellowPrime
-  },
-  sortBtnContainer: {
-    flexDirection: 'row'
   }
 });

@@ -12,13 +12,17 @@ import { Text } from '../components/Customs';
 const TabBarScreenOptions = (web: boolean) => {
   const style = (web) 
     ? {
+      position: 'absolute',
       top: 0,
       left: Spacing.screenWidth / 2,
       transform: 'translate(-50%, -0%)',
       width: Spacing.unit10,
       ...styles.tabBar,
     } 
-    : {...styles.tabBar, bottom: 0};
+    : {
+      paddingBottom: 0,
+      ...styles.tabBar,
+    };
 
   return {
     headerShown: false,
@@ -44,6 +48,7 @@ export default function RootLayout() {
               options={{  
                 tabBarLabel: 'Home',
                 tabBarLabelStyle: styles.tabBarText,
+                tabBarLabelPosition: 'beside-icon',
                 tabBarIcon: ({color}) => <FontAwesome size={FontSizes.large} name='home' color={color} />
               }}
             />
@@ -78,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabBar: {
-    position: 'absolute',
+
     height: Spacing.unit3o2,
     backgroundColor: Colors.blue,
     borderTopColor: Colors.yellowPrime,

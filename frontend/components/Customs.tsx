@@ -30,5 +30,9 @@ export const Text: React.FC<CustomTextProps> = ({ style, ...props }) => {
 };
 
 export const TextInput: React.FC<CustomTextInputProps> = ({ style, ...props }) => {
-  return <RNTextInput style={[styles.defaultTextInputStyle, style]} {...props} />;
+  return <RNTextInput 
+    style={[styles.defaultTextInputStyle, style]}
+    placeholderTextColor={Colors.gray}
+    {...props} 
+  />;
 };

@@ -1,24 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
 interface ToggleModeBtnProps {
-  name: string;
+  iconName: string;
   isDisabled: boolean;
-  submitFunction: (data: unknown) => void;
+  pressFunction: (data: unknown) => void;
 }
 
-export default function ToggleModeBtn({name, isDisabled = false, submitFunction}: ToggleModeBtnProps) {
+export default function ToggleModeBtn({iconName, isDisabled = false, pressFunction}: ToggleModeBtnProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <Pressable 
       style={styles.editBtn}
       disabled={isDisabled}
-      onPress={submitFunction}
+      onPress={pressFunction}
+      onHoverIn={() => setIsHovered(true)}
+      onHoverOut={() => setIsHovered(false)}
     >
       <FontAwesome 
-        size={FontSizes.medium} 
-        name={name}
+        size={isHovered ? FontSizes.large : FontSizes.medium}
+        name={iconName}
         color={(isDisabled) ? Colors.gray : Colors.yellow} 
       />
     </Pressable>

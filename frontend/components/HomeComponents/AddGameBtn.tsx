@@ -7,10 +7,11 @@ import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 interface AddGameBtnProps {
   isDisabled: boolean,
-  gameCount: number
+  gameCount: number,
+  onAddGame: () => void
 }
 
-export default function AddGameBtn({isDisabled, gameCount}: AddGameBtnProps) {
+export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGameBtnProps) {
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -18,21 +19,22 @@ export default function AddGameBtn({isDisabled, gameCount}: AddGameBtnProps) {
     const defaultGame: Game = {id: gameCount, name: '', hours: '', purchased: 'Date Purchased', mode: 'NEW' };
 
     dispatch(addGameAction(defaultGame));
+    onAddGame();
   }
 
   return (
     <Pressable 
       style={[
-        isDisabled ? { ...styles.submitGameBtn, backgroundColor: Colors.gray } : styles.submitGameBtn,
+        isDisabled ? { ...styles.addGameBtn, backgroundColor: Colors.gray } : styles.addGameBtn,
         {
-          ...(isHovered ? styles.submitHovered : null),
+          ...(isHovered ? styles.addBtnHovered : null),
           transitionProperty: 'height, background-color', // Specify properties to transition
           transitionDuration: '0.3s', // Duration of the transition
           transitionTimingFunction: 'ease-in-out', // Timing function for smooth transition
         },
       ]}
-      onPress={handlePlusPress} 
       disabled={isDisabled}
+      onPress={handlePlusPress} 
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
@@ -42,7 +44,7 @@ export default function AddGameBtn({isDisabled, gameCount}: AddGameBtnProps) {
 }
 
 const styles = StyleSheet.create({
-  submitGameBtn: {
+  addGameBtn: {
     alignItems: 'center',
     justifyContent: 'space-evenly',
     width: Spacing.unit,
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5
   },
-  submitHovered: {
+  addBtnHovered: {
     height: Spacing.unit
   },
 });

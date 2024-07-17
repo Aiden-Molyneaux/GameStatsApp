@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
-import FontAwesome  from '@expo/vector-icons/FontAwesome';
+import { View, StyleSheet } from 'react-native';
+import { Colors, Fonts, Spacing } from '@/constants/Constants';
 import { Calendar, DateData} from 'react-native-calendars';
 import { Game } from '@/store/gameListReducer';
+import ToggleCalendarBtn from './ToggleCalendarBtn';
 
 interface CalendarProps {
   gameData: Game;
@@ -29,9 +29,11 @@ export default function CustomCalendar({gameData, setGameData, setShowCalendar}:
         minDate={'1970-01-01'}
       />
 
-      <Pressable style={styles.calendarCloseBtn} onPress={closeCalendar}>
-        <FontAwesome size={FontSizes.medium} name='close' color={Colors.yellow} />
-      </Pressable>
+      <ToggleCalendarBtn 
+        styleType={'closeBtn'} 
+        iconName='close' 
+        pressFunction={closeCalendar}
+      />
     </View>
   );
 }
@@ -44,11 +46,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
-  },
-  calendarCloseBtn: {
-    position: 'absolute',
-    top: Spacing.unit1o5,
-    right: Spacing.unit1o5,
   }
 });
 

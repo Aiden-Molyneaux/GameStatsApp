@@ -33,7 +33,6 @@ export default function GamerTagForm({item, index, edit = false, handleTextInput
     <View style={styles.gamerTagEntry}>
       <TextInput
         placeholder='GamerTag'
-        placeholderTextColor={Colors.gray}
         style={styles.input}
         value={item.gamerTag}
         onChangeText={(value) => handleTextInputChange('gamerTag', value, index)}

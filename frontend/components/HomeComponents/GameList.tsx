@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import {FlatList} from 'react-native';
 import { Game } from '@/store/gameListReducer';
 import GameEntry from './GameEntry';
@@ -8,13 +8,14 @@ interface GameListProps {
   sortMode: string
 }
 
-export default function GameList({games, sortMode}: GameListProps) {
+function GameList({games, sortMode}: GameListProps, ref: React.Ref<FlatList>) {
   const renderItem = ({ item, index} : { item: Game; index: number}) => (    
     <GameEntry key={item.id} item={item} index={index} sortMode={sortMode}></GameEntry>
   );
 
   return (
     <FlatList
+      ref={ref}
       showsVerticalScrollIndicator={false}
       data={games}
       renderItem={renderItem}
@@ -23,3 +24,4 @@ export default function GameList({games, sortMode}: GameListProps) {
   );
 }
 
+export default forwardRef(GameList);

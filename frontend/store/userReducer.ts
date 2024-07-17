@@ -11,7 +11,7 @@ export interface PlatformData {
 export interface User {
   id: number;
   username: string;
-  favoriteGame: string;
+  favouriteGame: string;
   gamerTags: Array<GamerTag>;
 }
 
@@ -23,7 +23,7 @@ const initialGamerTags: Array<GamerTag> = [
 const initialState: User = {
   id: 0,
   username: 'Pat',
-  favoriteGame: 'Destiny',
+  favouriteGame: 'Destiny',
   gamerTags: initialGamerTags,
 };
 
@@ -39,8 +39,8 @@ export const userSlice = createSlice({
       state.username = action.payload;
     },
 
-    changeFavoriteGameAction: (state, action: PayloadAction<string>) => {
-      state.favoriteGame = action.payload;
+    changeFavouriteGameAction: (state, action: PayloadAction<string>) => {
+      state.favouriteGame = action.payload;
     },
 
     changeGamerTagAction: (state, action: PayloadAction<Array<GamerTag>>) => {
@@ -50,6 +50,6 @@ export const userSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { changeNameAction, changeFavoriteGameAction, addGamerTagAction, changeGamerTagAction } = userSlice.actions;
+export const { changeNameAction, changeFavouriteGameAction, addGamerTagAction, changeGamerTagAction } = userSlice.actions;
 
 export default userSlice.reducer;

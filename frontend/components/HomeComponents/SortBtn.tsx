@@ -37,16 +37,12 @@ export default function SortBtn({filterMode, label, currentSortMode, setSortMode
 const styles = StyleSheet.create({
   sortBtn: {
     alignItems: 'center',
-    justifyContent: 'space-evenly',
-    height: Spacing.unit1o2 + 8,
-    margin: Spacing.unit1o5,
+    justifyContent: 'center',
+    height: Spacing.unit1o2,
     backgroundColor: Colors.yellowPrime,
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,
-    borderTopWidth: 5,
     borderRadius: Spacing.unit1o5,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
     paddingHorizontal: 5
   },
   sortByText: {
