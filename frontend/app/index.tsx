@@ -21,9 +21,6 @@ export default function Home() {
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {
     setDisableAddBtn(games.some((game: Game) => (game.mode === 'NEW' || game.mode === 'EDIT')));
-  }, [games]);
-
-  useEffect(() => {
     setGameCount(games.length);
   }, [games]);
 

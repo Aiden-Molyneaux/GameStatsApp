@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { Text, TextInput } from '../Customs'; 
-import { GamerTag, PlatformData, User }  from '@/store/userReducer';
+import { GamerTag, PlatformData, User, deleteGamerTagAction }  from '@/store/userReducer';
 import SymbolDropdown from './SymbolDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSteam, faBattleNet } from '@fortawesome/free-brands-svg-icons';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import DelGamerTagBtn from './DelGamerTagBtn';
 
 interface GamerTagFormProps {
   item: GamerTag;
@@ -17,6 +19,8 @@ interface GamerTagFormProps {
 }
 
 export default function GamerTagForm({item, index, edit = false, handleTextInputChange, userData, setUserData}: GamerTagFormProps) {
+  const dispatch = useDispatch();
+
   const steamLogo = <FontAwesomeIcon icon={faSteam} color={Colors.white} size='lg' style={styles.icon} />;
   const battleNetLogo = <FontAwesomeIcon icon={faBattleNet} color={Colors.white} size='lg' style={styles.icon} />;
 
@@ -29,8 +33,16 @@ export default function GamerTagForm({item, index, edit = false, handleTextInput
     return (selected === 'Steam') ? steamLogo : battleNetLogo;
   };
 
+  function delGamerTag() {
+    const newGamerTags = [...userData.gamerTags.slice(0, index), ...userData.gamerTags.slice(index + 1)];
+
+    setUserData({...userData, gamerTags: newGamerTags});
+    dispatch(deleteGamerTagAction(index))
+  }
+
   return edit ? (
     <View style={styles.gamerTagEntry}>
+      <DelGamerTagBtn pressFunction={delGamerTag} />
       <TextInput
         placeholder='GamerTag'
         style={styles.input}
@@ -52,7 +64,7 @@ export default function GamerTagForm({item, index, edit = false, handleTextInput
     </View>
   ) : (
     <View style={styles.gamerTagEntry}>
-      <Text style={styles.index}>{index}:</Text>
+      <Text style={styles.index}>{index + 1}:</Text>
       <Text style={{ color: Colors.yellow }}>{item.gamerTag}</Text>
       {getSelectedLogo(item.platform)}
     </View>

@@ -118,10 +118,18 @@ export const gameListSlice = createSlice({
         break;
       }
     },
+
+    deleteGameAction: (state, action: PayloadAction<number>) => {
+      state.games = state.games.filter(item => item.id !== action.payload);
+    },
+
+    setIdToPositionAction: (state) => {
+      state.games = state.games.map((item, index) => ({ ...item, id: index }));
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addGameAction, replaceGameAction, sortGamesAction} = gameListSlice.actions;
+export const { addGameAction, replaceGameAction, sortGamesAction, deleteGameAction, setIdToPositionAction} = gameListSlice.actions;
 
 export default gameListSlice.reducer;

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Text, TextInput} from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
-import { replaceGameAction, Game } from '@/store/gameListReducer';
+import { replaceGameAction, Game, deleteGameAction, setIdToPositionAction } from '@/store/gameListReducer';
 import CustomCalendar from './CustomCalendar';
 import ToggleCalendarBtn from './ToggleCalendarBtn';
+import DelGameEntryBtn from './DelGameEntryBtn';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
@@ -24,7 +26,7 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
 
   useEffect(() => {
-    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.purchased));
+    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.purchased !== 'Date Purchased'));
   }, [gameData]);
 
   function openCalendar() {
@@ -50,11 +52,26 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
     setGameData({...gameData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
   }
 
+  const deleteAndRepositionGames = createAsyncThunk(
+    'games/deleteAndReposition',
+    async (gameId: number, { dispatch }) => {
+      await dispatch(deleteGameAction(gameId));
+      await dispatch(setIdToPositionAction());
+    }
+  );
+
+  function deleteGameEntry() {
+    dispatch(deleteAndRepositionGames(gameData.id));
+    // dispatch(setIdToPositionAction(gameData.id));
+  }
+
   return (
     <View style={styles.gameEntryForm}>
       <Text style={styles.addGameText}>
         {gameData.mode === EDIT ? 'Edit Game Entry' : 'New Game Entry'}
       </Text>
+
+      <DelGameEntryBtn pressFunction={deleteGameEntry} />
 
       <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={saveGameEntry}/>
 
@@ -124,7 +141,6 @@ const styles = StyleSheet.create({
   },
   datePurchasedContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     margin: Spacing.unit1o5,
     fontSize: FontSizes.mediumLess,

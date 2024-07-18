@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { GameList } from '@/store/gameListReducer';
 import { User, GamerTag, changeGamerTagAction }  from '@/store/userReducer';
 import { RootState } from '../../store/store';
-import { changeNameAction, changefavouriteGameAction, addGamerTagAction } from '@/store/userReducer';
+import { changeNameAction, changeFavouriteGameAction, addGamerTagAction } from '@/store/userReducer';
 import TextDropdown from './TextDropdown';
 import GamerTagList from './GamerTagList';
 import { Text, TextInput } from '@/components/Customs';
@@ -43,7 +43,7 @@ export default function ProfileDetails() {
 
   function saveUserEntry() {
     dispatch(changeNameAction(userData.username));
-    dispatch(changefavouriteGameAction(userData.favouriteGame));
+    dispatch(changeFavouriteGameAction(userData.favouriteGame));
     dispatch(changeGamerTagAction(userData.gamerTags));
     setMode(VIEW);
   }
@@ -88,13 +88,14 @@ export default function ProfileDetails() {
           edit={false}
         />
 
-        <Text>Favourite game: {<Text style={{ color: Colors.yellow }}>{user.favouriteGame}</Text>}</Text>
-        <Text>Number of games: {<Text style={{ color: Colors.yellow }}>{gameList.games.length}</Text>}</Text>
+        <Text>Favourite game: {<Text style={styles.labelText}>{user.favouriteGame}</Text>}</Text>
+        <Text>Number of games: {<Text style={styles.labelText}>{gameList.games.length}</Text>}</Text>
       </View>
     ) : (
       <View style={styles.profileEditSection}>
         <ToggleModeBtn iconName={'save'} isDisabled={disableSaveBtn} pressFunction={saveUserEntry} />
 
+        <Text style={styles.labelText}>Profile Name</Text>
         <TextInput
           placeholder='Username'
           style={styles.input}
@@ -102,7 +103,7 @@ export default function ProfileDetails() {
           onChangeText={(value: string) => handleTextInputChange('username', value)}
         />
 
-        <Text style={styles.labelText}>favourite game:</Text>
+        <Text style={styles.labelText}>Favourite Game</Text>
         <TextDropdown
           data={gameList.games.map(game => ({ label: game.name, value: game.name }))}
           value={userData.favouriteGame}
@@ -112,7 +113,7 @@ export default function ProfileDetails() {
         />
 
         <View style={styles.gamerTagEditContainer}>
-          <Text style={styles.labelText}>Your Gamertags:</Text>
+          <Text style={styles.labelText}>Your Gamertags</Text>
 
           <GamerTagList
             gamerTags={userData.gamerTags}
@@ -135,17 +136,18 @@ const styles = StyleSheet.create({
   profileEditSection: {
     alignItems: 'center',
     justifyContent: 'center',
-    margin: Spacing.unit1o5,
     padding: Spacing.unit1o2,
     backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
     borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5
+    borderRadius: Spacing.unit1o5,
   },
   gamerTagEditContainer: {
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
+    position: 'relative',
+    zIndex: 1
   },
   input: {
     margin: Spacing.unit1o5,
@@ -166,11 +168,12 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.unit1o5,
   },
   usernameText: {
+    marginBottom: Spacing.unit1o5,
     color: Colors.yellow,
-    fontSize: FontSizes.large + 5
+    fontSize: FontSizes.large
   },
   labelText: {
     color: Colors.yellow,
-    fontSize: FontSizes.mediumLess
+    fontSize: FontSizes.medium
   }
 });

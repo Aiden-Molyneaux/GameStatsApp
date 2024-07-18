@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Game, addGameAction } from '@/store/gameListReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -23,33 +23,40 @@ export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGame
   }
 
   return (
-    <Pressable 
-      style={[
-        isDisabled ? { ...styles.addGameBtn, backgroundColor: Colors.gray } : styles.addGameBtn,
-        {
-          ...(isHovered ? styles.addBtnHovered : null),
-          transitionProperty: 'height, background-color', // Specify properties to transition
-          transitionDuration: '0.3s', // Duration of the transition
-          transitionTimingFunction: 'ease-in-out', // Timing function for smooth transition
-        },
-      ]}
-      disabled={isDisabled}
-      onPress={handlePlusPress} 
-      onHoverIn={() => setIsHovered(true)}
-      onHoverOut={() => setIsHovered(false)}
-    >
-      <FontAwesome size={FontSizes.medium} name='plus' color={Colors.white} />
-    </Pressable>
+    <View style={styles.btnContainer}>
+      <Pressable 
+        style={[
+          isDisabled ? { ...styles.addGameBtn, backgroundColor: Colors.gray } : styles.addGameBtn,
+          {
+            ...(isHovered ? styles.addBtnHovered : null),
+            transitionProperty: 'height, background-color', // Specify properties to transition
+            transitionDuration: '0.3s', // Duration of the transition
+            transitionTimingFunction: 'ease-in-out', // Timing function for smooth transition
+          },
+        ]}
+        disabled={isDisabled}
+        onPress={handlePlusPress} 
+        onHoverIn={() => setIsHovered(true)}
+        onHoverOut={() => setIsHovered(false)}
+      >
+        <FontAwesome size={FontSizes.medium} name='plus' color={Colors.white} />
+      </Pressable>
+    </View>
+
   );
 }
 
 const styles = StyleSheet.create({
+  btnContainer: {
+    height: Spacing.unit + 10,
+    marginTop: Spacing.unit1o3,
+    justifyContent: 'flex-end'
+  },
   addGameBtn: {
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
     width: Spacing.unit,
     height: Spacing.unit + 10,
-    margin: Spacing.unit1o3,
     backgroundColor: Colors.yellowPrime,
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,
@@ -60,5 +67,5 @@ const styles = StyleSheet.create({
   },
   addBtnHovered: {
     height: Spacing.unit
-  },
+  }
 });

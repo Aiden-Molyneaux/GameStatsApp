@@ -46,10 +46,14 @@ export const userSlice = createSlice({
     changeGamerTagAction: (state, action: PayloadAction<Array<GamerTag>>) => {
       state.gamerTags = action.payload;
     },
+
+    deleteGamerTagAction: (state, action: PayloadAction<number>) => {
+      state.gamerTags.splice(action.payload, 1);
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { changeNameAction, changeFavouriteGameAction, addGamerTagAction, changeGamerTagAction } = userSlice.actions;
+export const { changeNameAction, changeFavouriteGameAction, addGamerTagAction, changeGamerTagAction, deleteGamerTagAction } = userSlice.actions;
 
 export default userSlice.reducer;

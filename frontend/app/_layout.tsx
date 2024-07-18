@@ -64,7 +64,7 @@ export default function RootLayout() {
 
           </Tabs>
 
-          <Pressable style={styles.resetBtn} onPress={purgeStoredState}><Text>Reset Storage</Text></Pressable>
+          <Pressable style={styles.resetBtn} onPress={purgeStoredState}><Text style={styles.resetText}>Reset Storage</Text></Pressable>
         </SafeAreaView>
       </PersistGate>
     </Provider>
@@ -75,7 +75,7 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.blue
+    backgroundColor: Colors.blue,
   },
   screen: {
     flex: 1,
@@ -83,7 +83,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabBar: {
-
     height: Spacing.unit3o2,
     backgroundColor: Colors.blue,
     borderTopColor: Colors.yellowPrime,
@@ -98,12 +97,15 @@ const styles = StyleSheet.create({
   resetBtn: {
     alignSelf: 'center',
     justifyContent: 'center',
-    width: Spacing.unit5,
-    height: Spacing.unit,
+    width: Spacing.unit * 3,
+    height: Spacing.unit1o2,
     margin: Spacing.unit1o3,
     backgroundColor: Colors.yellowPrime,
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5
+    borderRadius: Spacing.unit1o5,
+  },
+  resetText: {
+    fontSize: FontSizes.small
   }
 });

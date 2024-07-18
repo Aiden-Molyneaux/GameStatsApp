@@ -34,5 +34,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Spacing.unit1o5,
     right: Spacing.unit1o5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: FontSizes.large,
+    height: FontSizes.large,
   },
 });

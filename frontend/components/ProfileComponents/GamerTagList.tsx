@@ -1,7 +1,8 @@
 import React from 'react';
-import { FlatList } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 import GamerTagForm from './GamerTagForm';
 import { GamerTag } from '@/store/userReducer';
+import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 interface GamerTagListProps {
   gamerTags: GamerTag[];
@@ -14,6 +15,7 @@ interface GamerTagListProps {
 export default function GamerTagList({ gamerTags, handleTextInputChange, userData, setUserData, edit }: GamerTagListProps) {
   return (
     <FlatList
+      style={styles.gamerTagList}
       showsVerticalScrollIndicator={false}
       data={gamerTags}
       renderItem={({ item, index }) => (
@@ -30,3 +32,10 @@ export default function GamerTagList({ gamerTags, handleTextInputChange, userDat
     />
   );
 };
+
+
+const styles = StyleSheet.create({
+  gamerTagList: {
+    margin: Spacing.unit1o5,
+  }
+});

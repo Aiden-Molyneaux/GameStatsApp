@@ -12,7 +12,7 @@ interface SortBarProps {
 export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
   return (
     <View style={styles.sortBtnContainer}>
-      <FontAwesome name='filter' size={FontSizes.medium} color={Colors.white}/>
+      {/* <FontAwesome name='filter' size={FontSizes.medium} color={Colors.white}/> */}
 
       <SortBtn
         filterMode={'hours'}

@@ -45,7 +45,7 @@ function SymbolDropdown({ data, value, onChange, selectedLogo }: CustomDropdownP
 
 const styles = StyleSheet.create({
   topBar: {
-    margin: Spacing.unit1o5,
+    marginVertical: Spacing.unit1o5,
     padding: Spacing.unit1o5,
     fontSize: FontSizes.mediumLess,
     borderColor: Colors.yellow,

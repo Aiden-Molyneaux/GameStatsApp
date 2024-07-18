@@ -44,7 +44,7 @@ export default function GameEntry({item, index, sortMode}: GameEntryProps) {
     <View style={styles.gameEntry}>
       <ToggleModeBtn iconName='edit' isDisabled={false} pressFunction={setModeEdit}/>
 
-      <Text style={styles.gameIndex}>{(sortMode === 'entered') ? gameData.id + 1: index + 1}</Text>
+      <Text style={styles.gameIndex}>{index + 1}</Text>
       <Text style={styles.gameText}>{gameData.name}</Text>
       <Text style={styles.hourText}>{gameData.hours} hours</Text>
       <Text style={styles.hourText}>Owned since {gameData.purchased}</Text>
@@ -54,7 +54,6 @@ export default function GameEntry({item, index, sortMode}: GameEntryProps) {
     <GameEntryForm
       gameData={gameData}
       setGameData={setGameData}
-      index={gameData.index}
     />
   );
 }
