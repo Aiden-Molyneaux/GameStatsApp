@@ -4,10 +4,10 @@ interface User {
   id: number;
   username: string;
   password: string;
-  email: string;
-  favouriteGame: string;
-  preferredPlatform: string;
-  numberOfGames: number;
+  email: string | null;
+  favouritegame: string | null;
+  preferredplatform: string | null;
+  numberofgames: number | null;
 }
 
 export async function createUser(username: string, hashedPassword: string): Promise<User> {

@@ -1,71 +1,43 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, SafeAreaView, Platform, Pressable } from 'react-native';
-import { Tabs } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import Header from '../components/Header';
-import { persistor, store, purgeStoredState } from '../store/store';
+import { persistor, RootState, store } from '../store/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
-import FontAwesome  from '@expo/vector-icons/FontAwesome';
-import { Text } from '../components/Customs';
+import { useSelector } from 'react-redux';
 
-const TabBarScreenOptions = (web: boolean) => {
-  const style = (web) 
-    ? {
-      position: 'absolute',
-      top: 0,
-      left: Spacing.screenWidth / 2,
-      transform: 'translate(-50%, -0%)',
-      width: Spacing.unit10,
-      ...styles.tabBar,
-    } 
-    : {
-      paddingBottom: 0,
-      ...styles.tabBar,
-    };
+function Layout() {
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const router = useRouter();
 
-  return {
-    headerShown: false,
-    tabBarActiveTintColor: Colors.yellow,
-    tabBarInactiveTintColor: Colors.white,
-    tabBarLabelStyle: {fontSize: FontSizes.medium},
-    tabBarStyle: style,
-  };
-};
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.replace('/');
+    } else if (isAuthenticated) {
+      router.replace('/home/Profile');
+    }
+  }, [isAuthenticated]);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <Header />
+      <Stack>
+        <Stack.Screen
+          name='index'
+          options={{ headerShown: false }}
+        />
+      </Stack>;
+    </SafeAreaView>
+  );
+}
 
 export default function RootLayout() {
   return (
-
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <SafeAreaView style={styles.container}>
-          <Header/>
-
-          <Tabs screenOptions={TabBarScreenOptions(Platform.OS === 'web')}>
-
-            <Tabs.Screen
-              name='index'
-              options={{  
-                tabBarLabel: 'Home',
-                tabBarLabelStyle: styles.tabBarText,
-                tabBarLabelPosition: 'beside-icon',
-                tabBarIcon: ({color}) => <FontAwesome size={FontSizes.large} name='home' color={color} />
-              }}
-            />
-
-            <Tabs.Screen
-              name='Profile'
-              options={{
-                tabBarLabel: 'Profile',
-                tabBarLabelStyle: styles.tabBarText,
-                tabBarIcon: ({color}) => <FontAwesome size={FontSizes.large} name='user' color={color} />
-              }}
-            />
-
-          </Tabs>
-
-          <Pressable style={styles.resetBtn} onPress={purgeStoredState}><Text style={styles.resetText}>Reset Storage</Text></Pressable>
-        </SafeAreaView>
+        <Layout/>
       </PersistGate>
     </Provider>
   );
@@ -75,11 +47,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.blue,
-  },
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   tabBar: {
     height: Spacing.unit3o2,
@@ -91,7 +58,7 @@ const styles = StyleSheet.create({
   },
   tabBarText: {
     fontFamily: Fonts.monospace,
-    fontSize: FontSizes.large
+    fontSize: FontSizes.large,
   },
   resetBtn: {
     alignSelf: 'center',
@@ -105,6 +72,6 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.unit1o5,
   },
   resetText: {
-    fontSize: FontSizes.small
-  }
+    fontSize: FontSizes.small,
+  },
 });

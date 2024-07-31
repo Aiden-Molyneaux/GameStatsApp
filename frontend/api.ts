@@ -1,16 +1,18 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import * as Keychain from 'react-native-keychain';
+import { store } from './store/store';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000',
 });
 
 api.interceptors.request.use(async (config: AxiosRequestConfig) => {
-  const credentials = await Keychain.getGenericPassword();
-  if (credentials) {
+  const state = store.getState();
+  console.log(state);
+  const token = state.auth.token;
+  if (token) {
     config.headers = {
       ...config.headers,
-      Authorization: `Bearer ${credentials.password}`,
+      Authorization: `Bearer ${token}`,
     };
   }
   return config;

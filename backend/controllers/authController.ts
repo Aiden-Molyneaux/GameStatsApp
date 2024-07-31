@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { createUser, findUserByUsername } from '../models/userModel';
 
-interface AuthRequest extends Request {
-  user?: { id: number };
-}
+// interface AuthRequest extends Request {
+//   user?: { id: number };
+// }
 
 export async function register(req: Request, res: Response): Promise<void> {
   const { username, password } = req.body;
@@ -52,7 +52,18 @@ export async function login(req: Request, res: Response): Promise<void> {
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
 
-    res.status(200).json({ token });
+    res.status(200).json({ 
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        password: user.password,
+        email: user.email,
+        favouriteGame: user.favouritegame,
+        preferredPlatform: user.preferredplatform,
+        numberOfGames: user.numberofgames
+      } 
+    });
   } catch (err) {
     console.error('Error in login controller:', err);
     res.status(500).json({ error: (err as Error).message });

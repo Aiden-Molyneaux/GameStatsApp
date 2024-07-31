@@ -1,69 +1,70 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, Platform, FlatList } from 'react-native';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-import { Game } from '@/store/gameListReducer';
-import GameList from '@/components/HomeComponents/GameList';
-import { Text } from '@/components/Customs';
-import SortBar from '@/components/HomeComponents/SortBar';
-import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TextInput, Button, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginSuccess } from '../store/authReducer'; // Adjust path as needed
+import { RootState } from '@/store/store';
+import { loginUser } from '@/auth';
 
-export default function Home() {
-  const { games } = useSelector((state: RootState) => state.gameListData);
+export default function Auth() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const router = useRouter();
+  const dispatch = useDispatch();
 
-  const [gameCount, setGameCount] = useState(games.length);
-  const [disableAddBtn, setDisableAddBtn] = useState(false);
-  const [sortMode, setSortMode] = useState('entered');
+  // console.log(isAuthenticated);
 
-  const gameListRef = useRef<FlatList>(null);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     router.replace('/home/Profile'); // Redirect to the 'auth' screen if authenticated
+  //   }
+  // }, [isAuthenticated]);
 
-  // keep track of if we have a game open for edit (or new)
-  useEffect(() => {
-    setDisableAddBtn(games.some((game: Game) => (game.mode === 'NEW' || game.mode === 'EDIT')));
-    setGameCount(games.length);
-  }, [games]);
-
-  function handleAddGame() {
-    setTimeout(() => {
-      gameListRef.current?.scrollToEnd({ animated: true }); // Scroll to the end when a new game is added
-    }, 500);
-  };
+  async function attemptLogin() {
+    await loginUser(username, password).then((result) => {
+      console.log(result);
+      if (result) {
+        dispatch(loginSuccess({token: result.token, user: result.user}));
+      }
+    });
+  }
 
   return (
-    <View style={styles.homePage}>
-      <Text style={styles.playTimeText}>Your Play-Time</Text>
-
-      <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
-
-      <GameList
-        games={games} 
-        sortMode={sortMode}
-        ref={gameListRef}
+    <View style={styles.authPage}>
+      <TextInput
+        style={styles.input}
+        placeholder='Username'
+        value={username}
+        onChangeText={setUsername}
       />
-
-      <AddGameBtn
-        isDisabled={disableAddBtn}
-        gameCount={gameCount}
-        onAddGame={handleAddGame}
+      <TextInput
+        style={styles.input}
+        placeholder='Password'
+        value={password}
+        onChangeText={setPassword}
+        // secureTextEntry
       />
+      <Button title='Login' onPress={attemptLogin} />
     </View>
   );
 }
 
-const isIOS = Platform.OS === 'ios';
-
 const styles = StyleSheet.create({
-  homePage: {
+  authPage: {
     flex: 1,
-    height: '100%',
-    alignItems: 'center',
-    paddingTop: isIOS ? 0 : Spacing.unit3o2,
+    justifyContent: 'center',
+    padding: Spacing.unit * 2,
     backgroundColor: Colors.blue,
   },
-  playTimeText: {
-    marginVertical: Spacing.unit1o3,
-    color: Colors.yellow,
-    fontSize: FontSizes.large,
-  }
+  input: {
+    height: 40,
+    borderColor: Colors.yellowPrime,
+    borderWidth: 1,
+    marginBottom: Spacing.unit,
+    paddingHorizontal: Spacing.unit,
+    backgroundColor: Colors.white,
+    fontSize: FontSizes.medium,
+  },
 });

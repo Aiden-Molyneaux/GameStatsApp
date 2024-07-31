@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Platform, StyleSheet } from 'react-native';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
-import { Text } from '../components/Customs';
-import ProfileDetails from '../components/ProfileComponents/ProfileDetails';
+import { Text } from '../../components/Customs';
+import ProfileDetails from '../../components/ProfileComponents/ProfileDetails';
 
 export default function Profile() {
   return (
