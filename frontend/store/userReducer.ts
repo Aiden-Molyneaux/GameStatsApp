@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export interface GamerTag {id: number, gamerTag: string, platform: string}
+export interface GamerTag {
+  id: number, 
+  gamerTag: string, 
+  platform: string
+}
 
 export interface PlatformData {
   platform: string;

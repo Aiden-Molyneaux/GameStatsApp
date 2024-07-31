@@ -1,5 +1,5 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
-
+import authReducer from './authReducer';
 import userReducer from './userReducer';
 import gameListReducer from './gameListReducer';
 
@@ -23,6 +23,7 @@ const persistConfig = {
 
 export const store = configureStore({
   reducer: {
+    auth: persistReducer(persistConfig, authReducer),
     userData: persistReducer(persistConfig, userReducer),
     gameListData: persistReducer(persistConfig, gameListReducer)
   },

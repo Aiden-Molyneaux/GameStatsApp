@@ -44,7 +44,7 @@ export default function GameEntry({item, index, sortMode}: GameEntryProps) {
     <View style={styles.gameEntry}>
       <ToggleModeBtn iconName='edit' isDisabled={false} pressFunction={setModeEdit}/>
 
-      <Text style={styles.gameIndex}>{index + 1}</Text>
+      <Text style={styles.gameIndex}>{(sortMode === 'entered') ? gameData.id + 1: index + 1}</Text>
       <Text style={styles.gameText}>{gameData.name}</Text>
       <Text style={styles.hourText}>{gameData.hours} hours</Text>
       <Text style={styles.hourText}>Owned since {gameData.purchased}</Text>
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: Spacing.unit1o5,
     width: Spacing.unit10 - Spacing.unit,
-    margin: Spacing.unit1o5,
+    margin: Spacing.unit1o5 / 2,
     padding: Spacing.unit1o2,
     backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
