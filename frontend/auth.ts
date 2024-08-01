@@ -1,7 +1,5 @@
-import { useDispatch } from 'react-redux';
 import api from './api';
 import * as Keychain from 'react-native-keychain';
-import { loginSuccess } from './store/authReducer';
 
 interface User {
   id: number;
@@ -19,17 +17,28 @@ export interface LoginResponse {
   // Add other user data fields here if needed
 }
 
-export async function loginUser(username: string, password: string): Promise<LoginResponse> {  
+export async function loginUser(username: string, password: string): Promise<LoginResponse | void> {  
   try {
     const response = await api.post<LoginResponse>('api/auth/login', { username, password });
     const { token, user } = response.data;
   
     return { token, user };
   } catch (error) {
-    throw new Error('Invalid credentials');
+    return console.error(`Error: Invalid credentials, \n${error}`);
   }
 };
 
 export async function logoutUser(): Promise<void> {
   await Keychain.resetGenericPassword();
+};
+
+export async function registerUser(username: string, password: string): Promise<LoginResponse | void> {  
+  try {
+    const response = await api.post<LoginResponse>('api/auth/register', { username, password });
+    const { token, user } = response.data;
+  
+    return { token, user };
+  } catch (error) {
+    return console.error(`Error: Failed registration, \n${error}`);
+  }
 };

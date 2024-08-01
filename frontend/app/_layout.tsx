@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Platform, Pressable } from 'react-native';
+import { StyleSheet, SafeAreaView, Pressable } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import Header from '../components/Header';
-import { persistor, RootState, store } from '../store/store';
-import { Provider } from 'react-redux';
+import { Text } from '@/components/Customs';
+import { persistor, RootState, store, purgeStoredState } from '../store/store';
+import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
-import { useSelector } from 'react-redux';
 
 function Layout() {
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -16,7 +16,7 @@ function Layout() {
     if (!isAuthenticated) {
       router.replace('/');
     } else if (isAuthenticated) {
-      router.replace('/home/Profile');
+      router.replace('/home');
     }
   }, [isAuthenticated]);
 
@@ -28,7 +28,15 @@ function Layout() {
           name='index'
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name='home'
+          options={{ headerShown: false }}
+        />
       </Stack>;
+
+      <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>
+        <Text style={styles.resetText}>Reset Storage</Text>
+      </Pressable>
     </SafeAreaView>
   );
 }

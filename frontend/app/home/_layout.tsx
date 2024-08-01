@@ -60,9 +60,6 @@ export default function RootLayout() {
               />
             </Tabs>
 
-            <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>
-              <Text style={styles.resetText}>Reset Storage</Text>
-            </Pressable>
           </>
         </SafeAreaView>
       </PersistGate>

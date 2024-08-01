@@ -18,6 +18,7 @@ export async function createUser(username: string, hashedPassword: string): Prom
   );
 
   console.log("Query executed successfully:");
+  const user = result.rows[0];
   return result.rows[0] as User;
 };
 
