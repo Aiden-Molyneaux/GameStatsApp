@@ -6,7 +6,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Text, TextInput} from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
-import { replaceGameAction, Game, deleteGameAction, setIdToPositionAction } from '@/store/gameListReducer';
+import { GameListItem, replaceGameAction, deleteGameAction, setIdToPositionAction } from '@/store/gameReducer';
 import CustomCalendar from './CustomCalendar';
 import ToggleCalendarBtn from './ToggleCalendarBtn';
 import DelGameEntryBtn from './DelGameEntryBtn';
@@ -15,7 +15,7 @@ const VIEW = 'VIEW';
 const EDIT = 'EDIT';
 
 interface GameEntryFormProps {
-  gameData: Game;
+  gameData: GameListItem;
   setGameData: (data: unknown) => null;
 }
 
@@ -26,7 +26,7 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
 
   useEffect(() => {
-    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.purchased !== 'Date Purchased'));
+    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.purchasedDate !== 'Date Purchased'));
   }, [gameData]);
 
   function openCalendar() {
@@ -34,12 +34,12 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
   }
 
   function saveGameEntry() {
-    if (gameData.name && gameData.hours && gameData.purchased) {
-      const replacementGame: Game = {
+    if (gameData.name && gameData.hours && gameData.purchasedDate) {
+      const replacementGame: GameListItem = {
         id: gameData.id,
         name: gameData.name,
         hours: gameData.hours,
-        purchased: gameData.purchased,
+        purchasedDate: gameData.purchasedDate,
         mode: VIEW
       };
 
@@ -52,17 +52,18 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
     setGameData({...gameData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
   }
 
-  const deleteAndRepositionGames = createAsyncThunk(
-    'games/deleteAndReposition',
-    async (gameId: number, { dispatch }) => {
-      await dispatch(deleteGameAction(gameId));
-      await dispatch(setIdToPositionAction());
-    }
-  );
+  // const deleteAndRepositionGames = createAsyncThunk(
+  //   'games/deleteAndReposition',
+  //   async (gameId: number, { dispatch }) => {
+  //     await dispatch(deleteGameAction(gameId));
+  //     await dispatch(setIdToPositionAction());
+  //   }
+  // );
 
   function deleteGameEntry() {
-    dispatch(deleteAndRepositionGames(gameData.id));
-    // dispatch(setIdToPositionAction(gameData.id));
+    // dispatch(deleteAndRepositionGames(gameData.id));
+
+    dispatch(deleteGameAction(gameData.id));
   }
 
   return (
@@ -99,12 +100,12 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
       ) : (
         <View style={styles.datePurchasedContainer}>
           <Text style={
-            (/^\d{4}-\d{2}-\d{2}$/.test(gameData.purchased)) 
+            (/^\d{4}-\d{2}-\d{2}$/.test(gameData.purchasedDate)) 
               ? {...styles.datePurchasedText, color: Colors.white}
               : {...styles.datePurchasedText, color: Colors.gray}
           }
           >
-            {gameData.purchased}
+            {gameData.purchasedDate}
           </Text>
 
           <ToggleCalendarBtn 

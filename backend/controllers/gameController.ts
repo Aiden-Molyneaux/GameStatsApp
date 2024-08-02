@@ -16,17 +16,19 @@ export async function fetchGamesByUser(req: Request, res: Response): Promise<voi
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
 
-    const userId = 1;
-    // const userId = decoded.id;
+    if (typeof decoded !== 'string' && 'id' in decoded) {
+      const userId = decoded.id as number;
 
-    const games = await getGamesByUser(userId);
-    res.status(200).json({ games });
+      const games = await getGamesByUser(userId);
+      res.status(200).json({ games });
+    }
   } catch (err) {
     res.status(401).json({ error: 'Invalid or expired token' });
   }
 };
 
 export async function createGame(req: Request, res: Response): Promise<void> {
+  console.log(req.body)
   const { name, hours, datePurchased } = req.body;
   const authHeader = req.headers.authorization;
 
@@ -39,22 +41,13 @@ export async function createGame(req: Request, res: Response): Promise<void> {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    console.log(decoded);
-    // const userId = decoded.id;
 
-    const userId = 1;
+    if (typeof decoded !== 'string' && 'id' in decoded) {
+      const userId = decoded.id as number;
 
-    const game = await postGame({userId, name, hours, datePurchased});
-
-    res.status(200).json({ game });
-    //   game: {
-    //     id: game.id,
-    //     userId: game.userId,
-    //     name: game.name,
-    //     hours: game.hours,
-    //     datePurchased: game.datePurchased
-    //   } 
-    // });
+      const game = await postGame({userId, name, hours, datePurchased});
+      res.status(200).json({ game });
+    }
   } catch (err) {
     console.error('Error in game controller:', err);
     res.status(500).json({ error: (err as Error).message });

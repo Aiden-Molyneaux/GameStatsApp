@@ -6,10 +6,10 @@ import { Text } from '@/components/Customs';
 import { persistor, RootState, store, purgeStoredState } from '../store/store';
 import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
+import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 function Layout() {
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
   const router = useRouter();
 
   useEffect(() => {
@@ -55,18 +55,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.blue,
-  },
-  tabBar: {
-    height: Spacing.unit3o2,
-    backgroundColor: Colors.blue,
-    borderTopColor: Colors.yellowPrime,
-    borderBottomColor: Colors.yellowPrime,
-    borderTopWidth: Spacing.border,
-    borderBottomWidth: Spacing.border,
-  },
-  tabBarText: {
-    fontFamily: Fonts.monospace,
-    fontSize: FontSizes.large,
   },
   resetBtn: {
     alignSelf: 'center',

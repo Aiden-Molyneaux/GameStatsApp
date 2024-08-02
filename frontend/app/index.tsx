@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSuccess, registerSuccess } from '../store/authReducer';
-import { loginUser, registerUser } from '@/auth';
+import { loginSuccess } from '../store/authReducer';
+import { fetchGamesSuccess } from '../store/gameReducer';
+import { loginUser, registerUser } from '../api/authRequests';
+import { fetchGamesByUser } from '../api/gameRequests';
 import { Text, TextInput } from '@/components/Customs';
+import { store } from '@/store/store';
 
 export default function Auth() {
   const [username, setUsername] = useState('');
@@ -15,23 +18,36 @@ export default function Auth() {
 
   async function attemptAuth() {
     if (authMode === 'Login') {
-      await loginUser(username, password).then((result) => {
-        setAuthFail(result !== null);
-  
-        if (result) {
-          dispatch(loginSuccess({token: result.token, user: result.user}));
+      await loginUser(username, password).then((userData) => {
+        if (!userData) { 
+          setAuthFail(true); 
+          return; 
         }
+
+        console.log({userData});
+        
+        dispatch(loginSuccess({token: userData.token, user: userData.user}));        
+        getGames();
       });
     } else if (authMode === 'Register') {
-      await registerUser(username, password).then((result) => {
-        setAuthFail(result !== null);
-  
-        if (result) {
-          dispatch(loginSuccess({token: result.token, user: result.user}));
+      await registerUser(username, password).then((userData) => {
+        if (!userData) { 
+          setAuthFail(true); 
+          return; 
         }
+
+        dispatch(loginSuccess({token: userData.token, user: userData.user}));
       });
     }
+  }
 
+  async function getGames() {
+    await fetchGamesByUser().then((result) => {
+      if (!result) { return; }
+
+      dispatch(fetchGamesSuccess({games: result.games}));
+      console.log(store.getState());
+    }); 
   }
 
   return (

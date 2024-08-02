@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { GameList } from '@/store/gameListReducer';
+import { GameList } from '@/store/gameReducer';
 import { User, GamerTag, changeGamerTagAction }  from '@/store/userReducer';
 import { RootState } from '../../store/store';
 import { changeNameAction, changeFavouriteGameAction, addGamerTagAction } from '@/store/userReducer';
@@ -18,7 +18,7 @@ const EDIT = 'EDIT';
 export default function ProfileDetails() {
   const dispatch = useDispatch();
   const user: User = useSelector((state: RootState) => state.userData);
-  const gameList: GameList = useSelector((state: RootState) => state.gameListData);
+  const gameList: GameList = useSelector((state: RootState) => state.gameData);
 
   const [userData, setUserData] = useState({
     id: user.id,

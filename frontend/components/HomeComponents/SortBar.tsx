@@ -22,7 +22,7 @@ export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
       />
 
       <SortBtn
-        filterMode={'purchased'}
+        filterMode={'purchasedDate'}
         label={'Date purchased'}
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}

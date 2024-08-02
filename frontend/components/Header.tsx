@@ -19,8 +19,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'uppercase',
     letterSpacing: 3,
-    textShadowColor: Colors.yellowPrime,
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 5,
+    textShadow: `${Colors.yellowPrime} 1px 1px 5px`
   }
 });

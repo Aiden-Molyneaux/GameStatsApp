@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { Game, addGameAction } from '@/store/gameListReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { GameListItem, addGameAction } from '@/store/gameReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import { RootState } from '../../store/store';
+import { getNextGameId, createGame } from '@/api/gameRequests';
+import { partialGame } from '@/api/gameRequests';
 
 interface AddGameBtnProps {
   isDisabled: boolean,
@@ -12,14 +15,26 @@ interface AddGameBtnProps {
 }
 
 export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGameBtnProps) {
+  const userId = useSelector((state: RootState) => state.userData.id);
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
 
-  function handlePlusPress() {
-    const defaultGame: Game = {id: gameCount, name: '', hours: '', purchased: 'Date Purchased', mode: 'NEW' };
+  async function handlePlusPress() {
+    await getNextGameId().then((result) => {
+      if (!result) {
+        console.log('ouch');
+        return;
+      }
+      const partialGame: partialGame = {userId: userId, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
+    
+      createGame(partialGame).then((result) => {
+        if (!result) { return; }
 
-    dispatch(addGameAction(defaultGame));
-    onAddGame();
+        const defaultGameListItem: GameListItem = {id: result.id, userId: userId, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
+        dispatch(addGameAction(defaultGameListItem));
+        onAddGame();
+      });
+    }); 
   }
 
   return (

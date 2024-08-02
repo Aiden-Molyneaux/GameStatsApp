@@ -2,11 +2,11 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Colors, Fonts, Spacing } from '@/constants/Constants';
 import { Calendar, DateData} from 'react-native-calendars';
-import { Game } from '@/store/gameListReducer';
+import { GameListItem } from '@/store/gameReducer';
 import ToggleCalendarBtn from './ToggleCalendarBtn';
 
 interface CalendarProps {
-  gameData: Game;
+  gameData: GameListItem;
   setGameData: (data: unknown) => null;
   setShowCalendar: (data: unknown) => null;
 }
@@ -21,10 +21,10 @@ export default function CustomCalendar({gameData, setGameData, setShowCalendar}:
       <Calendar 
         theme={calendarTheme}
         onDayPress={(day: DateData) => {
-          setGameData({...gameData, purchased: day.dateString});
+          setGameData({...gameData, purchasedDate: day.dateString});
           setShowCalendar(false);
         }} 
-        markedDates={{[gameData.purchased]: {selected: true, disableTouchEvent: true}}}
+        markedDates={{[gameData.purchasedDate]: {selected: true, disableTouchEvent: true}}}
         maxDate={new Date().toISOString().split('T')[0]}
         minDate={'1970-01-01'}
       />

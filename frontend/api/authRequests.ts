@@ -1,5 +1,4 @@
 import api from './api';
-import * as Keychain from 'react-native-keychain';
 
 interface User {
   id: number;
@@ -19,7 +18,9 @@ export interface LoginResponse {
 
 export async function loginUser(username: string, password: string): Promise<LoginResponse | void> {  
   try {
+    console.log('here');
     const response = await api.post<LoginResponse>('api/auth/login', { username, password });
+    console.log({response});
     const { token, user } = response.data;
   
     return { token, user };
@@ -28,9 +29,9 @@ export async function loginUser(username: string, password: string): Promise<Log
   }
 };
 
-export async function logoutUser(): Promise<void> {
-  await Keychain.resetGenericPassword();
-};
+// export async function logoutUser(): Promise<void> {
+//   await Keychain.resetGenericPassword();
+// };
 
 export async function registerUser(username: string, password: string): Promise<LoginResponse | void> {  
   try {

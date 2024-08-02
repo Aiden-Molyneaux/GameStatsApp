@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { store } from './store/store';
+import { store } from '../store/store';
 
 const api = axios.create({
   baseURL: 'http://localhost:5000',
@@ -7,8 +7,7 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config: AxiosRequestConfig) => {
   const state = store.getState();
-  console.log(state);
-  const token = state.auth.token;
+  const token = state.authData.token;
   if (token) {
     config.headers = {
       ...config.headers,

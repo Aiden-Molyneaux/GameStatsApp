@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { replaceGameAction, Game } from '@/store/gameListReducer';
+import { GameListItem, replaceGameAction } from '@/store/gameReducer';
 import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
 import { Text } from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
@@ -11,7 +11,7 @@ const VIEW = 'VIEW';
 const EDIT = 'EDIT';
 
 interface GameEntryProps {
-  item: Game,
+  item: GameListItem,
   index: number,
   sortMode: string,
 }
@@ -23,16 +23,16 @@ export default function GameEntry({item, index, sortMode}: GameEntryProps) {
     index: index,
     name: item.name,
     hours: item.hours,
-    purchased: item.purchased,
+    purchasedDate: item.purchasedDate,
     mode: item.mode
   });
 
   function setModeEdit() {
-    const replacementGame: Game = {
+    const replacementGame: GameListItem = {
       id: gameData.id,
       name: gameData.name,
       hours: gameData.hours,
-      purchased: gameData.purchased,
+      purchasedDate: gameData.purchasedDate,
       mode: EDIT
     };
 
@@ -44,10 +44,10 @@ export default function GameEntry({item, index, sortMode}: GameEntryProps) {
     <View style={styles.gameEntry}>
       <ToggleModeBtn iconName='edit' isDisabled={false} pressFunction={setModeEdit}/>
 
-      <Text style={styles.gameIndex}>{(sortMode === 'entered') ? gameData.id + 1: index + 1}</Text>
+      <Text style={styles.gameIndex}>{index + 1}</Text>
       <Text style={styles.gameText}>{gameData.name}</Text>
       <Text style={styles.hourText}>{gameData.hours} hours</Text>
-      <Text style={styles.hourText}>Owned since {gameData.purchased}</Text>
+      <Text style={styles.hourText}>Owned since {gameData.purchasedDate}</Text>
     </View>
     
   ) : (

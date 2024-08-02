@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useDispatch } from 'react-redux';
-import {sortGamesAction } from '@/store/gameListReducer';
+import { sortGamesAction } from '@/store/gameReducer';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import { Text} from '@/components/Customs';
 import FontAwesome from '@expo/vector-icons/FontAwesome';

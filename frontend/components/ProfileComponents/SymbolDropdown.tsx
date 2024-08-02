@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Colors, Fonts, FontSizes, Spacing } from '@/constants/Constants';
 import { Text } from '../Customs';
-import { Game } from '@/store/gameListReducer';
 import { PlatformData } from '@/store/userReducer';
 
 interface CustomDropdownProps {

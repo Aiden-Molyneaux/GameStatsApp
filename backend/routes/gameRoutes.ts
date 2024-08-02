@@ -4,7 +4,7 @@ import authMiddleware from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.get('/userId', fetchGamesByUser)
-router.post('/', createGame);
+router.get('', fetchGamesByUser);
+router.post('', createGame);
 
 export default router;

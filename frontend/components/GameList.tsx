@@ -5,12 +5,12 @@ import { RootState } from '../store/store';
 import { Text } from './Customs';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import GameEntry from './GameEntry';
-import { Game, addGameAction, sortGamesAction } from '@/store/gameListReducer';
+import { GameListItem, addGameAction, sortGamesAction } from '@/store/gameReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function GameList() {
   const dispatch = useDispatch();
-  const { games } = useSelector((state: RootState) => state.gameListData);
+  const { games } = useSelector((state: RootState) => state.gameData);
   const [gameCount, setGameCount] = useState(games.length);
   const [disableAddBtn, setDisableAddBtn] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -18,7 +18,7 @@ export default function GameList() {
 
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {
-    setDisableAddBtn(games.some((game: Game) => (game.mode === 'NEW' || game.mode === 'EDIT')));
+    setDisableAddBtn(games.some((game: GameListItem) => (game.mode === 'NEW' || game.mode === 'EDIT')));
   }, [games]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function GameList() {
   }, [games]);
 
   function handlePlusPress() {
-    const defaultGame: Game = {id: gameCount, name: '', hours: '', purchased: 'Date Purchased', mode: 'NEW' };
+    const defaultGame: GameListItem = {id: gameCount, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
 
     dispatch(addGameAction(defaultGame));
   }
@@ -36,7 +36,7 @@ export default function GameList() {
     setSortMode(sortModeStr);
   }
 
-  const renderItem = ({ item, index} : { item: Game; index: number}) => (    
+  const renderItem = ({ item, index} : { item: GameListItem; index: number}) => (    
     <GameEntry key={item.id} item={item} index={index} sortMode={sortMode}></GameEntry>
   );
 
@@ -58,10 +58,10 @@ export default function GameList() {
         </Pressable>
         
         <Pressable 
-          style={(sortMode === 'purchased') 
+          style={(sortMode === 'purchasedDate') 
             ? {...styles.sortBtn, backgroundColor: Colors.gray} 
             : styles.sortBtn} 
-          onPress={() => {handleSortPress('purchased');}}
+          onPress={() => {handleSortPress('purchasedDate');}}
         >
           <Text style={styles.sortByText}>Date Purchased</Text>
         </Pressable>

@@ -3,11 +3,11 @@ import { StyleSheet, View } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Colors, Fonts, FontSizes, Spacing } from '@/constants/Constants';
 import { Text } from '../Customs';
-import { Game } from '@/store/gameListReducer';
+import { GameListItem } from '@/store/gameReducer';
 import { PlatformData } from '@/store/userReducer';
 
 interface CustomDropdownProps {
-  data: Array<PlatformData> | Array<Game>;
+  data: Array<PlatformData> | Array<GameListItem>;
   value: string | null;
   onChange: (item: PlatformData) => void;
   labelField: string;
@@ -19,7 +19,7 @@ interface CustomDropdownProps {
 
 // export default function GameEntry({item, index, sortMode}: GameEntryProps) {
 function TextDropdown({ data, value, onChange, labelField, valueField, style, renderItem, renderLeftIcon }: CustomDropdownProps ) {
-  const defaultRenderItem = (item: Game) => (
+  const defaultRenderItem = (item: GameListItem) => (
     <View>
       <Text style={styles.selectedText}>{item.name}</Text>
     </View>

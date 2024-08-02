@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
 import { RootState } from './store';
-import { LoginResponse } from '../auth';
+import { LoginResponse } from '../api/authRequests';
 
 interface AuthState {
   token: string | null;
@@ -21,7 +21,7 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: 'authData',
   initialState,
   reducers: {
     loginStart: (state) => {

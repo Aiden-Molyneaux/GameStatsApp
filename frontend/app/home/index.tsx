@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Platform, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
-import { Game } from '@/store/gameListReducer';
+import { GameListItem } from '@/store/gameReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
 import SortBar from '@/components/HomeComponents/SortBar';
@@ -10,7 +10,7 @@ import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
 
 export default function Home() {
-  const { games } = useSelector((state: RootState) => state.gameListData);
+  const { games } = useSelector((state: RootState) => state.gameData);
 
   const [gameCount, setGameCount] = useState(games.length);
   const [disableAddBtn, setDisableAddBtn] = useState(false);
@@ -20,7 +20,7 @@ export default function Home() {
 
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {
-    setDisableAddBtn(games.some((game: Game) => (game.mode === 'NEW' || game.mode === 'EDIT')));
+    setDisableAddBtn(games.some((game: GameListItem) => (game.mode === 'NEW' || game.mode === 'EDIT')));
     setGameCount(games.length);
   }, [games]);
 

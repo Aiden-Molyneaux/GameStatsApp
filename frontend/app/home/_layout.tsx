@@ -1,13 +1,11 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Platform, Pressable } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { Tabs } from 'expo-router';
-import Header from '../../components/Header';
-import { persistor, store, purgeStoredState } from '../../store/store';
-import { Provider, useSelector } from 'react-redux';
+import { persistor, store } from '../../store/store';
+import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Text } from '../../components/Customs';
 
 const TabBarScreenOptions = (web: boolean) => {
   const style = web
@@ -38,29 +36,25 @@ export default function RootLayout() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaView style={styles.container}>
-          <>
-
-            <Tabs screenOptions={TabBarScreenOptions(Platform.OS === 'web')}>
-              <Tabs.Screen
-                name='index'
-                options={{
-                  tabBarLabel: 'Home',
-                  tabBarLabelStyle: styles.tabBarText,
-                  tabBarLabelPosition: 'beside-icon',
-                  tabBarIcon: ({ color }) => <FontAwesome size={FontSizes.large} name='home' color={color} />,
-                }}
-              />
-              <Tabs.Screen
-                name='Profile'
-                options={{
-                  tabBarLabel: 'Profile',
-                  tabBarLabelStyle: styles.tabBarText,
-                  tabBarIcon: ({ color }) => <FontAwesome size={FontSizes.large} name='user' color={color} />,
-                }}
-              />
-            </Tabs>
-
-          </>
+          <Tabs screenOptions={TabBarScreenOptions(Platform.OS === 'web')}>
+            <Tabs.Screen
+              name='index'
+              options={{
+                tabBarLabel: 'Home',
+                tabBarLabelStyle: styles.tabBarText,
+                tabBarLabelPosition: 'beside-icon',
+                tabBarIcon: ({ color }) => <FontAwesome size={FontSizes.large} name='home' color={color} />,
+              }}
+            />
+            <Tabs.Screen
+              name='Profile'
+              options={{
+                tabBarLabel: 'Profile',
+                tabBarLabelStyle: styles.tabBarText,
+                tabBarIcon: ({ color }) => <FontAwesome size={FontSizes.large} name='user' color={color} />,
+              }}
+            />
+          </Tabs>
         </SafeAreaView>
       </PersistGate>
     </Provider>
@@ -83,19 +77,5 @@ const styles = StyleSheet.create({
   tabBarText: {
     fontFamily: Fonts.monospace,
     fontSize: FontSizes.large,
-  },
-  resetBtn: {
-    alignSelf: 'center',
-    justifyContent: 'center',
-    width: Spacing.unit * 3,
-    height: Spacing.unit1o2,
-    margin: Spacing.unit1o3,
-    backgroundColor: Colors.yellowPrime,
-    borderColor: Colors.yellow,
-    borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5,
-  },
-  resetText: {
-    fontSize: FontSizes.small,
-  },
+  }
 });

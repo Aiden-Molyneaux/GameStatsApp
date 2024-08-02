@@ -19,6 +19,16 @@ export interface User {
   gamerTags: Array<GamerTag>;
 }
 
+// interface User {
+//   id: number;
+//   username: string;
+//   password: string;
+//   email: string | null;
+//   favouriteGame: string | null;
+//   preferredPlatform: string | null;
+//   numberOfGames: number | null;
+// }
+
 const initialGamerTags: Array<GamerTag> = [
   { id: 0, gamerTag: 'Pachwick', platform: 'Steam' },
   { id: 1, gamerTag: 'Rimmy Tim', platform: 'BattleNet' },
@@ -36,23 +46,23 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     addGamerTagAction: (state, action: PayloadAction<GamerTag>) => {
-      state.gamerTags.push(action.payload);
+      state.userData.gamerTags.push(action.payload);
     },
 
     changeNameAction: (state, action: PayloadAction<string>) => {
-      state.username = action.payload;
+      state.userData.username = action.payload;
     },
 
     changeFavouriteGameAction: (state, action: PayloadAction<string>) => {
-      state.favouriteGame = action.payload;
+      state.userData.favouriteGame = action.payload;
     },
 
     changeGamerTagAction: (state, action: PayloadAction<Array<GamerTag>>) => {
-      state.gamerTags = action.payload;
+      state.userData.gamerTags = action.payload;
     },
 
     deleteGamerTagAction: (state, action: PayloadAction<number>) => {
-      state.gamerTags.splice(action.payload, 1);
+      state.userData.gamerTags.splice(action.payload, 1);
     },
   },
 });
