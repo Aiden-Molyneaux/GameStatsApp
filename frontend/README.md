@@ -1,50 +1,57 @@
-# Welcome to your Expo app 👋
+# In-Game Stats App - Development Setup
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project contains both frontend and backend components. Follow the steps below to run the app in development mode.
 
-## Get started
+## Prerequisites
 
-1. Install dependencies
+Ensure you have the following installed on your machine:
+
+- [Node.js](https://nodejs.org/) (v14.x or higher recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- [nodemon](https://nodemon.io/) (for automatically restarting the backend server)
+
+## Installation
+
+1. **Clone the repository**:
 
    ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
+
+2. **Install frontend dependencies**:
+
+   ```bash
+   cd frontend
    npm install
    ```
 
-2. Start the app
+3. **Install backend dependencies**:
 
    ```bash
-    npx expo start
+   cd ../backend
+   npm install
    ```
 
-In the output, you'll find options to open the app in a
+## Running the App
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1. **Start the frontend**:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+   ```bash
+   cd frontend/app
+   npm run start
+   ```
 
-## Get a fresh project
+2. **Start the backend**:
 
-When you're ready, run:
+   ```bash
+   cd backend
+   nodemon index.ts
+   ```
 
-```bash
-npm run reset-project
-```
+This will start the backend server and automatically restart it when changes are detected.
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Additional Notes
+- The frontend is built with React Native and is configured to run as a web app.
+- Ensure that both the frontend and backend servers are running for the app to function correctly.
+- Use nodemon for backend development to automatically restart the server upon code changes.
