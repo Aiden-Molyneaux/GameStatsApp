@@ -15,7 +15,7 @@ Ensure you have the following installed on your machine:
 1. **Clone the repository**:
 
    ```bash
-   git clone [<repository-url>](https://github.com/Aiden-Molyneaux/GameStatsApp.git)
+   git clone https://github.com/Aiden-Molyneaux/GameStatsApp.git
    cd GameStatsApp
    ```
 
