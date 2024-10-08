@@ -5,7 +5,7 @@ import { GameListItem, addGameAction } from '@/store/gameReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import { RootState } from '../../store/store';
-import { getNextGameId, createGame } from '@/api/gameRequests';
+import { requestCreateGame } from '@/api/gameRequests';
 import { partialGame } from '@/api/gameRequests';
 
 interface AddGameBtnProps {
@@ -20,21 +20,25 @@ export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGame
   const [isHovered, setIsHovered] = useState(false);
 
   async function handlePlusPress() {
-    await getNextGameId().then((result) => {
-      if (!result) {
-        console.log('ouch');
-        return;
-      }
-      const partialGame: partialGame = {userId: userId, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
+    const partialGame: partialGame = {userId: userId, name: '', hours: null, datePurchased: null, mode: 'NEW' };
     
-      createGame(partialGame).then((result) => {
-        if (!result) { return; }
-
-        const defaultGameListItem: GameListItem = {id: result.id, userId: userId, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
-        dispatch(addGameAction(defaultGameListItem));
-        onAddGame();
+    try {
+      requestCreateGame(partialGame).then((response) => {
+        if ('game' in response) { 
+          const game = response.game;
+          
+          const defaultGameListItem: GameListItem = {id: game.id, userId: userId, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
+          dispatch(addGameAction(defaultGameListItem));
+          onAddGame();
+        } else {
+          console.error(response.error);
+          // Handle error in UI
+        }
       });
-    }); 
+    } catch(err) {
+      console.error(err);
+      // Handle error in UI
+    }
   }
 
   return (

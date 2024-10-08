@@ -9,7 +9,8 @@ import FontAwesome  from '@expo/vector-icons/FontAwesome';
 import { GameListItem, replaceGameAction, deleteGameAction, setIdToPositionAction } from '@/store/gameReducer';
 import CustomCalendar from './CustomCalendar';
 import ToggleCalendarBtn from './ToggleCalendarBtn';
-import DelGameEntryBtn from './DelGameEntryBtn';
+import DeleteGameEntryBtn from './DeleteGameEntryBtn';
+import { requestDeleteGame } from '@/api/gameRequests';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
@@ -60,10 +61,21 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
   //   }
   // );
 
-  function deleteGameEntry() {
-    // dispatch(deleteAndRepositionGames(gameData.id));
-
-    dispatch(deleteGameAction(gameData.id));
+  function handleDeleteGameClick() {
+    try {
+      console.log(gameData.id);
+      requestDeleteGame(gameData.id).then((response) => {
+        if ('deletedGameId' in response) {
+          dispatch(deleteGameAction(response.deletedGameId));
+        } else {
+          console.error(response.error);
+          // Handle failure in UI
+        }
+      });
+    } catch(err) {
+      console.error(err);
+      // Handle error in UI
+    }
   }
 
   return (
@@ -72,7 +84,7 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
         {gameData.mode === EDIT ? 'Edit Game Entry' : 'New Game Entry'}
       </Text>
 
-      <DelGameEntryBtn pressFunction={deleteGameEntry} />
+      <DeleteGameEntryBtn clickFunction={handleDeleteGameClick}/>
 
       <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={saveGameEntry}/>
 

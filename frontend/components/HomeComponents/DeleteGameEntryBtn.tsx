@@ -4,16 +4,16 @@ import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
 interface ToggleCalendarBtnProps {
-  pressFunction: (data: unknown) => void
+  clickFunction: (data: unknown) => void
 }
 
-export default function DelGameEntryBtn({pressFunction}: ToggleCalendarBtnProps) {
+export default function DeleteGameEntryBtn({clickFunction}: ToggleCalendarBtnProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Pressable 
-      style={ styles.delBtn }
-      onPress={pressFunction}
+      style={ styles.deleteBtn }
+      onPress={clickFunction}
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
@@ -27,7 +27,7 @@ export default function DelGameEntryBtn({pressFunction}: ToggleCalendarBtnProps)
 }
 
 const styles = StyleSheet.create({
-  delBtn: {
+  deleteBtn: {
     position: 'absolute',
     top: Spacing.unit1o5,
     left: Spacing.unit1o5,

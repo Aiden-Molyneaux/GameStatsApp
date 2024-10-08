@@ -1,55 +1,67 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+import { AuthRequest } from '../middleware/authMiddleware'; 
 import jwt from 'jsonwebtoken';
-import { postGame, getGamesByUser } from '../models/gameModel';
+import { postGame, deleteGame, getGamesByUser } from '../models/gameModel';
 
-export async function fetchGamesByUser(req: Request, res: Response): Promise<void> {
-  const authHeader = req.headers.authorization;
+export async function handleFetchGamesByUser(req: AuthRequest, res: Response) {
+  console.log('Handling request to fetch games by user...');
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({ error: 'Unauthorized access' });
+  if (!req.user || !req.user.id) {
+    res.status(401).json({ error: 'User authorization error' });
     return;
   }
-
-  const token = authHeader.split(' ')[1];
+  const userId = req.user.id;
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const response = await getGamesByUser(userId);
 
-    if (typeof decoded !== 'string' && 'id' in decoded) {
-      const userId = decoded.id as number;
-
-      const games = await getGamesByUser(userId);
-      res.status(200).json({ games });
+    if (response.success) {
+      const games = response.games;
+      return res.status(200).json({ games });
     }
+      
   } catch (err) {
-    res.status(401).json({ error: 'Invalid or expired token' });
+    return res.status(500).json({ error: `Backend server error while fetching games by user: ${err}` });
   }
 };
 
-export async function createGame(req: Request, res: Response): Promise<void> {
-  console.log(req.body)
+export async function handleCreateGame(req: AuthRequest, res: Response) {
+  console.log('Handling request to create game...');
   const { name, hours, datePurchased } = req.body;
-  const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    res.status(401).json({ error: 'Unauthorized access' });
+  if (!req.user || !req.user.id) {
+    res.status(401).json({ error: 'User authorization error' });
     return;
   }
-
-  const token = authHeader.split(' ')[1];
+  const userId = req.user.id;
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+    const response = await postGame({userId, name, hours, datePurchased});
 
-    if (typeof decoded !== 'string' && 'id' in decoded) {
-      const userId = decoded.id as number;
+    if (response.success) {
+      return res.status(200).json({ game: response.game });
+    } {
+      return res.status(400).json({ error: `Could not create game.`});
+    }
+  } catch(err) {
+    return res.status(500).json({ error: `Backend server error while creating game: ${err}` });
+  }
+};
 
-      const game = await postGame({userId, name, hours, datePurchased});
-      res.status(200).json({ game });
+export async function handleDeleteGame(req: Request, res: Response) {
+  console.log('Handling request to delete game...');
+
+  const gameId = Number(req.query.gameId);
+
+  try {
+    const response = await deleteGame(gameId);
+
+    if (response.success) {
+      return res.status(200).json({ deletedGameId: response.deletedGameId });
+    } {
+      return res.status(404).json({ error: `Game Entity with ID (${gameId}) not found.`});
     }
   } catch (err) {
-    console.error('Error in game controller:', err);
-    res.status(500).json({ error: (err as Error).message });
+    return res.status(500).json({ error: `Backend server error while deleting game: ${err}` });
   }
 };

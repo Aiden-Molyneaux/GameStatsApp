@@ -12,11 +12,11 @@ let pool = new Pool({
 });
 
 pool.on('connect', () => {
-  console.log('Connected to the database');
+  console.log('-> Database Connection SUCCESS');
 });
 
 pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err as Error);
+  console.error('-> Database Connection ERROR: unexpected error on idle client', err as Error);
   process.exit(-1);
 });
 

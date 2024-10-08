@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '../store/authReducer';
 import { fetchGamesSuccess } from '../store/gameReducer';
 import { loginUser, registerUser } from '../api/authRequests';
-import { fetchGamesByUser } from '../api/gameRequests';
+import { requestFetchGamesByUser } from '../api/gameRequests';
 import { Text, TextInput } from '@/components/Customs';
 import { store } from '@/store/store';
 
@@ -42,7 +42,7 @@ export default function Auth() {
   }
 
   async function getGames() {
-    await fetchGamesByUser().then((result) => {
+    await requestFetchGamesByUser().then((result) => {
       if (!result) { return; }
 
       dispatch(fetchGamesSuccess({games: result.games}));
