@@ -15,8 +15,8 @@ Ensure you have the following installed on your machine:
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
-   cd <repository-folder>
+   git clone https://github.com/Aiden-Molyneaux/GameStatsApp.git
+   cd GameStatsApp
    ```
 
 2. **Install frontend dependencies**:
@@ -49,7 +49,7 @@ Ensure you have the following installed on your machine:
    nodemon index.ts
    ```
 
-This will start the backend server and automatically restart it when changes are detected.
+   This will start the backend server and automatically restart it when changes are detected.
 
 ## Additional Notes
 - The frontend is built with React Native and is configured to run as a web app.
