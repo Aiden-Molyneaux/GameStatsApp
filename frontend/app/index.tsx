@@ -4,55 +4,93 @@ import { Colors, Spacing, FontSizes } from '@/constants/Constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '../store/authReducer';
 import { fetchGamesSuccess } from '../store/gameReducer';
-import { loginUser, registerUser } from '../api/authRequests';
+import { requestLoginUser, requestRegisterUser } from '../api/authRequests';
 import { requestFetchGamesByUser } from '../api/gameRequests';
 import { Text, TextInput } from '@/components/Customs';
-import { store } from '@/store/store';
+import { changeUserAction } from '@/store/userReducer';
+import { requestFetchGamerTagsByUser } from '@/api/gamerTagRequests';
+import { fetchGamerTagsSuccess } from '@/store/gamerTagReducer';
 
 export default function Auth() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [authMode, setAuthMode] = useState('Login');
+  const [authMode, setAuthMode] = useState('Sign In');
   const [authFail, setAuthFail] = useState(false);
   const dispatch = useDispatch();
 
   async function attemptAuth() {
-    if (authMode === 'Login') {
-      await loginUser(username, password).then((userData) => {
-        if (!userData) { 
-          setAuthFail(true); 
-          return; 
-        }
+    if (authMode === 'Sign In') {
+      try {
+        await requestLoginUser(username, password).then((response) => {
+          if ('error' in response) {
+            console.error(response.error);
+            setAuthFail(true); 
+            return;
+          }
 
-        console.log({userData});
-        
-        dispatch(loginSuccess({token: userData.token, user: userData.user}));        
-        getGames();
-      });
+          console.log(response.user);
+          
+          dispatch(loginSuccess({ token: response.token, user: response.user }));
+          dispatch(changeUserAction({ user: response.user }));        
+          getGames();
+          getGamerTags();
+        });
+      } catch(err) {
+        console.error(err);
+      }
+
     } else if (authMode === 'Register') {
-      await registerUser(username, password).then((userData) => {
-        if (!userData) { 
-          setAuthFail(true); 
-          return; 
-        }
-
-        dispatch(loginSuccess({token: userData.token, user: userData.user}));
-      });
+      try {
+        await requestRegisterUser(username, password).then((response) => {
+          if ('error' in response) {
+            console.error(response.error);
+            setAuthFail(true); 
+            return; 
+          }
+  
+          dispatch(loginSuccess({ token: response.token, user: response.user }));
+        });
+      } catch(err) {
+        console.error(err);
+      }
     }
   }
 
   async function getGames() {
-    await requestFetchGamesByUser().then((result) => {
-      if (!result) { return; }
+    try {
+      await requestFetchGamesByUser().then((response) => {
+        if ('error' in response) {
+          console.error(response.error); 
+          return; 
+        }
+  
+        dispatch(fetchGamesSuccess({games: response.games}));
+      }); 
+    } catch(err) {
+      console.error(err);
+    }
+  }
 
-      dispatch(fetchGamesSuccess({games: result.games}));
-      console.log(store.getState());
-    }); 
+  async function getGamerTags() {
+    try {
+      await requestFetchGamerTagsByUser().then((response) => {
+        if ('error' in response) {
+          console.error(response.error); 
+          return; 
+        }
+  
+        dispatch(fetchGamerTagsSuccess({gamerTags: response.gamerTags}));
+      });
+    } catch(err) {
+      console.error(err);
+    }
   }
 
   return (
     <View style={styles.authPage}>
       <View style={styles.authForm}>
+        <Text style={styles.welcomeText}>{authMode === 'Sign In' ? 'Sign In' : 'Join In' }</Text>
+
         { authFail
           ? <Text>Login failed</Text>
           : null
@@ -70,13 +108,16 @@ export default function Auth() {
           onChangeText={setPassword}
         // secureTextEntry
         />
-        <Pressable style={styles.authBtn} onPress={attemptAuth}>
-          <Text>{authMode === 'Login' ? 'Login' : 'Register'}</Text>
-        </Pressable>
+        <View style={styles.authBtns}>
+          <Pressable style={styles.modeBtn} onPress={() => setAuthMode(authMode === 'Sign In' ? 'Register' : 'Sign In')}>
+            <Text>or {authMode === 'Sign In' ? 'Join In' : 'Sign In'}</Text>
+          </Pressable>
+        
+          <Pressable style={styles.authBtn} onPress={attemptAuth}>
+            <Text>-&gt;</Text>
+          </Pressable>
+        </View>
 
-        <Pressable style={styles.modeBtn} onPress={() => setAuthMode(authMode === 'Login' ? 'Register' : 'Login')}>
-          <Text>or {authMode === 'Login' ? 'Register' : 'Login'}</Text>
-        </Pressable>
       </View>
     </View>
   );
@@ -102,6 +143,16 @@ const styles = StyleSheet.create({
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   },
+  welcomeText: {
+    alignSelf: 'flex-start',
+    paddingLeft: Spacing.unit1o5,
+    fontSize: FontSizes.large,
+    color: Colors.yellow
+  },
+  authBtns: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
   authBtn: {
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
@@ -116,7 +167,7 @@ const styles = StyleSheet.create({
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
     backgroundColor: Colors.yellowPrime,
-    fontSize: FontSizes.mediumLess,
+    fontSize: FontSizes.small,
     textAlign: 'center',
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,

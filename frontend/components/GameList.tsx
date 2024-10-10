@@ -26,7 +26,7 @@ export default function GameList() {
   }, [games]);
 
   function handlePlusPress() {
-    const defaultGame: GameListItem = {id: gameCount, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
+    const defaultGame: GameListItem = {id: gameCount, name: '', hours: '', datePurchased: 'Date Purchased', mode: 'NEW' };
 
     dispatch(addGameAction(defaultGame));
   }
@@ -58,10 +58,10 @@ export default function GameList() {
         </Pressable>
         
         <Pressable 
-          style={(sortMode === 'purchasedDate') 
+          style={(sortMode === 'datePurchased') 
             ? {...styles.sortBtn, backgroundColor: Colors.gray} 
             : styles.sortBtn} 
-          onPress={() => {handleSortPress('purchasedDate');}}
+          onPress={() => {handleSortPress('datePurchased');}}
         >
           <Text style={styles.sortByText}>Date Purchased</Text>
         </Pressable>

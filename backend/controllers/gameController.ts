@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/authMiddleware'; 
 import jwt from 'jsonwebtoken';
-import { postGame, deleteGame, getGamesByUser } from '../models/gameModel';
+import { postGame, patchGame, deleteGame, getGamesByUser } from '../models/gameModel';
 
 export async function handleFetchGamesByUser(req: AuthRequest, res: Response) {
   console.log('Handling request to fetch games by user...');
@@ -36,7 +36,7 @@ export async function handleCreateGame(req: AuthRequest, res: Response) {
   const userId = req.user.id;
 
   try {
-    const response = await postGame({userId, name, hours, datePurchased});
+    const response = await postGame({ userId, name, hours, datePurchased });
 
     if (response.success) {
       return res.status(200).json({ game: response.game });
@@ -45,6 +45,28 @@ export async function handleCreateGame(req: AuthRequest, res: Response) {
     }
   } catch(err) {
     return res.status(500).json({ error: `Backend server error while creating game: ${err}` });
+  }
+};
+
+export async function handleUpdateGame(req: AuthRequest, res: Response) {
+  console.log('Handling request to update game...');
+  const { id, name, hours, datePurchased } = req.body.updatedGame;
+
+  if (!req.user || !req.user.id) {
+    res.status(401).json({ error: 'User authorization error' });
+    return;
+  }
+
+  try {
+    const response = await patchGame({ id, name, hours, datePurchased });
+
+    if (response.success) {
+      return res.status(200).json({ game: response.game });
+    } {
+      return res.status(400).json({ error: `Could not update game.`});
+    }
+  } catch(err) {
+    return res.status(500).json({ error: `Backend server error while updating game: ${err}` });
   }
 };
 

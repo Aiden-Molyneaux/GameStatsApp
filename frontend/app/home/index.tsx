@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Platform, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { RootState, store } from '../../store/store';
 import { GameListItem } from '@/store/gameReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
@@ -17,6 +17,10 @@ export default function Home() {
   const [sortMode, setSortMode] = useState('entered');
 
   const gameListRef = useRef<FlatList>(null);
+
+  const state = store.getState();
+
+  console.log(state);
 
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {

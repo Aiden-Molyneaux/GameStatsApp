@@ -2,15 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { GameList } from '@/store/gameReducer';
-import { User, GamerTag, changeGamerTagAction }  from '@/store/userReducer';
+import { User }  from '@/store/userReducer';
 import { RootState } from '../../store/store';
-import { changeNameAction, changeFavouriteGameAction, addGamerTagAction } from '@/store/userReducer';
+import { changeNameAction, changeFavouriteGameAction } from '@/store/userReducer';
+import { addGamerTagAction } from '@/store/gamerTagReducer';
 import TextDropdown from './TextDropdown';
 import GamerTagList from './GamerTagList';
 import { Text, TextInput } from '@/components/Customs';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import ToggleModeBtn from '../ToggleModeBtn';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import { requestUpdateUser } from '@/api/userRequests';
+import { requestCreateGamerTag } from '@/api/gamerTagRequests';
+import { GamerTag } from '../../../backend/models/gamerTagModel';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
@@ -19,32 +23,64 @@ export default function ProfileDetails() {
   const dispatch = useDispatch();
   const user: User = useSelector((state: RootState) => state.userData);
   const gameList: GameList = useSelector((state: RootState) => state.gameData);
+  const { gamerTags } = useSelector((state: RootState) => state.gamerTagData); 
 
   const [userData, setUserData] = useState({
     id: user.id,
     username: user.username,
     favouriteGame: user.favouriteGame,
-    gamerTags: user.gamerTags,
   });
 
   const [mode, setMode] = useState(VIEW);
   const [disableAddBtn, setDisableAddBtn] = useState(false);
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
-  const [gamerTagCount, setGamerTagCount] = useState(userData.gamerTags.length);
 
   useEffect(() => {
-    setDisableAddBtn(userData.gamerTags.some((gamerTag: GamerTag) => (gamerTag.gamerTag === '')));
-    setGamerTagCount(userData.gamerTags.length);
-  }, [userData.gamerTags]);
+    setDisableAddBtn(gamerTags.some((gamerTag: GamerTag) => (gamerTag.tag === '')));
+  }, [gamerTags]);
 
   useEffect(() => {
     setDisableSaveBtn((userData.username === '' || disableAddBtn));
   }, [userData, disableAddBtn]);
 
-  function saveUserEntry() {
-    dispatch(changeNameAction(userData.username));
-    dispatch(changeFavouriteGameAction(userData.favouriteGame));
-    dispatch(changeGamerTagAction(userData.gamerTags));
+  async function handleUpdateUserDetails() {
+    try {
+      await requestUpdateUser(userData).then((response) => {
+        if('error' in response) {
+          console.error(response.error);
+          return;
+        }
+
+        dispatch(changeNameAction(userData.username));
+        dispatch(changeFavouriteGameAction(userData.favouriteGame));
+      });
+
+    } catch (err) {
+      console.error(err);
+    }
+    
+    // gamerTags.forEach((gamerTag : GamerTag) => {
+    //   // if gamertag changed
+    //   // should really send all gamertags in one payload and iterate through them on the backend
+    //   if (true) {
+
+    //   }
+    //   updatedGamerTags
+    // });
+
+    // try {
+    //   await requestUpdateGamerTags(updatedGamerTags).then((response) => {
+    //     if('error' in response) {
+    //       console.error(response.error);
+    //       return;
+    //     }
+
+    //     dispatch(changeGamerTagAction(gamerTags));
+    //   }
+    // } catch(err) {
+
+    // }
+
     setMode(VIEW);
   }
 
@@ -52,21 +88,32 @@ export default function ProfileDetails() {
     setMode(EDIT);
   }
 
-  function handlePlusPress() {
-    const defaultGamerTag: GamerTag = { id: gamerTagCount, gamerTag: '', platform: 'Steam' };
-    const gamerTagsCopy = JSON.parse(JSON.stringify(userData.gamerTags));
-    gamerTagsCopy.push(defaultGamerTag);
+  async function handlePlusPress() {
+    try {
+      await requestCreateGamerTag({ userId: user.user.id, tag: '', platform: 'Steam' }).then((response) => {
+        if ('error' in response) { 
+          console.error(response.error);
+          // Handle error in UI
+          return;
+        }
 
-    setUserData({ ...userData, gamerTags: gamerTagsCopy });
-    dispatch(addGamerTagAction(defaultGamerTag));
+        console.log({response});
+
+        const defaultGamerTag: GamerTag = { id: response.gamerTag.id, userId: response.gamerTag.userId, tag: '', platform: 'Steam' };
+        dispatch(addGamerTagAction({gamerTag: defaultGamerTag}));
+      });
+    } catch(err) {
+      console.error(err);
+    }
+
   }
 
   function handleTextInputChange(field: string, value: string, index: number | null = null) {
     if (field === 'gamerTag' && index !== null) {
-      const newGamerTags: Array<GamerTag> = JSON.parse(JSON.stringify(userData.gamerTags));
-      newGamerTags[index].gamerTag = value;
+      const newGamerTags: Array<GamerTag> = JSON.parse(JSON.stringify(gamerTags));
+      newGamerTags[index].tag = value;
 
-      setUserData({ ...userData, gamerTags: newGamerTags });
+      setUserData({ ...userData });
     } else {
       setUserData({ ...userData, [field]: value });
     }
@@ -81,10 +128,8 @@ export default function ProfileDetails() {
         <Text style={{ fontSize: FontSizes.mediumLess }}>Also known as...</Text>
 
         <GamerTagList
-          gamerTags={user.gamerTags}
+          gamerTags={gamerTags}
           handleTextInputChange={handleTextInputChange}
-          userData={userData}
-          setUserData={setUserData}
           edit={false}
         />
 
@@ -93,7 +138,7 @@ export default function ProfileDetails() {
       </View>
     ) : (
       <View style={styles.profileEditSection}>
-        <ToggleModeBtn iconName={'save'} isDisabled={disableSaveBtn} pressFunction={saveUserEntry} />
+        <ToggleModeBtn iconName={'save'} isDisabled={disableSaveBtn} pressFunction={handleUpdateUserDetails} />
 
         <Text style={styles.labelText}>Profile Name</Text>
         <TextInput
@@ -116,10 +161,8 @@ export default function ProfileDetails() {
           <Text style={styles.labelText}>Your Gamertags</Text>
 
           <GamerTagList
-            gamerTags={userData.gamerTags}
+            gamerTags={gamerTags}
             handleTextInputChange={handleTextInputChange}
-            userData={userData}
-            setUserData={setUserData}
             edit={true}
           />
         </View>

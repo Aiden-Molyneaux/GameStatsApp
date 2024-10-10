@@ -22,7 +22,7 @@ function Layout() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header />
+      <Header/>
       <Stack>
         <Stack.Screen
           name='index'
@@ -32,7 +32,7 @@ function Layout() {
           name='home'
           options={{ headerShown: false }}
         />
-      </Stack>;
+      </Stack>
 
       <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>
         <Text style={styles.resetText}>Reset Storage</Text>

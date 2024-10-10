@@ -1,6 +1,7 @@
 import pool from '../config/db';
+import { GamerTag } from './gamerTagModel';
 
-interface User {
+export interface User {
   id: number;
   username: string;
   password: string;
@@ -8,6 +9,12 @@ interface User {
   favouriteGame: string | null;
   preferredPlatform: string | null;
   numberOfGames: number | null;
+}
+
+export interface UpdatedUser {
+  id: number;
+  username: string;
+  favouriteGame: string | null;
 }
 
 type PostUserQueryReturn = { success: true; user: User } | { success: false; error: string };
@@ -32,6 +39,32 @@ export async function postUser(username: string, hashedPassword: string): Promis
   } catch (err) {
     console.error("-> Query ERROR:", err);
     return { success: false, error: `Database error from postUser query: ${err}` };
+  }
+};
+
+type UpdateUserQueryReturn = { success: true; user: User } | { success: false; error: string };
+
+export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQueryReturn> {
+  console.log("Executing patchUser query...");
+
+  console.log({updatedUser})
+  try {
+    const result = await pool.query(
+      'UPDATE users SET username=$1, "favouriteGame"=$2, WHERE id=$3 RETURNING *',
+      [updatedUser.username, updatedUser.favouriteGame, updatedUser.id]
+    );
+
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      console.log(`-> Query SUCCESS: updated entity with ID (${user.id}).`);
+      return { success: true, user };
+    } else {
+      console.error(`-> Query FAIL: could not update iser.`);
+      return { success: false, error: `Could not update user.` };
+    }
+  } catch(err) {
+    console.error(`-> Query ERROR:`, err);
+    return { success: false, error: `Database error from update user query: ${err}` };
   }
 };
 

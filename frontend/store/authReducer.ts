@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
 import { RootState } from './store';
-import { LoginResponse } from '../api/authRequests';
+import { requestLoginUserResponse } from '../api/authRequests';
 
 interface AuthState {
   token: string | null;
-  user: LoginResponse | null;
+  user: requestLoginUserResponse | null;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
@@ -28,9 +28,9 @@ const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    loginSuccess: (state, action: PayloadAction<LoginResponse>) => {
+    loginSuccess: (state, action: PayloadAction<requestLoginUserResponse>) => {
       state.token = action.payload.token;
-      state.user = action.payload.user;
+      // state.user = action.payload.user;
       state.isAuthenticated = true;
       state.loading = false;
       state.error = null;

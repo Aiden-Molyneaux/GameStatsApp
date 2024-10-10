@@ -10,22 +10,23 @@ interface User {
   numberOfGames: number | null;
 }
 
-export interface LoginResponse {
-  token: string;
-  user: User;
-  // Add other user data fields here if needed
-}
+export type requestLoginUserResponse = { token: string; user: User } | { error: string };
 
-export async function loginUser(username: string, password: string): Promise<LoginResponse | void> {  
+export async function requestLoginUser(username: string, password: string): Promise<requestLoginUserResponse> {  
   try {
-    console.log('here');
-    const response = await api.post<LoginResponse>('api/auth/login', { username, password });
-    console.log({response});
-    const { token, user } = response.data;
-  
-    return { token, user };
-  } catch (error) {
-    return console.error(`Error: Invalid credentials, \n${error}`);
+    const response = await api.post<requestLoginUserResponse>('api/auth/login', { username, password });
+
+    if (response.status !== 200) {
+      return { error: `Login User Request FAILURE: ${'error' in response.data ? response.data.error : 'Unknown error'}` };
+    }
+
+    if ('user' in response.data && 'token' in response.data) {
+      return { token: response.data.token, user: response.data.user };
+    }
+    
+    return { error: 'Login User Request FAILURE: unexpected response format' };
+  } catch (err) {
+    return { error: `Login User Request ERROR: ${err}` };
   }
 };
 
@@ -33,13 +34,22 @@ export async function loginUser(username: string, password: string): Promise<Log
 //   await Keychain.resetGenericPassword();
 // };
 
-export async function registerUser(username: string, password: string): Promise<LoginResponse | void> {  
+type requestRegisterUserResponse = { token: string; user: User } | { error: string };
+
+export async function requestRegisterUser(username: string, password: string): Promise<requestRegisterUserResponse> {  
   try {
-    const response = await api.post<LoginResponse>('api/auth/register', { username, password });
-    const { token, user } = response.data;
-  
-    return { token, user };
-  } catch (error) {
-    return console.error(`Error: Failed registration, \n${error}`);
+    const response = await api.post<requestRegisterUserResponse>('api/auth/register', { username, password });
+
+    if (response.status !== 200) {
+      return { error: `Register User Request FAILURE: ${'error' in response.data ? response.data.error : 'Unknown error'}` };
+    }
+
+    if ('user' in response.data && 'token' in response.data) {
+      return { token: response.data.token, user: response.data.user };
+    }
+    
+    return { error: 'Register User Request FAILURE: unexpected response format' };
+  } catch (err) {
+    return { error: `Register User Request ERROR: ${err}` };
   }
 };

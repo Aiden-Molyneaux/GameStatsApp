@@ -22,15 +22,20 @@ export function authorizeUser(req: AuthRequest, res: Response, next: NextFunctio
     if (typeof decoded === 'object' && decoded !== null && 'id' in decoded) {
       req.user = { id: (decoded as JwtPayload).id as number };
 
-      console.log('-> User Authorizion SUCCESS.');
+      console.log('-> User Authorizion SUCCESS');
       next();
     } else {
       console.error('-> User Authorization ERROR: invalid token structure.');
       return res.status(401).json({ error: 'Invalid token structure.' });
     }
   } catch (err) {
-    console.error('-> User Authorization ERROR:', err);
-    return res.status(401).json({ error: err });
+    if (err instanceof jwt.TokenExpiredError) {
+      console.error('-> User Authorization ERROR: token expired.');
+      return res.status(401).json({ error: 'Token expired. Please log in again.' });
+    } else {
+      console.error('-> User Authorization ERROR:', err);
+      return res.status(401).json({ error: err });
+    }
   }
 }
 

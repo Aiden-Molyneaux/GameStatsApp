@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { GameListItem, addGameAction } from '@/store/gameReducer';
+import {  GameListItem, PartialGameListItem, addGameAction } from '@/store/gameReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import { RootState } from '../../store/store';
 import { requestCreateGame } from '@/api/gameRequests';
-import { partialGame } from '@/api/gameRequests';
+import { Game, PartialGame } from '../../../backend/models/gameModel';
 
 interface AddGameBtnProps {
   isDisabled: boolean,
@@ -20,20 +20,19 @@ export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGame
   const [isHovered, setIsHovered] = useState(false);
 
   async function handlePlusPress() {
-    const partialGame: partialGame = {userId: userId, name: '', hours: null, datePurchased: null, mode: 'NEW' };
+    const newGame: PartialGame = { userId: userId, name: ' ', hours: 0, datePurchased: null };
     
     try {
-      requestCreateGame(partialGame).then((response) => {
-        if ('game' in response) { 
-          const game = response.game;
-          
-          const defaultGameListItem: GameListItem = {id: game.id, userId: userId, name: '', hours: '', purchasedDate: 'Date Purchased', mode: 'NEW' };
-          dispatch(addGameAction(defaultGameListItem));
-          onAddGame();
-        } else {
+      await requestCreateGame(newGame).then((response) => {
+        if ('error' in response) { 
           console.error(response.error);
           // Handle error in UI
+          return;
         }
+        
+        const defaultGameListItem = { ...response.game, mode: 'NEW' };
+        dispatch(addGameAction({ game: defaultGameListItem }));
+        onAddGame();
       });
     } catch(err) {
       console.error(err);

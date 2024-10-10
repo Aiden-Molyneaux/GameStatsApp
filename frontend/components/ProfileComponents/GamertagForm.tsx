@@ -1,25 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { Text, TextInput } from '../Customs'; 
-import { GamerTag, PlatformData, User, deleteGamerTagAction }  from '@/store/userReducer';
+import { Text, TextInput } from '../Customs';
+import { deleteGamerTagAction } from '@/store/gamerTagReducer';
+import { GamerTag } from '../../../backend/models/gamerTagModel';
+import { PlatformData } from '@/store/userReducer';
 import SymbolDropdown from './SymbolDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSteam, faBattleNet } from '@fortawesome/free-brands-svg-icons';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import DelGamerTagBtn from './DelGamerTagBtn';
+import { requestUpdateGamerTag, requestDeleteGamerTag } from '@/api/gamerTagRequests';
+import ToggleModeBtn from '../ToggleModeBtn';
 
 interface GamerTagFormProps {
-  item: GamerTag;
+  gamerTagData: GamerTag;
   index: number;
   edit?: boolean;
   handleTextInputChange: (field: string, value: string, index: number) => void;
-  userData: User;
-  setUserData: (data: unknown) => void;
 }
 
-export default function GamerTagForm({item, index, edit = false, handleTextInputChange, userData, setUserData}: GamerTagFormProps) {
+export default function GamerTagForm({ gamerTagData: gamerTagData, index, edit = false, handleTextInputChange }: GamerTagFormProps) {
   const dispatch = useDispatch();
+
+  const [disableSaveBtn, setDisableSaveBtn] = useState(false);
+
+  useEffect(() => {
+    setDisableSaveBtn(!(gamerTagData.tag && gamerTagData.platform));
+  }, [gamerTagData]);
 
   const steamLogo = <FontAwesomeIcon icon={faSteam} color={Colors.white} size='lg' style={styles.icon} />;
   const battleNetLogo = <FontAwesomeIcon icon={faBattleNet} color={Colors.white} size='lg' style={styles.icon} />;
@@ -33,40 +41,63 @@ export default function GamerTagForm({item, index, edit = false, handleTextInput
     return (selected === 'Steam') ? steamLogo : battleNetLogo;
   };
 
-  function delGamerTag() {
-    const newGamerTags = [...userData.gamerTags.slice(0, index), ...userData.gamerTags.slice(index + 1)];
+  async function handleUpdateGamerTagPress() {
+    try {
+      await requestUpdateGamerTag(gamerTagData).then((response) => {
+        if('error' in response) {
+          console.error(response.error);
+          return;
+        }
 
-    setUserData({...userData, gamerTags: newGamerTags});
-    dispatch(deleteGamerTagAction(index))
+        dispatch(deleteGamerTagAction({ deletedGamerTagId: response.gamerTag.id}));
+      });
+    } catch(err) {
+      console.error(err);
+      // Handle error in UI
+    }
   }
 
+  async function handleDeleteGamerTagPress() {
+    try {
+      await requestDeleteGamerTag(gamerTagData.id).then((response) => {
+        if('error' in response) {
+          console.error(response.error);
+          return;
+        }
+
+        dispatch(deleteGamerTagAction({ deletedGamerTagId: gamerTagData.id}));
+      });
+    } catch(err) {
+      console.error(err);
+      // Handle error in UI
+    }
+  }
+
+  console.log(gamerTagData);
   return edit ? (
     <View style={styles.gamerTagEntry}>
-      <DelGamerTagBtn pressFunction={delGamerTag} />
+      <DelGamerTagBtn pressFunction={handleDeleteGamerTagPress} />
+      <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={handleUpdateGamerTagPress}/>
+
       <TextInput
         placeholder='GamerTag'
         style={styles.input}
-        value={item.gamerTag}
+        value={gamerTagData.tag}
         onChangeText={(value) => handleTextInputChange('gamerTag', value, index)}
       />
 
       <SymbolDropdown
         data={platformData}
-        value={item.platform}
-        selectedLogo={getSelectedLogo(item.platform)}
-        onChange={(item: PlatformData) => {
-          const newGamerTags: Array<GamerTag> = JSON.parse(JSON.stringify(userData.gamerTags));
-          newGamerTags[index].platform = item.platform;
-
-          setUserData({ ...userData, gamerTags: newGamerTags });
-        }}
+        value={gamerTagData.platform}
+        selectedLogo={getSelectedLogo(gamerTagData.platform)}
+        onChange={() => {}}
       />
     </View>
   ) : (
     <View style={styles.gamerTagEntry}>
       <Text style={styles.index}>{index + 1}:</Text>
-      <Text style={{ color: Colors.yellow }}>{item.gamerTag}</Text>
-      {getSelectedLogo(item.platform)}
+      <Text style={{ color: Colors.yellow }}>{gamerTagData.tag}</Text>
+      {getSelectedLogo(gamerTagData.platform)}
     </View>
   );
 };

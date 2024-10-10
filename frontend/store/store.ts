@@ -2,6 +2,7 @@ import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import authReducer from './authReducer';
 import userReducer from './userReducer';
 import gameReducer from './gameReducer';
+import gamerTagReducer from './gamerTagReducer';
 
 import { 
   persistReducer, 
@@ -25,7 +26,8 @@ export const store = configureStore({
   reducer: {
     authData: persistReducer(persistConfig, authReducer),
     userData: persistReducer(persistConfig, userReducer),
-    gameData: persistReducer(persistConfig, gameReducer)
+    gameData: persistReducer(persistConfig, gameReducer),
+    gamerTagData: persistReducer(persistConfig, gamerTagReducer)
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

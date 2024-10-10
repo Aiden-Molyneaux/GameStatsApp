@@ -6,11 +6,11 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Text, TextInput} from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
-import { GameListItem, replaceGameAction, deleteGameAction, setIdToPositionAction } from '@/store/gameReducer';
+import { GameListItem, updateGameAction, deleteGameAction, setIdToPositionAction } from '@/store/gameReducer';
 import CustomCalendar from './CustomCalendar';
 import ToggleCalendarBtn from './ToggleCalendarBtn';
 import DeleteGameEntryBtn from './DeleteGameEntryBtn';
-import { requestDeleteGame } from '@/api/gameRequests';
+import { Game, requestDeleteGame, requestUpdateGame } from '@/api/gameRequests';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
@@ -27,26 +27,11 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
 
   useEffect(() => {
-    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.purchasedDate !== 'Date Purchased'));
+    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.datePurchased !== null));
   }, [gameData]);
 
   function openCalendar() {
     setShowCalendar(true);
-  }
-
-  function saveGameEntry() {
-    if (gameData.name && gameData.hours && gameData.purchasedDate) {
-      const replacementGame: GameListItem = {
-        id: gameData.id,
-        name: gameData.name,
-        hours: gameData.hours,
-        purchasedDate: gameData.purchasedDate,
-        mode: VIEW
-      };
-
-      setGameData({...gameData, mode: VIEW});
-      dispatch(replaceGameAction({id: gameData.id, game: replacementGame}));
-    }
   }
 
   function handleTextInputChange(field: string, value: string) {
@@ -61,20 +46,45 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
   //   }
   // );
 
-  function handleDeleteGameClick() {
+  async function handleDeleteGamePress() {
     try {
-      console.log(gameData.id);
-      requestDeleteGame(gameData.id).then((response) => {
-        if ('deletedGameId' in response) {
-          dispatch(deleteGameAction(response.deletedGameId));
-        } else {
+      await requestDeleteGame(gameData.id).then((response) => {
+        if('error' in response) {
           console.error(response.error);
-          // Handle failure in UI
+          return;
         }
+
+        dispatch(deleteGameAction({ deletedGameId: response.deletedGameId }));
       });
     } catch(err) {
       console.error(err);
       // Handle error in UI
+    }
+  }
+  
+  async function handleUpdateGamePress() {
+    if (gameData.name !== '' && gameData.hours && gameData.datePurchased) {
+      const updatedGame: GameListItem = {
+        id: gameData.id,
+        name: gameData.name,
+        hours: gameData.hours,
+        datePurchased: gameData.datePurchased,
+        mode: VIEW
+      };
+
+      try {
+        await requestUpdateGame(updatedGame).then((response) => {
+          if('error' in response) {
+            console.error(response.error);
+            return;
+          }
+
+          setGameData({...gameData, mode: VIEW});
+          dispatch(updateGameAction({ game: updatedGame }));
+        });
+      } catch(err) {
+        console.error(err);
+      }
     }
   }
 
@@ -84,21 +94,21 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
         {gameData.mode === EDIT ? 'Edit Game Entry' : 'New Game Entry'}
       </Text>
 
-      <DeleteGameEntryBtn clickFunction={handleDeleteGameClick}/>
+      <DeleteGameEntryBtn pressFunction={handleDeleteGamePress}/>
 
-      <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={saveGameEntry}/>
+      <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={handleUpdateGamePress}/>
 
       <TextInput
         placeholder='Title'
         style={styles.input}
-        value={gameData.name} 
+        value={gameData.name ? gameData.name : ''}
         onChangeText={(value) => handleTextInputChange('name', value)}
       />
 
       <TextInput 
         placeholder='Hours played'
         style={styles.input}
-        value={String(gameData.hours)} 
+        value={gameData.hours ? String(gameData.hours) : '0'} 
         onChangeText={(value) => handleTextInputChange('hours', value)}
         keyboardType='numeric'
       />
@@ -112,12 +122,12 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
       ) : (
         <View style={styles.datePurchasedContainer}>
           <Text style={
-            (/^\d{4}-\d{2}-\d{2}$/.test(gameData.purchasedDate)) 
+            (/^\d{4}-\d{2}-\d{2}$/.test(String(gameData.datePurchased))) 
               ? {...styles.datePurchasedText, color: Colors.white}
               : {...styles.datePurchasedText, color: Colors.gray}
           }
           >
-            {gameData.purchasedDate}
+            {String(gameData.datePurchased)}
           </Text>
 
           <ToggleCalendarBtn 

@@ -18,13 +18,13 @@ export default function CustomCalendar({gameData, setGameData, setShowCalendar}:
 
   return (
     <View style={styles.calendarContainer}>
-      <Calendar 
+      <Calendar
         theme={calendarTheme}
         onDayPress={(day: DateData) => {
-          setGameData({...gameData, purchasedDate: day.dateString});
+          setGameData({...gameData, datePurchased: day.dateString});
           setShowCalendar(false);
         }} 
-        markedDates={{[gameData.purchasedDate]: {selected: true, disableTouchEvent: true}}}
+        markedDates={{[gameData.datePurchased]: {selected: true, disableTouchEvent: true}}}
         maxDate={new Date().toISOString().split('T')[0]}
         minDate={'1970-01-01'}
       />

@@ -4,16 +4,16 @@ import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
 interface ToggleCalendarBtnProps {
-  clickFunction: (data: unknown) => void
+  pressFunction: (data: unknown) => void
 }
 
-export default function DeleteGameEntryBtn({clickFunction}: ToggleCalendarBtnProps) {
+export default function DeleteGameEntryBtn({pressFunction}: ToggleCalendarBtnProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Pressable 
       style={ styles.deleteBtn }
-      onPress={clickFunction}
+      onPress={pressFunction}
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
     >
