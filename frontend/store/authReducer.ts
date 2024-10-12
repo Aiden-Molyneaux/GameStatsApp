@@ -3,18 +3,27 @@ import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
 import { RootState } from './store';
 import { requestLoginUserResponse } from '../api/authRequests';
+import { User } from '../../backend/models/userModel';
 
 interface AuthState {
   token: string | null;
-  user: requestLoginUserResponse | null;
+  user: User;
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
 }
 
-const initialState: AuthState = {
+const initialAuthState: AuthState = {
   token: null,
-  user: null,
+  user: {
+    id: -1,
+    username: 'Dev',
+    password: '',
+    email: null,
+    favouriteGame: null,
+    preferredPlatform: null,
+    numberOfGames: null,
+  },
   isAuthenticated: false,
   loading: false,
   error: null,
@@ -22,15 +31,15 @@ const initialState: AuthState = {
 
 const authSlice = createSlice({
   name: 'authData',
-  initialState,
+  initialState: initialAuthState,
   reducers: {
     loginStart: (state) => {
       state.loading = true;
       state.error = null;
     },
-    loginSuccess: (state, action: PayloadAction<requestLoginUserResponse>) => {
+    loginSuccess: (state, action: PayloadAction<{ token: string; user: User }>) => {
       state.token = action.payload.token;
-      // state.user = action.payload.user;
+      state.user = action.payload.user;
       state.isAuthenticated = true;
       state.loading = false;
       state.error = null;
@@ -41,7 +50,7 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.token = null;
-      state.user = null;
+      // state.user = null
       state.isAuthenticated = false;
       state.loading = false;
       state.error = null;

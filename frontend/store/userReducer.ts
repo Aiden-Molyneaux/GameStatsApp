@@ -1,5 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { GamerTag } from '../../backend/models/gamerTagModel';
 import { User } from '../../backend/models/userModel';
 
@@ -36,7 +35,7 @@ export interface PlatformData {
 //   { id: 1, gamerTag: 'Rimmy Tim', platform: 'BattleNet' },
 // ];
 
-const initialState = {
+const initialUserState = {
   user: {
     id: 0,
     username: '',
@@ -47,7 +46,7 @@ const initialState = {
 
 export const userSlice = createSlice({
   name: 'userData',
-  initialState,
+  initialState: initialUserState,
   reducers: {
 
     changeNameAction: (state, action: PayloadAction<string>) => {
@@ -59,7 +58,7 @@ export const userSlice = createSlice({
     },
 
     changeUserAction: (state, action: PayloadAction<{user: User}>) => {
-      state.user = action.payload.user;
+      state.user = { ...action.payload.user };
     }
   },
 });

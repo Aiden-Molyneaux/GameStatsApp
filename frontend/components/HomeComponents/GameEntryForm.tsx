@@ -38,14 +38,6 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
     setGameData({...gameData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
   }
 
-  // const deleteAndRepositionGames = createAsyncThunk(
-  //   'games/deleteAndReposition',
-  //   async (gameId: number, { dispatch }) => {
-  //     await dispatch(deleteGameAction(gameId));
-  //     await dispatch(setIdToPositionAction());
-  //   }
-  // );
-
   async function handleDeleteGamePress() {
     try {
       await requestDeleteGame(gameData.id).then((response) => {

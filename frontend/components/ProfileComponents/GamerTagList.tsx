@@ -1,29 +1,28 @@
 import React from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import GamerTagForm from './GamerTagForm';
 import { GamerTag } from '../../../backend/models/gamerTagModel';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import GamerTagEntry from './GamerTagEntry';
+import { GamerTagListItem } from '@/store/gamerTagReducer';
 
 interface GamerTagListProps {
-  gamerTags: GamerTag[];
-  handleTextInputChange: (field: string, value: string, index: number | null) => void;
-  edit: boolean;
+  gamerTags: GamerTagListItem[];
+  mode: string;
 }
 
-export default function GamerTagList({ gamerTags, handleTextInputChange, edit }: GamerTagListProps) {
-
-  console.log({gamerTags});
-  const renderItem = ({ item, index } : { item: GamerTag; index: number}) => (
-    <GamerTagForm key={item.id} gamerTagData={item} index={index} edit={edit} handleTextInputChange={handleTextInputChange}/>
+export default function GamerTagList({ gamerTags }: GamerTagListProps) {
+  const renderItem = ({ item, index } : { item: GamerTagListItem; index: number}) => (
+    <GamerTagEntry key={item.id} gamerTag={item} index={index}/>
   );
 
   return (
     <FlatList
       style={styles.gamerTagList}
+      contentContainerStyle={styles.contentContainer}
       showsVerticalScrollIndicator={false}
       data={gamerTags}
       renderItem={renderItem}
-      keyExtractor={(gamerTag: GamerTag) => String(gamerTag.id)}
+      keyExtractor={(gamerTag: GamerTagListItem) => String(gamerTag.id)}
     />
   );
 };
@@ -31,5 +30,11 @@ export default function GamerTagList({ gamerTags, handleTextInputChange, edit }:
 const styles = StyleSheet.create({
   gamerTagList: {
     margin: Spacing.unit1o5,
-  }
+    
+    width: '100%',
+
+  },
+  // contentContainer: {
+  //   justifyContent: 'flex-start'
+  // }
 });

@@ -21,7 +21,7 @@ export default function Auth() {
   async function attemptAuth() {
     if (authMode === 'Sign In') {
       try {
-        await requestLoginUser(username, password).then((response) => {
+        await requestLoginUser(username, password).then(async (response) => {
           if ('error' in response) {
             console.error(response.error);
             setAuthFail(true); 
@@ -32,8 +32,9 @@ export default function Auth() {
           
           dispatch(loginSuccess({ token: response.token, user: response.user }));
           dispatch(changeUserAction({ user: response.user }));        
-          getGames();
-          getGamerTags();
+          await getGames().then(async () => {
+            await getGamerTags();
+          });
         });
       } catch(err) {
         console.error(err);
@@ -47,7 +48,7 @@ export default function Auth() {
             setAuthFail(true); 
             return; 
           }
-  
+          console.log({response});
           dispatch(loginSuccess({ token: response.token, user: response.user }));
         });
       } catch(err) {

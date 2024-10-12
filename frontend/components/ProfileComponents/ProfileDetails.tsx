@@ -5,7 +5,7 @@ import { GameList } from '@/store/gameReducer';
 import { User }  from '@/store/userReducer';
 import { RootState } from '../../store/store';
 import { changeNameAction, changeFavouriteGameAction } from '@/store/userReducer';
-import { addGamerTagAction } from '@/store/gamerTagReducer';
+import { addGamerTagAction, GamerTagListItem } from '@/store/gamerTagReducer';
 import TextDropdown from './TextDropdown';
 import GamerTagList from './GamerTagList';
 import { Text, TextInput } from '@/components/Customs';
@@ -36,7 +36,7 @@ export default function ProfileDetails() {
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
 
   useEffect(() => {
-    setDisableAddBtn(gamerTags.some((gamerTag: GamerTag) => (gamerTag.tag === '')));
+    setDisableAddBtn(gamerTags.some((gamerTag: GamerTag) => (gamerTag.tag === null)));
   }, [gamerTags]);
 
   useEffect(() => {
@@ -58,28 +58,6 @@ export default function ProfileDetails() {
     } catch (err) {
       console.error(err);
     }
-    
-    // gamerTags.forEach((gamerTag : GamerTag) => {
-    //   // if gamertag changed
-    //   // should really send all gamertags in one payload and iterate through them on the backend
-    //   if (true) {
-
-    //   }
-    //   updatedGamerTags
-    // });
-
-    // try {
-    //   await requestUpdateGamerTags(updatedGamerTags).then((response) => {
-    //     if('error' in response) {
-    //       console.error(response.error);
-    //       return;
-    //     }
-
-    //     dispatch(changeGamerTagAction(gamerTags));
-    //   }
-    // } catch(err) {
-
-    // }
 
     setMode(VIEW);
   }
@@ -97,9 +75,7 @@ export default function ProfileDetails() {
           return;
         }
 
-        console.log({response});
-
-        const defaultGamerTag: GamerTag = { id: response.gamerTag.id, userId: response.gamerTag.userId, tag: '', platform: 'Steam' };
+        const defaultGamerTag: GamerTagListItem= { id: response.gamerTag.id, userId: response.gamerTag.userId, tag: '', platform: 'Steam', mode: VIEW };
         dispatch(addGamerTagAction({gamerTag: defaultGamerTag}));
       });
     } catch(err) {
@@ -108,15 +84,8 @@ export default function ProfileDetails() {
 
   }
 
-  function handleTextInputChange(field: string, value: string, index: number | null = null) {
-    if (field === 'gamerTag' && index !== null) {
-      const newGamerTags: Array<GamerTag> = JSON.parse(JSON.stringify(gamerTags));
-      newGamerTags[index].tag = value;
-
-      setUserData({ ...userData });
-    } else {
-      setUserData({ ...userData, [field]: value });
-    }
+  function handleTextInputChange(field: string, value: string) {
+    setUserData({ ...userData, [field]: value });
   }
 
   return (
@@ -129,8 +98,7 @@ export default function ProfileDetails() {
 
         <GamerTagList
           gamerTags={gamerTags}
-          handleTextInputChange={handleTextInputChange}
-          edit={false}
+          mode={VIEW}
         />
 
         <Text>Favourite game: {<Text style={styles.labelText}>{user.favouriteGame}</Text>}</Text>
@@ -162,8 +130,7 @@ export default function ProfileDetails() {
 
           <GamerTagList
             gamerTags={gamerTags}
-            handleTextInputChange={handleTextInputChange}
-            edit={true}
+            mode={EDIT}
           />
         </View>
 
@@ -189,7 +156,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'column',
-    position: 'relative',
+    width: '100%',
     zIndex: 1
   },
   input: {

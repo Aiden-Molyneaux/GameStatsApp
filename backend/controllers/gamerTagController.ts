@@ -72,7 +72,7 @@ export async function handleUpdateGamerTag(req: AuthRequest, res: Response) {
 export async function handleDeleteGamerTag(req: Request, res: Response) {
   console.log('Handling request to delete gamertag...');
 
-  const gamerTagId = Number(req.query.gamerTagId);
+  const gamerTagId = Number(req.query.id);
 
   try {
     const response = await deleteGamerTag(gamerTagId);

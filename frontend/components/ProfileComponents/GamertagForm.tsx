@@ -14,16 +14,15 @@ import { requestUpdateGamerTag, requestDeleteGamerTag } from '@/api/gamerTagRequ
 import ToggleModeBtn from '../ToggleModeBtn';
 
 interface GamerTagFormProps {
-  gamerTagData: GamerTag;
-  index: number;
-  edit?: boolean;
-  handleTextInputChange: (field: string, value: string, index: number) => void;
+  gamerTag: GamerTag;
 }
 
-export default function GamerTagForm({ gamerTagData: gamerTagData, index, edit = false, handleTextInputChange }: GamerTagFormProps) {
+export default function GamerTagForm({ gamerTag }: GamerTagFormProps) {
   const dispatch = useDispatch();
 
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
+
+  const [gamerTagData, setGamerTagData] = useState(gamerTag);
 
   useEffect(() => {
     setDisableSaveBtn(!(gamerTagData.tag && gamerTagData.platform));
@@ -40,6 +39,10 @@ export default function GamerTagForm({ gamerTagData: gamerTagData, index, edit =
   const getSelectedLogo = (selected: string) => {
     return (selected === 'Steam') ? steamLogo : battleNetLogo;
   };
+
+  function handleTextInputChange(field: string, value: string) {
+    setGamerTagData({...gamerTagData, [field]: value });
+  }
 
   async function handleUpdateGamerTagPress() {
     try {
@@ -73,8 +76,7 @@ export default function GamerTagForm({ gamerTagData: gamerTagData, index, edit =
     }
   }
 
-  console.log(gamerTagData);
-  return edit ? (
+  return (
     <View style={styles.gamerTagEntry}>
       <DelGamerTagBtn pressFunction={handleDeleteGamerTagPress} />
       <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={handleUpdateGamerTagPress}/>
@@ -83,7 +85,7 @@ export default function GamerTagForm({ gamerTagData: gamerTagData, index, edit =
         placeholder='GamerTag'
         style={styles.input}
         value={gamerTagData.tag}
-        onChangeText={(value) => handleTextInputChange('gamerTag', value, index)}
+        onChangeText={(value) => handleTextInputChange('tag', value)}
       />
 
       <SymbolDropdown
@@ -92,12 +94,6 @@ export default function GamerTagForm({ gamerTagData: gamerTagData, index, edit =
         selectedLogo={getSelectedLogo(gamerTagData.platform)}
         onChange={() => {}}
       />
-    </View>
-  ) : (
-    <View style={styles.gamerTagEntry}>
-      <Text style={styles.index}>{index + 1}:</Text>
-      <Text style={{ color: Colors.yellow }}>{gamerTagData.tag}</Text>
-      {getSelectedLogo(gamerTagData.platform)}
     </View>
   );
 };

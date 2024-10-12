@@ -8,6 +8,6 @@ const router = Router();
 router.get('', authorizeUser, handleFetchGamerTagsByUser);
 router.post('', authorizeUser, handleCreateGamerTag);
 router.patch('', authorizeUser, handleUpdateGamerTag);
-router.delete('', authorizeUser, validateGameId, handleDeleteGamerTag);
+router.delete('', authorizeUser, handleDeleteGamerTag);
 
 export default router;

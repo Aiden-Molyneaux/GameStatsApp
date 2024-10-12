@@ -1,9 +1,8 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { GamerTag, PartialGamerTag } from '../../backend/models/gamerTagModel';
 
 export interface GamerTagListItem extends GamerTag {
-    // mode: string; // maybe
+    mode: string; // maybe
 }
 
 export interface PartialGamerTagListItem extends PartialGamerTag {
@@ -14,13 +13,13 @@ export interface GamerTagList {
     gamerTags: GamerTagListItem[]
 }
 
-const initialState: GamerTagList = {
+const initialGamerTagState: GamerTagList = {
   gamerTags: []
 };
 
 export const gamerTagListSlice = createSlice({
   name: 'gamerTagData',
-  initialState,
+  initialState: initialGamerTagState,
   reducers: {
     fetchGamerTagsSuccess: (state, action: PayloadAction<{ gamerTags: GamerTag[] }>) => {
       const newGamerTags = action.payload.gamerTags;

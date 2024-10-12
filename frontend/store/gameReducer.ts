@@ -14,13 +14,13 @@ export interface GameList {
   games: GameListItem[];
 }
 
-const initialState: GameList = {
+const initialGameState: GameList = {
   games: []
 };
 
 export const gameListSlice = createSlice({
   name: 'gameData',
-  initialState,
+  initialState: initialGameState,
   reducers: {
     fetchGamesSuccess: (state, action: PayloadAction<{ games: Game[] }>) => {
       const newGames = action.payload.games.map((game) => {

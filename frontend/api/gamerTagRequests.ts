@@ -64,20 +64,20 @@ export async function requestUpdateGamerTag(updatedGamerTag: GamerTag): Promise<
 
 type requestDeleteGamerTagReturn = { deletedGamerTagId: number } | { error: string };
 
-export async function requestDeleteGamerTag(gameId: number): Promise<requestDeleteGamerTagReturn> {  
+export async function requestDeleteGamerTag(gamerTagId: number): Promise<requestDeleteGamerTagReturn> {  
   try {
-    const response = await api.delete<requestDeleteGamerTagReturn>(`api/games?gameId=${gameId}`);
+    const response = await api.delete<requestDeleteGamerTagReturn>(`api/gamerTags?id=${gamerTagId}`);
 
     if (response.status !== 200) {
-      return { error: `Delete Game Request FAILURE: ${'error' in response.data ? response.data.error : 'unknown error'}` };
+      return { error: `Delete GamerTag Request FAILURE: ${'error' in response.data ? response.data.error : 'unknown error'}` };
     }
 
     if ('deletedGamerTagId' in response.data) {
       return { deletedGamerTagId: response.data.deletedGamerTagId };
     }
  
-    return { error: 'Delete Game Request FAILURE: unexpected response format' };
+    return { error: 'Delete GamerTag Request FAILURE: unexpected response format' };
   } catch (err) {
-    return { error: `Delete Game Request ERROR: ${err}` };
+    return { error: `Delete GamerTag Request ERROR: ${err}` };
   }
 };
