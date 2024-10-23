@@ -16,8 +16,10 @@ interface AddGameBtnProps {
 
 export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGameBtnProps) {
   const userId = useSelector((state: RootState) => state.userData.id);
+  const [gameData, setGameData] = useState({});
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   async function handlePlusPress() {
     const newGame: PartialGame = { userId: userId, name: ' ', hours: 0, datePurchased: null };

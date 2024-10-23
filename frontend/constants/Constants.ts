@@ -40,9 +40,11 @@ export const Colors = {
   gray: '#808080',
   black: '#111111',
   blue: '#212833',
+  blueMid: '#394559',
   bluePrime: '#52637f',
-  yellow: '#ffce1f',
-  yellowPrime: '#997828',
+  yellow: '#ffce1fFF',
+  yellowPrime: '#997828FF',
+  red: '#ff0000'
 };
 
 // const tintColorLight = '#0a7ea4';

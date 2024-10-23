@@ -79,7 +79,12 @@ export default function GamerTagForm({ gamerTag }: GamerTagFormProps) {
   return (
     <View style={styles.gamerTagEntry}>
       <DelGamerTagBtn pressFunction={handleDeleteGamerTagPress} />
-      <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={handleUpdateGamerTagPress}/>
+      <ToggleModeBtn 
+        type='edit'
+        iconName='save' 
+        isDisabled={disableSaveBtn} 
+        pressFunction={handleUpdateGamerTagPress}
+      />
 
       <TextInput
         placeholder='GamerTag'

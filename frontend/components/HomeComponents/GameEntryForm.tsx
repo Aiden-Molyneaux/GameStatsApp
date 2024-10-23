@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Animated } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import { createAsyncThunk } from '@reduxjs/toolkit';
@@ -16,11 +16,13 @@ const VIEW = 'VIEW';
 const EDIT = 'EDIT';
 
 interface GameEntryFormProps {
+  index: string,
   gameData: GameListItem;
   setGameData: (data: unknown) => null;
+  closeModal: () => void;
 }
 
-export default function GameEntryForm({gameData, setGameData}: GameEntryFormProps) {
+export default function GameEntryForm({ index, gameData, setGameData, closeModal }: GameEntryFormProps) {
   const dispatch = useDispatch();
   
   const [showCalendar, setShowCalendar]  = useState(false);
@@ -73,6 +75,7 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
 
           setGameData({...gameData, mode: VIEW});
           dispatch(updateGameAction({ game: updatedGame }));
+          closeModal();
         });
       } catch(err) {
         console.error(err);
@@ -81,91 +84,154 @@ export default function GameEntryForm({gameData, setGameData}: GameEntryFormProp
   }
 
   return (
-    <View style={styles.gameEntryForm}>
-      <Text style={styles.addGameText}>
-        {gameData.mode === EDIT ? 'Edit Game Entry' : 'New Game Entry'}
-      </Text>
-
-      <DeleteGameEntryBtn pressFunction={handleDeleteGamePress}/>
-
-      <ToggleModeBtn iconName='save' isDisabled={disableSaveBtn} pressFunction={handleUpdateGamePress}/>
-
-      <TextInput
-        placeholder='Title'
-        style={styles.input}
-        value={gameData.name ? gameData.name : ''}
-        onChangeText={(value) => handleTextInputChange('name', value)}
-      />
-
-      <TextInput 
-        placeholder='Hours played'
-        style={styles.input}
-        value={gameData.hours ? String(gameData.hours) : '0'} 
-        onChangeText={(value) => handleTextInputChange('hours', value)}
-        keyboardType='numeric'
-      />
-
-      { showCalendar ? (
-        <CustomCalendar 
-          gameData={gameData}
-          setGameData={setGameData}
-          setShowCalendar={setShowCalendar}
+    <View style={styles.gameEntry}>
+      <View style={styles.gameHeader}>
+        <Text style={styles.gameIndex}>{index + 1}</Text>
+        <TextInput
+          placeholder='Title'
+          style={styles.titleInput}
+          value={gameData.name ? gameData.name : ''}
+          onChangeText={(value) => handleTextInputChange('name', value)}
         />
-      ) : (
-        <View style={styles.datePurchasedContainer}>
-          <Text style={
-            (/^\d{4}-\d{2}-\d{2}$/.test(String(gameData.datePurchased))) 
-              ? {...styles.datePurchasedText, color: Colors.white}
-              : {...styles.datePurchasedText, color: Colors.gray}
-          }
-          >
-            {String(gameData.datePurchased)}
-          </Text>
+      </View>
+        
+      <View>
+        <View style={styles.expandedGame}>
+          <View style={styles.gameStats}>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>Hours: </Text>
+              <TextInput 
+                placeholder='Hours played'
+                style={{...styles.statsInput, width: Spacing.unit * 2.3}}
+                value={gameData.hours ? String(gameData.hours) : '0'} 
+                onChangeText={(value) => handleTextInputChange('hours', value)}
+                keyboardType='numeric'
+              />
+            </View>
+            <View style={styles.statContainer}>
+              <Text style={styles.statTitle}>Date Purchased: </Text>
+              { showCalendar ? (
+                <CustomCalendar 
+                  gameData={gameData}
+                  setGameData={setGameData}
+                  setShowCalendar={setShowCalendar}
+                />
+              ) : (
+                <View style={styles.datePurchasedContainer}>
+                  <TextInput 
+                    placeholder='0'
+                    style={{...styles.statsInput, width: Spacing.unit * 2.3}}
+                    value={gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'zilch'} 
+                    onChangeText={(value) => handleTextInputChange('datePurchased', value)}
+                  />
 
-          <ToggleCalendarBtn 
-            styleType={'openBtn'} 
-            iconName='calendar' 
-            pressFunction={openCalendar}
-          />
+                  <ToggleCalendarBtn 
+                    styleType={'openBtn'} 
+                    iconName='calendar' 
+                    pressFunction={openCalendar}
+                  />
+                </View>
+              )}
+            </View>
+
+            <View style={styles.editBtnContainer}>
+              <DeleteGameEntryBtn pressFunction={handleDeleteGamePress}/>
+              <ToggleModeBtn
+                type='editGame'
+                iconName='save' 
+                isDisabled={false} 
+                pressFunction={handleUpdateGamePress} 
+              />
+            </View>
+          </View>
+
         </View>
-      )}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  gameEntryForm: {
-    margin: Spacing.unit1o5,
-    padding: Spacing.unit1o3,
+  gameEntry: {
+    flexDirection: 'column',
+    gap: Spacing.unit1o5,
+    width: Spacing.unit10 - Spacing.unit,
+    margin: Spacing.unit1o5 / 5,
+    // padding: Spacing.unit1o5,
     backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
     borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5
+    borderLeftColor: Colors.blue,
+    borderRightColor: Colors.blue,
   },
-  addGameText: {
-    marginBottom: Spacing.unit1o5,
-    color: Colors.yellow,
-  },
-  input: {
-    margin: Spacing.unit1o5,
+  gameHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: Spacing.unit1o5,
+    paddingBottom: 0
+  },
+  gameIndex: {
+    marginRight: Spacing.unit1o2,
+    color: Colors.yellow,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.yellow,
-    borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5,
+    fontWeight: 'bold',
+    textShadow: `${Colors.yellowPrime} 1px 1px 5px`
+  },
+  gameText: {
+    color: Colors.white,
+    fontSize: FontSizes.large,
+    fontWeight: 'bold',
+    letterSpacing: 3,
+    textShadow: `${Colors.black} 1px 1px 1px`
+  },
+  expandedGame: {
+    flexDirection: 'row',
+    width: '100%',
+    backgroundColor: Colors.blueMid
+  },
+  statContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: Spacing.unit1o5,
+    paddingTop: Spacing.unit1o5,
+  },
+  gameStats: {
+    flex: 1,
+  },
+  statTitle: {
+    color: Colors.yellow,
+    fontSize: FontSizes.mediumLess,
+    whiteSpace: 'nowrap'
+  },
+  editBtnContainer: {
+    flexDirection: 'row',
+    padding: Spacing.unit1o5,
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
   datePurchasedContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: Spacing.unit1o5,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.yellow,
-    borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5,
   },
   datePurchasedText: {
-    margin: Spacing.unit1o5,
-    color: Colors.gray,
     fontSize: FontSizes.mediumLess,
-  }
+    marginHorizontal: Spacing.unit1o10,
+  },
+  titleInput: {
+    color: Colors.white,
+    fontSize: FontSizes.large,
+    fontWeight: 'bold',
+    letterSpacing: 3,
+    textShadow: `${Colors.black} 1px 1px 1px`,
+    borderBottomColor: Colors.yellowPrime,
+    borderBottomWidth: Spacing.border
+  },
+  statsInput: {
+    color: Colors.white,
+    fontSize: FontSizes.mediumLess,
+    borderBottomColor: Colors.yellowPrime,
+    borderBottomWidth: Spacing.border,
+    marginHorizontal: Spacing.unit1o10,
+  },
 });

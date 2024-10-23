@@ -40,18 +40,19 @@ export default function CustomCalendar({gameData, setGameData, setShowCalendar}:
 
 const styles = StyleSheet.create({
   calendarContainer: {
+    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Spacing.unit1o5,
-    borderColor: Colors.yellow,
+    borderColor: Colors.yellowPrime,
     borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5,
+    backgroundColor: Colors.blueMid,
+    zIndex: 3
   }
 });
 
 const calendarTheme = {
   monthTextColor: Colors.yellow,
-  backgroundColor: Colors.bluePrime,
   calendarBackground: Colors.bluePrime,
   
   selectedDayTextColor: Colors.white,
@@ -68,4 +69,5 @@ const calendarTheme = {
   textDayFontFamily: Fonts.monospace,
   textMonthFontFamily: Fonts.monospace,
   textDayHeaderFontFamily: Fonts.monospace,
+  enableSwipeMonths: true
 };

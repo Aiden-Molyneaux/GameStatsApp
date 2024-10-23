@@ -91,7 +91,12 @@ export default function ProfileDetails() {
   return (
     (mode === VIEW) ? (
       <View style={styles.profileEditSection}>
-        <ToggleModeBtn iconName={'edit'} isDisabled={false} pressFunction={setModeEdit} />
+        <ToggleModeBtn 
+          type='edit'
+          iconName='edit' 
+          isDisabled={false} 
+          pressFunction={setModeEdit} 
+        />
 
         <Text style={styles.usernameText}>{user.username}</Text>
         <Text style={{ fontSize: FontSizes.mediumLess }}>Also known as...</Text>
@@ -106,7 +111,12 @@ export default function ProfileDetails() {
       </View>
     ) : (
       <View style={styles.profileEditSection}>
-        <ToggleModeBtn iconName={'save'} isDisabled={disableSaveBtn} pressFunction={handleUpdateUserDetails} />
+        <ToggleModeBtn 
+          type='edit'
+          iconName={'save'} 
+          isDisabled={disableSaveBtn} 
+          pressFunction={handleUpdateUserDetails} 
+        />
 
         <Text style={styles.labelText}>Profile Name</Text>
         <TextInput

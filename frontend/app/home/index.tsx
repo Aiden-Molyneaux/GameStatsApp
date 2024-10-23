@@ -18,10 +18,6 @@ export default function Home() {
 
   const gameListRef = useRef<FlatList>(null);
 
-  const state = store.getState();
-
-  console.log(state);
-
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {
     setDisableAddBtn(games.some((game: GameListItem) => (game.mode === 'NEW' || game.mode === 'EDIT')));
@@ -32,6 +28,7 @@ export default function Home() {
     setTimeout(() => {
       gameListRef.current?.scrollToEnd({ animated: true }); // Scroll to the end when a new game is added
     }, 500);
+
   };
 
   return (
@@ -69,5 +66,5 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.unit1o3,
     color: Colors.yellow,
     fontSize: FontSizes.large,
-  }
+  },
 });

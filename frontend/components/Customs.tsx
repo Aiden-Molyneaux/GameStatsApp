@@ -2,21 +2,6 @@ import { Colors, FontSizes, Fonts } from '@/constants/Constants';
 import React from 'react';
 import { Text as RNText, TextInput as RNTextInput, StyleSheet, TextStyle, TextProps, TextInputProps } from 'react-native';
 
-const styles = StyleSheet.create({
-  defaultTextStyle: {
-    color: Colors.white,
-    fontFamily: Fonts.monospace,
-    fontSize: FontSizes.medium,
-    textAlign: 'center'
-  } as TextStyle,
-  defaultTextInputStyle: {
-    color: Colors.white,
-    fontFamily: Fonts.monospace,
-    fontSize: FontSizes.medium,
-    
-  } as TextStyle
-});
-
 interface CustomTextProps extends TextProps {
   style?: TextStyle;
 }
@@ -36,3 +21,17 @@ export const TextInput: React.FC<CustomTextInputProps> = ({ style, ...props }) =
     {...props} 
   />;
 };
+
+const styles = StyleSheet.create({
+  defaultTextStyle: {
+    color: Colors.white,
+    fontFamily: Fonts.monospace,
+    fontSize: FontSizes.medium,
+    textAlign: 'center'
+  } as TextStyle,
+  defaultTextInputStyle: {
+    color: Colors.white,
+    fontFamily: Fonts.monospace,
+    fontSize: FontSizes.medium,
+  } as TextStyle
+});

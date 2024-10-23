@@ -4,17 +4,38 @@ import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
 interface ToggleModeBtnProps {
+  type: string;
   iconName: string;
   isDisabled: boolean;
   pressFunction: (data: unknown) => void;
 }
 
-export default function ToggleModeBtn({iconName, isDisabled = false, pressFunction}: ToggleModeBtnProps) {
+export default function ToggleModeBtn({type, iconName, isDisabled = false, pressFunction}: ToggleModeBtnProps) {
   const [isHovered, setIsHovered] = useState(false);
+  
+  const getStyleByType = (type: string) => {
+    switch (type) {
+    case 'edit':
+      return styles.edit;
+    case 'save':
+      return styles.edit;
+    case 'editGame':
+      return styles.editGame;
+    case 'saveGame':
+      return styles.editGame;
+    case 'view':
+      return styles.view;
+    default:
+      return styles.edit;
+    }
+  };
 
   return (
     <Pressable 
-      style={styles.editBtn}
+      style={[
+        getStyleByType(type),
+        { opacity: isDisabled ? 0.5 : 1 }, // Reduce opacity if disabled
+      ]}
       disabled={isDisabled}
       onPress={pressFunction}
       onHoverIn={() => setIsHovered(true)}
@@ -30,7 +51,7 @@ export default function ToggleModeBtn({iconName, isDisabled = false, pressFuncti
 }
 
 const styles = StyleSheet.create({
-  editBtn: {
+  edit: {
     position: 'absolute',
     top: Spacing.unit1o5,
     right: Spacing.unit1o5,
@@ -39,4 +60,20 @@ const styles = StyleSheet.create({
     width: FontSizes.large,
     height: FontSizes.large,
   },
+  editGame: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: FontSizes.large,
+    height: FontSizes.large,
+  },
+  view: {
+    position: 'absolute',
+    top: Spacing.unit1o10,
+    right: Spacing.unit1o5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: FontSizes.large,
+    height: FontSizes.large,
+  },
+
 });

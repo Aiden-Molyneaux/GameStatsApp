@@ -20,7 +20,7 @@ export default function DeleteGameEntryBtn({pressFunction}: ToggleCalendarBtnPro
       <FontAwesome
         name={'trash'}
         size={isHovered ? FontSizes.large : FontSizes.medium}
-        color={Colors.yellow} 
+        color={Colors.red} 
       />
     </Pressable>
   );
@@ -28,12 +28,10 @@ export default function DeleteGameEntryBtn({pressFunction}: ToggleCalendarBtnPro
 
 const styles = StyleSheet.create({
   deleteBtn: {
-    position: 'absolute',
-    top: Spacing.unit1o5,
-    left: Spacing.unit1o5,
     justifyContent: 'center',
     alignItems: 'center',
     width: FontSizes.large,
     height: FontSizes.large,
+    zIndex: 0
   }
 });
