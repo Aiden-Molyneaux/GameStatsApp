@@ -9,26 +9,19 @@ interface SortBarProps {
   setSortMode: (sortMode: string) => void
 }
 
-export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
+export default function OpenCloseBar({currentSortMode, setSortMode} : SortBarProps) {
   return (
     <View style={styles.sortBtnContainer}>
       <SortBtn
         filterMode={'hours'}
-        iconName={'hourglass'}
+        iconName={'open'}
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
 
       <SortBtn
         filterMode={'datePurchased'}
-        iconName={'calendar'}
-        currentSortMode={currentSortMode}
-        setSortMode={setSortMode}
-      />
-  
-      <SortBtn
-        filterMode={'entered'}
-        iconName={'hashtag'}
+        iconName={'close'}
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
@@ -40,8 +33,8 @@ const styles = StyleSheet.create({
   sortBtnContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-start',
+    justifyContent: 'flex-end',
     gap: Spacing.unit1o5,
-    marginLeft: 10
+    marginRight: 10
   }
 });

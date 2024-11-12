@@ -21,6 +21,7 @@ export const Spacing = {
   unit8: em1 * 8,
   unit7: em1 * 7,
   unit5: em1 * 5,
+  unit3: em1 * 3,
   unit2: em1 * 2,
   unit3o2: em1 * 3/2,
   unit: em1,
@@ -39,14 +40,19 @@ export const Spacing = {
 export const Colors = {
   white: '#ffffff',
   gray: '#b9bbb6',
+  grayPrime: '#777b7e',
+  grayEdge: '#46494b',
   black: '#111111',
-  blue: '#1d1c1a',// '#212833', white
+  blue: '#b9bbb6',// '#212833', white
   blueMid: '#ffffff',
   bluePrime: '#1d1c1a',
   yellow: '#1d1c1a',// '#ffce1fFF', black
   yellowPrime: '#000000', // '#997828FF', darker black
+  yellowEdge: '#c68611',
   red: '#ff0000',
-  orange: '#FAA916'
+  orange: '#FAA916',
+  trout: '#d1d5c0',
+  plum: '#70637c'
 };
 
 // const tintColorLight = '#0a7ea4';

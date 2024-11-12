@@ -8,6 +8,9 @@ import { Text } from '@/components/Customs';
 import SortBar from '@/components/HomeComponents/SortBar';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
+import Header from '@/components/Header';
+import CustomButton from '@/components/HomeComponents/CustomButton';
+import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
 
 export default function Home() {
   const { games } = useSelector((state: RootState) => state.gameData);
@@ -34,22 +37,26 @@ export default function Home() {
 
   return (
     <View style={styles.homePage}>
-      <Text>Filters</Text>
-      <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
+      <Header/>
 
-      <GameList
-        games={games} 
-        sortMode={sortMode}
-        ref={gameListRef}
-        setIsPressed={setIsPressed}
-      />
-
-      <AddGameBtn
-        isDisabled={disableAddBtn}
-        onAddGame={handleAddGame}
-        isPressed={isPressed}
-        setIsPressed={setIsPressed}
-      />
+      <View style={styles.screen}>
+        <GameList
+          games={games} 
+          sortMode={sortMode}
+          ref={gameListRef}
+          setIsPressed={setIsPressed}
+        />
+      </View>
+      <View style={styles.buttons}>
+        <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
+        <AddGameBtn
+          isDisabled={disableAddBtn}
+          onAddGame={handleAddGame}
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+        />
+        <OpenCloseBar currentSortMode={sortMode} setSortMode={setSortMode}/>
+      </View>
     </View>
   );
 }
@@ -61,7 +68,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     alignItems: 'center',
-    paddingTop: isIOS ? 0 : Spacing.unit3o2,
+    overflow: 'hidden',
     backgroundColor: Colors.blue,
   },
   playTimeText: {
@@ -69,4 +76,21 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: FontSizes.large,
   },
+  screen: {
+    flex: 1,
+    backgroundColor: Colors.trout,
+    borderWidth: Spacing.borderThick,
+    borderColor: Colors.grayPrime,
+    borderRadius: 15,
+    marginBottom: Spacing.unit1o3
+  },
+  buttons: {
+    flexDirection: 'row',
+    gap: Spacing.unit,
+    width: '100%',
+    marginBottom: Spacing.unit1o2,
+  },
+  addGameButton: {
+    marginBottom: Spacing.unit1o2
+  }
 });

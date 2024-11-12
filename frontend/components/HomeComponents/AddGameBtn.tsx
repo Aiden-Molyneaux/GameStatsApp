@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {  addGameAction } from '@/store/gameReducer';
-import { Colors } from '@/constants/Constants';
+import { Colors, Spacing } from '@/constants/Constants';
 import { RootState } from '../../store/store';
 import { requestCreateGame } from '@/api/gameRequests';
 import { PartialGame } from '../../../backend/models/gameModel';
@@ -56,3 +56,4 @@ export default function AddGameBtn({ isDisabled, onAddGame, isPressed, setIsPres
     />
   );
 }
+

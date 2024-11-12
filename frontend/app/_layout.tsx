@@ -22,7 +22,6 @@ function Layout() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header/>
       <Stack>
         <Stack.Screen
           name='index'
@@ -54,12 +53,13 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.blue,
+    justifyContent: 'center',
+    backgroundColor: Colors.black,
   },
   resetBtn: {
     alignSelf: 'center',
     justifyContent: 'center',
-    width: Spacing.unit * 3,
+    width: Spacing.unit3,
     height: Spacing.unit1o2,
     margin: Spacing.unit1o3,
     backgroundColor: Colors.yellowPrime,
