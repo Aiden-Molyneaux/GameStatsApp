@@ -34,9 +34,9 @@ function Layout() {
         />
       </Stack>
 
-      <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>
+      {/* <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>
         <Text style={styles.resetText}>Reset Storage</Text>
-      </Pressable>
+      </Pressable> */}
     </SafeAreaView>
   );
 }

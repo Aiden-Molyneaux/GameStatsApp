@@ -1,28 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Animated } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { View, StyleSheet, Pressable, Modal } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Text, TextInput} from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
-import { GameListItem, updateGameAction, deleteGameAction, setIdToPositionAction } from '@/store/gameReducer';
+import { GameListItem, updateGameAction, deleteGameAction } from '@/store/gameReducer';
 import CustomCalendar from './CustomCalendar';
 import ToggleCalendarBtn from './ToggleCalendarBtn';
 import DeleteGameEntryBtn from './DeleteGameEntryBtn';
 import { Game, requestDeleteGame, requestUpdateGame } from '@/api/gameRequests';
+import { CustomColourPicker } from './CustomColourPicker';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
 
 interface GameEntryFormProps {
   index: string,
-  gameData: GameListItem;
-  setGameData: (data: unknown) => null;
-  closeModal: () => void;
+  gameData: GameListItem,
+  setGameData: (data: Game) => void,
+  closeModal: () => void,
+  setIsPressed: (data: boolean) => void
 }
 
-export default function GameEntryForm({ index, gameData, setGameData, closeModal }: GameEntryFormProps) {
+export default function GameEntryForm({ index, gameData, setGameData, closeModal, setIsPressed }: GameEntryFormProps) {
   const dispatch = useDispatch();
   
   const [showCalendar, setShowCalendar]  = useState(false);
@@ -41,6 +44,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   }
 
   async function handleDeleteGamePress() {
+    setIsPressed(false);
+    
     try {
       await requestDeleteGame(gameData.id).then((response) => {
         if('error' in response) {
@@ -63,6 +68,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
         name: gameData.name,
         hours: gameData.hours,
         datePurchased: gameData.datePurchased,
+        titleColour: titleColour,
+        headerColour: headerColour,
         mode: VIEW
       };
 
@@ -73,7 +80,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
             return;
           }
 
-          setGameData({...gameData, mode: VIEW});
+          setGameData({...gameData, titleColour: titleColour, headerColour: headerColour, mode: VIEW});
           dispatch(updateGameAction({ game: updatedGame }));
           closeModal();
         });
@@ -81,15 +88,27 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
         console.error(err);
       }
     }
+
+    setIsPressed(false);
   }
+
+  function handleCloseGamePress() {
+    setGameData({...gameData, mode: VIEW});
+    dispatch(updateGameAction({ game: {...gameData, mode: VIEW} }));
+    closeModal();
+    setIsPressed(false);
+  }
+
+  const [titleColour, setTitleColour] = useState(gameData.titleColour);
+  const [headerColour, setHeaderColour] = useState(gameData.headerColour);
 
   return (
     <View style={styles.gameEntry}>
-      <View style={styles.gameHeader}>
+      <View style={{...styles.gameHeader, backgroundColor: headerColour}}>
         <Text style={styles.gameIndex}>{index + 1}</Text>
         <TextInput
           placeholder='Title'
-          style={styles.titleInput}
+          style={{...styles.titleInput, color: titleColour, backgroundColor: headerColour}}
           value={gameData.name ? gameData.name : ''}
           onChangeText={(value) => handleTextInputChange('name', value)}
         />
@@ -133,15 +152,49 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                 </View>
               )}
             </View>
+            <View style={styles.colourPickerContainer}>
+              <View style={styles.colourPickerInput}>
+                <Text style={styles.statTitle}>Title Colour: </Text>
+                <View style={styles.colorPickerContainer}>
+                  <CustomColourPicker colour={gameData.titleColour} setColour={setTitleColour}/>
+                </View>
+              </View>
+
+              <View style={styles.colourPickerInput}>
+                <Text style={styles.statTitle}>Header Colour: </Text>
+                <View style={styles.colorPickerContainer}>
+                  <CustomColourPicker colour={gameData.headerColour} setColour={setHeaderColour}/>
+                </View>
+              </View>
+
+              {/* <View style={styles.colourPickerInput}>
+                <Text style={styles.statTitle}>Background Colour: </Text>
+                <View style={styles.colorPickerContainer}>
+                  <ColorPicker
+                    onColorSelected={handleColorChange}
+                    sliderComponent={Slider}
+                  />
+                </View>
+              </View> */}
+
+            </View>
 
             <View style={styles.editBtnContainer}>
               <DeleteGameEntryBtn pressFunction={handleDeleteGamePress}/>
-              <ToggleModeBtn
-                type='editGame'
-                iconName='save' 
-                isDisabled={false} 
-                pressFunction={handleUpdateGamePress} 
-              />
+              <View style={styles.editBtnsRight}>
+                <ToggleModeBtn
+                  type='editGame'
+                  iconName='thumbs-down' 
+                  isDisabled={false} 
+                  pressFunction={handleCloseGamePress}
+                />
+                <ToggleModeBtn
+                  type='editGame'
+                  iconName='save' 
+                  isDisabled={false} 
+                  pressFunction={handleUpdateGamePress} 
+                />
+              </View>
             </View>
           </View>
 
@@ -160,24 +213,25 @@ const styles = StyleSheet.create({
     // padding: Spacing.unit1o5,
     backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
-    borderWidth: Spacing.border,
-    borderLeftColor: Colors.blue,
-    borderRightColor: Colors.blue,
+    borderWidth: Spacing.borderThick,
+    borderLeftColor: Colors.orange,
+    borderRightColor: Colors.orange,
+    borderLeftWidth: 2,
+    borderRightWidth: 2
   },
   gameHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: Spacing.unit1o5,
-    paddingBottom: 0
+    padding: Spacing.unit1o5
   },
   gameIndex: {
     marginRight: Spacing.unit1o2,
-    color: Colors.yellow,
+    color: Colors.white,
     fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',
     textShadow: `${Colors.yellowPrime} 1px 1px 5px`
   },
-  gameText: {
+  titleText: {
     color: Colors.white,
     fontSize: FontSizes.large,
     fontWeight: 'bold',
@@ -201,6 +255,7 @@ const styles = StyleSheet.create({
   statTitle: {
     color: Colors.yellow,
     fontSize: FontSizes.mediumLess,
+    fontWeight: 'bold',
     whiteSpace: 'nowrap'
   },
   editBtnContainer: {
@@ -208,6 +263,10 @@ const styles = StyleSheet.create({
     padding: Spacing.unit1o5,
     alignItems: 'center',
     justifyContent: 'space-between'
+  },
+  editBtnsRight: {
+    flexDirection: 'row',
+    gap: Spacing.unit1o5
   },
   datePurchasedContainer: {
     flexDirection: 'row',
@@ -224,14 +283,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 3,
     textShadow: `${Colors.black} 1px 1px 1px`,
-    borderBottomColor: Colors.yellowPrime,
+    borderBottomColor: Colors.orange,
     borderBottomWidth: Spacing.border
   },
   statsInput: {
-    color: Colors.white,
+    color: Colors.black,
     fontSize: FontSizes.mediumLess,
-    borderBottomColor: Colors.yellowPrime,
+    borderBottomColor: Colors.orange,
     borderBottomWidth: Spacing.border,
     marginHorizontal: Spacing.unit1o10,
   },
+  colourPickerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: Spacing.unit1o2
+  },
+  colourPickerInput: {
+    alignItems: 'center'
+  },
+
 });

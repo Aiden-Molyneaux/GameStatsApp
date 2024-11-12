@@ -14,11 +14,11 @@ export default function Header() {
 const styles = StyleSheet.create({
   headerText: {
     margin: Spacing.unit1o3,
-    color: Colors.yellow,
+    color: Colors.white,
     fontSize: FontSizes.header,
     fontWeight: 'bold',
     textTransform: 'uppercase',
     letterSpacing: 3,
-    textShadow: `${Colors.yellowPrime} 1px 1px 5px`
+    textShadow: `${Colors.orange} 1px 1px 4px`
   }
 });

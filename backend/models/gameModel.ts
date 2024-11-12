@@ -6,6 +6,8 @@ export interface Game {
   name: string;
   hours: number;
   datePurchased: Date | null;
+  titleColour: string;
+  headerColour: string;
 }
 
 export interface PartialGame {
@@ -13,6 +15,8 @@ export interface PartialGame {
   name: string;
   hours: number;
   datePurchased: Date | null;
+  titleColour: string;
+  headerColour: string;
 }
 
 export interface UpdatedGame {
@@ -20,17 +24,21 @@ export interface UpdatedGame {
   name: string;
   hours: number;
   datePurchased: Date | null;
+  titleColour: string;
+  headerColour: string;
 }
 
 type CreateGameQueryReturn = { success: true; game: Game } | { success: false; error: string };
 
 export async function postGame(game: PartialGame): Promise<CreateGameQueryReturn> {
   console.log("Executing postGame query...");
+
+  console.log({game})
   
   try {
     const result = await pool.query(
-      'INSERT INTO games ("userId", name, hours, "datePurchased") VALUES ($1, $2, $3, $4) RETURNING *',
-      [game.userId, game.name, game.hours, game.datePurchased]
+      'INSERT INTO games ("userId", name, hours, "datePurchased", "titleColour", "headerColour") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [game.userId, game.name, game.hours, game.datePurchased, game.titleColour, game.headerColour]
     );
 
     if (result.rows.length > 0) {
@@ -55,8 +63,8 @@ export async function patchGame(updatedGame: UpdatedGame): Promise<UpdateGameQue
   console.log({updatedGame})
   try {
     const result = await pool.query(
-      'UPDATE games SET name=$1, hours=$2, "datePurchased"=$3 WHERE id=$4 RETURNING *',
-      [updatedGame.name, updatedGame.hours, updatedGame.datePurchased, updatedGame.id]
+      'UPDATE games SET name=$1, hours=$2, "datePurchased"=$3, "titleColour"=$4, "headerColour"=$5 WHERE id=$6 RETURNING *',
+      [updatedGame.name, updatedGame.hours, updatedGame.datePurchased, updatedGame.titleColour, updatedGame.headerColour, updatedGame.id]
     );
 
     if (result.rows.length > 0) {

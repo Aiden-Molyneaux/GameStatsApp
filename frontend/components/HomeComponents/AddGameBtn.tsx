@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import {  GameListItem, PartialGameListItem, addGameAction } from '@/store/gameReducer';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import {  addGameAction } from '@/store/gameReducer';
+import { Colors } from '@/constants/Constants';
 import { RootState } from '../../store/store';
 import { requestCreateGame } from '@/api/gameRequests';
-import { Game, PartialGame } from '../../../backend/models/gameModel';
+import { PartialGame } from '../../../backend/models/gameModel';
+import CustomButton from './CustomButton';
 
 interface AddGameBtnProps {
   isDisabled: boolean,
-  gameCount: number,
-  onAddGame: () => void
+  onAddGame: () => void,
+  isPressed: boolean,
+  setIsPressed: (data: boolean) => void
 }
 
-export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGameBtnProps) {
+const timeout = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+export default function AddGameBtn({ isDisabled, onAddGame, isPressed, setIsPressed }: AddGameBtnProps) {
   const userId = useSelector((state: RootState) => state.userData.id);
-  const [gameData, setGameData] = useState({});
   const dispatch = useDispatch();
-  const [isHovered, setIsHovered] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   async function handlePlusPress() {
-    const newGame: PartialGame = { userId: userId, name: ' ', hours: 0, datePurchased: null };
-    
+    const newGame: PartialGame = { userId: userId, name: ' ', hours: 0, datePurchased: null, titleColour: Colors.white, headerColour: Colors.bluePrime };
+    setIsPressed(true);
+    await timeout(300);
     try {
       await requestCreateGame(newGame).then((response) => {
         if ('error' in response) { 
@@ -38,54 +41,18 @@ export default function AddGameBtn({ isDisabled, gameCount, onAddGame }: AddGame
       });
     } catch(err) {
       console.error(err);
+      setIsPressed(false);
       // Handle error in UI
     }
   }
 
   return (
-    <View style={styles.btnContainer}>
-      <Pressable 
-        style={[
-          isDisabled ? { ...styles.addGameBtn, backgroundColor: Colors.gray } : styles.addGameBtn,
-          {
-            ...(isHovered ? styles.addBtnHovered : null),
-            transitionProperty: 'height, background-color', // Specify properties to transition
-            transitionDuration: '0.3s', // Duration of the transition
-            transitionTimingFunction: 'ease-in-out', // Timing function for smooth transition
-          },
-        ]}
-        disabled={isDisabled}
-        onPress={handlePlusPress} 
-        onHoverIn={() => setIsHovered(true)}
-        onHoverOut={() => setIsHovered(false)}
-      >
-        <FontAwesome size={FontSizes.medium} name='plus' color={Colors.white} />
-      </Pressable>
-    </View>
-
+    <CustomButton
+      size={'big'}
+      iconName='plus'
+      isDisabled={false}
+      isPressed={isPressed}
+      pressFunction={handlePlusPress}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  btnContainer: {
-    height: Spacing.unit + 10,
-    marginTop: Spacing.unit1o3,
-    justifyContent: 'flex-end'
-  },
-  addGameBtn: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: Spacing.unit,
-    height: Spacing.unit + 10,
-    backgroundColor: Colors.yellowPrime,
-    borderColor: Colors.yellow,
-    borderWidth: Spacing.border,
-    borderTopWidth: 10,
-    borderRadius: Spacing.unit1o5,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5
-  },
-  addBtnHovered: {
-    height: Spacing.unit
-  }
-});

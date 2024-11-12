@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { Text } from './Customs';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
-import GameEntry from './GameEntry';
+import GameEntry from './GameEntry.tsx';
 import { GameListItem, addGameAction, sortGamesAction } from '@/store/gameReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -26,7 +26,7 @@ export default function GameList() {
   }, [games]);
 
   function handlePlusPress() {
-    const defaultGame: GameListItem = {id: gameCount, name: '', hours: '', datePurchased: 'Date Purchased', mode: 'NEW' };
+    const defaultGame: GameListItem = {id: gameCount, name: '', hours: '', datePurchased: 'Date Purchased', titleColour: Colors.white, headerColour: Colors.bluePrime, mode: 'NEW' };
 
     dispatch(addGameAction(defaultGame));
   }

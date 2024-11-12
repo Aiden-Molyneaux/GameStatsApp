@@ -32,19 +32,21 @@ export const Spacing = {
   screenWidth: width,
   screenHeight: height,
 
-  border: 2
+  border: 2,
+  borderThick: 5
 };
 
 export const Colors = {
   white: '#ffffff',
-  gray: '#808080',
+  gray: '#b9bbb6',
   black: '#111111',
-  blue: '#212833',
-  blueMid: '#394559',
-  bluePrime: '#52637f',
-  yellow: '#ffce1fFF',
-  yellowPrime: '#997828FF',
-  red: '#ff0000'
+  blue: '#1d1c1a',// '#212833', white
+  blueMid: '#ffffff',
+  bluePrime: '#1d1c1a',
+  yellow: '#1d1c1a',// '#ffce1fFF', black
+  yellowPrime: '#000000', // '#997828FF', darker black
+  red: '#ff0000',
+  orange: '#FAA916'
 };
 
 // const tintColorLight = '#0a7ea4';

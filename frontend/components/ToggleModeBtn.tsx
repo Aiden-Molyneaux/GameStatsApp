@@ -44,7 +44,7 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
       <FontAwesome 
         size={isHovered ? FontSizes.large : FontSizes.medium}
         name={iconName}
-        color={(isDisabled) ? Colors.gray : Colors.yellow} 
+        color={(isDisabled) ? Colors.gray : Colors.orange} 
       />
     </Pressable>
   );
@@ -67,11 +67,9 @@ const styles = StyleSheet.create({
     height: FontSizes.large,
   },
   view: {
-    position: 'absolute',
-    top: Spacing.unit1o10,
-    right: Spacing.unit1o5,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'flex-end',
     width: FontSizes.large,
     height: FontSizes.large,
   },

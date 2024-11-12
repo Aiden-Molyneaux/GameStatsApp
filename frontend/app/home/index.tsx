@@ -18,6 +18,8 @@ export default function Home() {
 
   const gameListRef = useRef<FlatList>(null);
 
+  const [isPressed, setIsPressed] = useState(false);
+
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {
     setDisableAddBtn(games.some((game: GameListItem) => (game.mode === 'NEW' || game.mode === 'EDIT')));
@@ -28,25 +30,25 @@ export default function Home() {
     setTimeout(() => {
       gameListRef.current?.scrollToEnd({ animated: true }); // Scroll to the end when a new game is added
     }, 500);
-
   };
 
   return (
     <View style={styles.homePage}>
-      <Text style={styles.playTimeText}>Your Play-Time</Text>
-
+      <Text>Filters</Text>
       <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
 
       <GameList
         games={games} 
         sortMode={sortMode}
         ref={gameListRef}
+        setIsPressed={setIsPressed}
       />
 
       <AddGameBtn
         isDisabled={disableAddBtn}
-        gameCount={gameCount}
         onAddGame={handleAddGame}
+        isPressed={isPressed}
+        setIsPressed={setIsPressed}
       />
     </View>
   );
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
   },
   playTimeText: {
     marginVertical: Spacing.unit1o3,
-    color: Colors.yellow,
+    color: Colors.white,
     fontSize: FontSizes.large,
   },
 });

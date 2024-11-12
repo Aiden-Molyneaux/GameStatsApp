@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Platform } from 'react-native';
+import { StyleSheet, SafeAreaView, Platform, Pressable } from 'react-native';
 import { Tabs } from 'expo-router';
 import { persistor, store } from '../../store/store';
 import { Provider } from 'react-redux';
@@ -24,7 +24,7 @@ const TabBarScreenOptions = (web: boolean) => {
 
   return {
     headerShown: false,
-    tabBarActiveTintColor: Colors.yellow,
+    tabBarActiveTintColor: Colors.orange,
     tabBarInactiveTintColor: Colors.white,
     tabBarLabelStyle: { fontSize: FontSizes.medium },
     tabBarStyle: style,
@@ -40,7 +40,7 @@ export default function RootLayout() {
             <Tabs.Screen
               name='index'
               options={{
-                tabBarLabel: 'Home',
+                tabBarLabel: 'Games',
                 tabBarLabelStyle: styles.tabBarText,
                 tabBarLabelPosition: 'beside-icon',
                 tabBarIcon: ({ color }) => <FontAwesome size={FontSizes.large} name='home' color={color} />,
@@ -65,14 +65,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.blue,
+    zIndex: -1
   },
   tabBar: {
     height: Spacing.unit3o2,
-    backgroundColor: Colors.blue,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
     borderTopColor: Colors.yellowPrime,
     borderBottomColor: Colors.yellowPrime,
     borderTopWidth: Spacing.border,
     borderBottomWidth: Spacing.border,
+    zIndex: -1
   },
   tabBarText: {
     fontFamily: Fonts.monospace,

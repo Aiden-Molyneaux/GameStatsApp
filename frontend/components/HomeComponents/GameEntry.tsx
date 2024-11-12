@@ -6,6 +6,7 @@ import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
 import { Text } from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
 import GameEntryForm from './GameEntryForm';
+import CustomButton from './CustomButton';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
@@ -13,10 +14,10 @@ const EDIT = 'EDIT';
 interface GameEntryProps {
   item: GameListItem,
   index: number,
-  sortMode: string
+  setIsPressed: (data: boolean) => void
 }
 
-export default function GameEntry({ item, index, sortMode }: GameEntryProps) {
+export default function GameEntry({ item, index, setIsPressed }: GameEntryProps) {
   const dispatch = useDispatch();
   
   const [ gameData, setGameData] = useState({
@@ -25,13 +26,15 @@ export default function GameEntry({ item, index, sortMode }: GameEntryProps) {
     name: item.name,
     hours: item.hours,
     datePurchased: item.datePurchased,
+    titleColour: item.titleColour,
+    headerColour: item.headerColour,
     mode: item.mode
   });
 
   const [ viewMode, setViewMode ] = useState('CLOSED');
   const [isModalVisible, setIsModalVisible] = useState(item.mode === 'NEW');
 
-  const animatedHeight = useRef(new Animated.Value(viewMode === 'OPEN' ? 150 : 0)).current;
+  const animatedHeight = useRef(new Animated.Value(viewMode === 'OPEN' ? 60 : 0)).current;
 
   function setModeEdit() {
     const updatedGame: GameListItem = {
@@ -39,6 +42,8 @@ export default function GameEntry({ item, index, sortMode }: GameEntryProps) {
       name: gameData.name,
       hours: gameData.hours,
       datePurchased: gameData.datePurchased,
+      titleColour: gameData.titleColour,
+      headerColour: gameData.headerColour,
       mode: EDIT
     };
 
@@ -62,28 +67,29 @@ export default function GameEntry({ item, index, sortMode }: GameEntryProps) {
 
   return (
     <>
-      <View style={styles.gameEntry}>
-        <View style={styles.gameHeader}>
+      <View style={{...styles.gameEntry, shadowColor: gameData.titleColour}}>
+        <View style={{...styles.gameHeader, backgroundColor: gameData.headerColour }}>
           <Text style={styles.gameIndex}>{index + 1}</Text>
-          <Text style={styles.gameText}>{gameData.name}</Text>
+          <Text style={{...styles.titleText, color: gameData.titleColour}}>{gameData.name}</Text>
 
-          <ToggleModeBtn 
-            type='view'
-            iconName={viewMode === 'OPEN' ? 'caret-up' : 'caret-down'} 
-            isDisabled={false} 
-            pressFunction={changeViewMode} 
+          <CustomButton
+            size={'small'}
+            iconName={viewMode === 'OPEN' ? 'caret-up' : 'caret-down'}
+            isDisabled={false}
+            isPressed={false}
+            pressFunction={changeViewMode}
           />
         </View>
       
-        <Animated.View style={{ height: animatedHeight, overflow: 'hidden' }}>
-          {viewMode === 'OPEN' && (
+        {viewMode === 'OPEN' && ( 
+          <Animated.View style={{ height: animatedHeight, overflow: 'hidden' }}>  
             <View style={styles.expandedGame}>
               <View style={styles.gameStats}>
                 <View style={styles.statContainer}>
-                  <Text style={styles.statTitle}>Hours: </Text><Text style={styles.hourText}>{gameData.hours}</Text>
+                  <Text style={styles.statTitle}>Hours: </Text><Text style={styles.statText}>{gameData.hours}</Text>
                 </View>
                 <View style={styles.statContainer}>
-                  <Text style={styles.statTitle}>Date Purchased: </Text><Text style={styles.hourText}>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
+                  <Text style={styles.statTitle}>Date Purchased: </Text><Text style={styles.statText}>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
                 </View>
               </View>
               <View style={styles.editBtnContainer}>
@@ -94,11 +100,8 @@ export default function GameEntry({ item, index, sortMode }: GameEntryProps) {
                   pressFunction={setModeEdit} 
                 />
               </View>
-
             </View>
-
-          )}
-        </Animated.View>
+          </Animated.View>)}
       </View>
 
       <Modal
@@ -113,7 +116,9 @@ export default function GameEntry({ item, index, sortMode }: GameEntryProps) {
               index={index}
               gameData={gameData}
               setGameData={setGameData}
-              closeModal={() => setIsModalVisible(false)} // Pass close function to the form
+              setIs
+              closeModal={() => setIsModalVisible(false)}
+              setIsPressed={setIsPressed}
             />
           </View>
         </View>
@@ -122,43 +127,51 @@ export default function GameEntry({ item, index, sortMode }: GameEntryProps) {
   );};
 
 const styles = StyleSheet.create({
+  gameEntryContainer: {
+
+  },
   gameEntry: {
     flexDirection: 'column',
-    gap: Spacing.unit1o5,
     width: Spacing.unit10 - Spacing.unit,
-    margin: Spacing.unit1o5 / 5,
+    margin: Spacing.unit1o5,
     backgroundColor: Colors.bluePrime,
-    borderColor: Colors.yellowPrime,
-    borderWidth: Spacing.border,
-    borderLeftColor: Colors.blue,
-    borderRightColor: Colors.blue,
-    zIndex: 0
+    borderColor: Colors.white,
+    borderBottomWidth: 3,
+    borderRadius: Spacing.unit1o5,
+    shadowOpacity: 0.9,
+    shadowRadius: Spacing.unit1o5
   },
   gameHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: Spacing.unit1o5,
-    paddingBottom: 0
+    borderRadius: Spacing.unit1o10
+
   },
   gameIndex: {
     marginRight: Spacing.unit1o2,
-    color: Colors.yellow,
+    color: Colors.white,
     fontSize: FontSizes.mediumLess,
-    fontWeight: 'bold',
-    textShadow: `${Colors.yellowPrime} 1px 1px 5px`
+    fontWeight: 'bold'
   },
-  gameText: {
+  titleText: {
+    flex: 1,
     color: Colors.white,
     fontSize: FontSizes.large,
+    textAlign: 'left',
     fontWeight: 'bold',
     letterSpacing: 3,
     textShadow: `${Colors.black} 1px 1px 1px`
   },
   expandedGame: {
+    position: 'absolute',
+    top: -Spacing.unit1o10,
     flexDirection: 'row',
     width: '100%',
-    height: '100%',
-    backgroundColor: Colors.blueMid
+    height: '110%',
+    backgroundColor: Colors.white,
+    borderBottomRightRadius: Spacing.unit1o5,
+    borderBottomLeftRadius: Spacing.unit1o5,
   },
   editBtnContainer: {
     alignItems: 'center',
@@ -178,7 +191,8 @@ const styles = StyleSheet.create({
     color: Colors.yellow,
     fontSize: FontSizes.mediumLess
   },
-  hourText: {
+  statText: {
+    color: Colors.black,
     fontSize: FontSizes.mediumLess
   },
   modalBackground: {
@@ -188,7 +202,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.9)' // Dark background for modal
   },
   modalContainer: {
-    shadowColor: Colors.black,
+    shadowColor: Colors.orange,
     shadowOpacity: 0.5,
     shadowRadius: Spacing.unit1o2
   }

@@ -12,25 +12,23 @@ interface SortBarProps {
 export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
   return (
     <View style={styles.sortBtnContainer}>
-      {/* <FontAwesome name='filter' size={FontSizes.medium} color={Colors.white}/> */}
-
       <SortBtn
         filterMode={'hours'}
-        label={'Hours'}
+        iconName={'hourglass'}
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
 
       <SortBtn
         filterMode={'datePurchased'}
-        label={'Date purchased'}
+        iconName={'calendar'}
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
   
       <SortBtn
         filterMode={'entered'}
-        label={'Default'}
+        iconName={'hashtag'}
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
@@ -41,8 +39,9 @@ export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
 const styles = StyleSheet.create({
   sortBtnContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.unit1o5,
+    alignItems: 'flex-end',
+    gap: Spacing.unit3o2,
+    margin: Spacing.unit1o2,
     marginBottom: Spacing.unit1o5
   }
 });

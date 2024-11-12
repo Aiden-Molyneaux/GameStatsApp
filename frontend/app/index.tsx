@@ -107,7 +107,7 @@ export default function Auth() {
           placeholder='Password'
           value={password}
           onChangeText={setPassword}
-        // secureTextEntry
+          // secureTextEntry
         />
         <View style={styles.authBtns}>
           <Pressable style={styles.modeBtn} onPress={() => setAuthMode(authMode === 'Sign In' ? 'Register' : 'Sign In')}>
@@ -121,6 +121,7 @@ export default function Auth() {
 
       </View>
     </View>
+
   );
 }
 
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
   input: {
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
+    color: Colors.black,
     fontSize: FontSizes.mediumLess,
     borderColor: Colors.yellow,
     borderWidth: Spacing.border,
