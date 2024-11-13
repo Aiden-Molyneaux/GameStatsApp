@@ -5,20 +5,25 @@ import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 export default function Header() {
   return (
-    <View style={styles.header}>
-      <Text style={styles.hmm}> </Text>
-      <Text style={styles.headerText}>n-Game</Text>
+    <View style={styles.headerContainer}>
+      <View style={styles.header}>
+        <Text style={styles.hmm}> </Text>
+        <Text style={styles.headerText}>n-Game</Text>
+      </View>
+      <Text style={styles.headerSubText}>The Root of Your Passion</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
+  headerContainer: {
     width: '100%',
     margin: Spacing.unit1o2,
-    marginLeft: Spacing.unit3o2,
-    marginBottom: Spacing.unit1o5
+    marginLeft: Spacing.unit,
+    marginBottom: Spacing.unit1o10
+  },
+  header: {
+    flexDirection: 'row',
   },
   headerText: {
     paddingLeft: 5,
@@ -41,6 +46,11 @@ const styles = StyleSheet.create({
     // borderBottomWidth: 0,
     // borderBottomLeftRadius: 0,
     // borderBottomRightRadius: 0
+  },
+  headerSubText: {
+    alignSelf: 'flex-start',
+    color: Colors.plum,
+    fontWeight: 'bold',
   },
   hmm: {
     borderTopWidth: 5,

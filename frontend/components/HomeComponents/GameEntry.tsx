@@ -7,6 +7,8 @@ import { Text } from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
 import GameEntryForm from './GameEntryForm';
 import CustomButton from './CustomButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
@@ -34,7 +36,7 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
   const [ viewMode, setViewMode ] = useState('CLOSED');
   const [isModalVisible, setIsModalVisible] = useState(item.mode === 'NEW');
 
-  const animatedHeight = useRef(new Animated.Value(viewMode === 'OPEN' ? 60 : 0)).current;
+  const animatedHeight = useRef(new Animated.Value(viewMode === 'OPEN' ? Spacing.unit : 0)).current;
 
   function setModeEdit() {
     const updatedGame: GameListItem = {
@@ -59,26 +61,20 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
   // UseEffect to animate the height when viewMode changes
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: viewMode === 'OPEN' ? 60 : 0, // Adjust height for open/closed
+      toValue: viewMode === 'OPEN' ? Spacing.unit2 * .85 : 0, // Adjust height for open/closed
       duration: 500, // Animation duration
       useNativeDriver: false, // Height requires useNativeDriver to be false
     }).start();
   }, [viewMode]);
 
   return (
-    <>
-      <View style={{...styles.gameEntry, shadowColor: gameData.titleColour}}>
+    <View style={styles.gameEntryContainer}>
+      <Text style={styles.gameIndex}>{index + 1}</Text>
+      <View style={{...styles.gameEntry}}>
         <View style={{...styles.gameHeader, backgroundColor: gameData.headerColour }}>
-          <Text style={styles.gameIndex}>{index + 1}</Text>
+          
           <Text style={{...styles.titleText, color: gameData.titleColour}}>{gameData.name}</Text>
 
-          <CustomButton
-            size={'small'}
-            iconName={viewMode === 'OPEN' ? 'caret-up' : 'caret-down'}
-            isDisabled={false}
-            isPressed={false}
-            pressFunction={changeViewMode}
-          />
         </View>
       
         {viewMode === 'OPEN' && ( 
@@ -92,16 +88,26 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
                   <Text style={styles.statTitle}>Date Purchased: </Text><Text style={styles.statText}>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
                 </View>
               </View>
-              <View style={styles.editBtnContainer}>
-                <ToggleModeBtn
-                  type='editGame'
-                  iconName='edit' 
-                  isDisabled={false} 
-                  pressFunction={setModeEdit} 
-                />
-              </View>
             </View>
           </Animated.View>)}
+      </View>
+      
+      <View style={styles.button}>
+        <ToggleModeBtn
+          type='editGame'
+          iconName='book' 
+          isDisabled={false} 
+          pressFunction={changeViewMode} 
+        />
+      </View>
+
+      <View style={styles.button}>
+        <ToggleModeBtn
+          type='editGame'
+          iconName='edit' 
+          isDisabled={false} 
+          pressFunction={setModeEdit} 
+        />
       </View>
 
       <Modal
@@ -112,6 +118,7 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
       >
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
+            <Text style={styles.ellipsis}>⋮</Text>
             <GameEntryForm
               index={index}
               gameData={gameData}
@@ -120,44 +127,48 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
               closeModal={() => setIsModalVisible(false)}
               setIsPressed={setIsPressed}
             />
+            <Text style={styles.ellipsis}>⋮</Text>
           </View>
         </View>
       </Modal>
-    </>
+    </View>
   );};
 
 const styles = StyleSheet.create({
+  button: {
+    alignSelf: 'center',
+    padding: Spacing.unit1o5
+  },
   gameEntryContainer: {
-
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   gameEntry: {
     flexDirection: 'column',
-    width: Spacing.unit10 - Spacing.unit,
-    margin: Spacing.unit1o5,
+    flex: 1,
+    marginVertical: Spacing.unit1o5,
     backgroundColor: Colors.bluePrime,
-    borderColor: Colors.white,
-    borderBottomWidth: 3,
-    borderRadius: Spacing.unit1o5,
-    shadowOpacity: 0.9,
-    shadowRadius: Spacing.unit1o5
+    borderColor: Colors.black,
+    borderWidth: Spacing.border,
   },
   gameHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: Spacing.unit1o5,
-    borderRadius: Spacing.unit1o10
-
+    paddingVertical: Spacing.unit1o5,
   },
   gameIndex: {
-    marginRight: Spacing.unit1o2,
-    color: Colors.white,
+    marginHorizontal: Spacing.unit1o3,
+    color: Colors.black,
     fontSize: FontSizes.mediumLess,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   titleText: {
     flex: 1,
     color: Colors.white,
     fontSize: FontSizes.large,
+    marginLeft: Spacing.unit1o3,
     textAlign: 'left',
     fontWeight: 'bold',
     letterSpacing: 3,
@@ -165,18 +176,11 @@ const styles = StyleSheet.create({
   },
   expandedGame: {
     position: 'absolute',
-    top: -Spacing.unit1o10,
+    top: Spacing.unit1o10,
     flexDirection: 'row',
     width: '100%',
     height: '110%',
-    backgroundColor: Colors.white,
-    borderBottomRightRadius: Spacing.unit1o5,
-    borderBottomLeftRadius: Spacing.unit1o5,
-  },
-  editBtnContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: Spacing.unit
+    backgroundColor: Colors.trout
   },
   statContainer: {
     flexDirection: 'row',
@@ -199,11 +203,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.9)' // Dark background for modal
+    backgroundColor: 'rgba(209, 213, 192, 1)', // Dark background for modal
+    borderColor: Colors.grayPrime,
+    borderWidth: 5,
+    borderRadius: 15
   },
   modalContainer: {
-    shadowColor: Colors.orange,
-    shadowOpacity: 0.5,
-    shadowRadius: Spacing.unit1o2
+
+  },
+  ellipsis: {
+    color: Colors.black,
+    fontSize: FontSizes.header,
+    fontWeight: 'bold'
   }
 });

@@ -52,7 +52,9 @@ export const Colors = {
   red: '#ff0000',
   orange: '#FAA916',
   trout: '#d1d5c0',
-  plum: '#70637c'
+  plum: '#6557a7',
+  gameCubeGreen: '#019190',
+  greenEdge: '#007269'
 };
 
 // const tintColorLight = '#0a7ea4';

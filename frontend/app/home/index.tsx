@@ -39,13 +39,16 @@ export default function Home() {
     <View style={styles.homePage}>
       <Header/>
 
-      <View style={styles.screen}>
-        <GameList
-          games={games} 
-          sortMode={sortMode}
-          ref={gameListRef}
-          setIsPressed={setIsPressed}
-        />
+      <View style={styles.screenContainer}>
+        <View style={styles.screen}>
+          <GameList
+            games={games} 
+            sortMode={sortMode}
+            ref={gameListRef}
+            setIsPressed={setIsPressed}
+          />
+        </View>
+
       </View>
       <View style={styles.buttons}>
         <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
@@ -71,26 +74,27 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: Colors.blue,
   },
-  playTimeText: {
-    marginVertical: Spacing.unit1o3,
-    color: Colors.white,
-    fontSize: FontSizes.large,
-  },
-  screen: {
+  screenContainer: {
     flex: 1,
-    backgroundColor: Colors.trout,
+    width: '95%',
     borderWidth: Spacing.borderThick,
     borderColor: Colors.grayPrime,
     borderRadius: 15,
     marginBottom: Spacing.unit1o3
   },
+  screen: {
+    flex: 1,
+    backgroundColor: Colors.trout,
+    borderWidth: Spacing.border,
+    borderColor: Colors.grayEdge,
+    borderRadius: 9,
+    overflow: 'hidden'
+  },
   buttons: {
+    height: Spacing.unit3o2,
     flexDirection: 'row',
     gap: Spacing.unit,
-    width: '100%',
-    marginBottom: Spacing.unit1o2,
+    width: '95%',
+    marginBottom: isIOS ? Spacing.unit1o3 : Spacing.unit
   },
-  addGameButton: {
-    marginBottom: Spacing.unit1o2
-  }
 });

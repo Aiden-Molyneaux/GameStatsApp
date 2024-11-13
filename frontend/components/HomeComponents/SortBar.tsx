@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-start',
-    gap: Spacing.unit1o5,
-    marginLeft: 10
+    gap: Spacing.unit1o5
   }
 });

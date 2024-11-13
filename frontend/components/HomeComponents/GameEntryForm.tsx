@@ -103,71 +103,72 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   const [headerColour, setHeaderColour] = useState(gameData.headerColour);
 
   return (
-    <View style={styles.gameEntry}>
-      <View style={{...styles.gameHeader, backgroundColor: headerColour}}>
-        <Text style={styles.gameIndex}>{index + 1}</Text>
-        <TextInput
-          placeholder='Title'
-          style={{...styles.titleInput, color: titleColour, backgroundColor: headerColour}}
-          value={gameData.name ? gameData.name : ''}
-          onChangeText={(value) => handleTextInputChange('name', value)}
-        />
-      </View>
+    <View style={styles.gameEntryContainer}>
+      <Text style={styles.gameIndex}>{index + 1}</Text>
+      <View style={styles.gameEntry}>
+        <View style={{...styles.gameHeader, backgroundColor: headerColour}}>
+          <TextInput
+            placeholder='Title'
+            style={{...styles.titleInput, color: titleColour, backgroundColor: headerColour}}
+            value={gameData.name ? gameData.name : ''}
+            onChangeText={(value) => handleTextInputChange('name', value)}
+          />
+        </View>
         
-      <View>
-        <View style={styles.expandedGame}>
-          <View style={styles.gameStats}>
-            <View style={styles.statContainer}>
-              <Text style={styles.statTitle}>Hours: </Text>
-              <TextInput 
-                placeholder='Hours played'
-                style={{...styles.statsInput, width: Spacing.unit * 2.3}}
-                value={gameData.hours ? String(gameData.hours) : '0'} 
-                onChangeText={(value) => handleTextInputChange('hours', value)}
-                keyboardType='numeric'
-              />
-            </View>
-            <View style={styles.statContainer}>
-              <Text style={styles.statTitle}>Date Purchased: </Text>
-              { showCalendar ? (
-                <CustomCalendar 
-                  gameData={gameData}
-                  setGameData={setGameData}
-                  setShowCalendar={setShowCalendar}
+        <View>
+          <View style={styles.expandedGame}>
+            <View style={styles.gameStats}>
+              <View style={styles.statContainer}>
+                <Text style={styles.statTitle}>Hours: </Text>
+                <TextInput 
+                  placeholder='Hours played'
+                  style={{...styles.statsInput, width: Spacing.unit * 2.3}}
+                  value={gameData.hours ? String(gameData.hours) : '0'} 
+                  onChangeText={(value) => handleTextInputChange('hours', value)}
+                  keyboardType='numeric'
                 />
-              ) : (
-                <View style={styles.datePurchasedContainer}>
-                  <TextInput 
-                    placeholder='0'
-                    style={{...styles.statsInput, width: Spacing.unit * 2.3}}
-                    value={gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'zilch'} 
-                    onChangeText={(value) => handleTextInputChange('datePurchased', value)}
-                  />
-
-                  <ToggleCalendarBtn 
-                    styleType={'openBtn'} 
-                    iconName='calendar' 
-                    pressFunction={openCalendar}
-                  />
-                </View>
-              )}
-            </View>
-            <View style={styles.colourPickerContainer}>
-              <View style={styles.colourPickerInput}>
-                <Text style={styles.statTitle}>Title Colour: </Text>
-                <View style={styles.colorPickerContainer}>
-                  <CustomColourPicker colour={gameData.titleColour} setColour={setTitleColour}/>
-                </View>
               </View>
+              <View style={styles.statContainer}>
+                <Text style={styles.statTitle}>Date Purchased: </Text>
+                { showCalendar ? (
+                  <CustomCalendar 
+                    gameData={gameData}
+                    setGameData={setGameData}
+                    setShowCalendar={setShowCalendar}
+                  />
+                ) : (
+                  <View style={styles.datePurchasedContainer}>
+                    <TextInput 
+                      placeholder='0'
+                      style={{...styles.statsInput, width: Spacing.unit * 2.3}}
+                      value={gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'zilch'} 
+                      onChangeText={(value) => handleTextInputChange('datePurchased', value)}
+                    />
 
-              <View style={styles.colourPickerInput}>
-                <Text style={styles.statTitle}>Header Colour: </Text>
-                <View style={styles.colorPickerContainer}>
-                  <CustomColourPicker colour={gameData.headerColour} setColour={setHeaderColour}/>
-                </View>
+                    <ToggleCalendarBtn 
+                      styleType={'openBtn'} 
+                      iconName='calendar' 
+                      pressFunction={openCalendar}
+                    />
+                  </View>
+                )}
               </View>
+              <View style={styles.colourPickerContainer}>
+                <View style={styles.colourPickerInput}>
+                  <Text style={styles.statTitle}>Title Colour: </Text>
+                  <View style={styles.colorPickerContainer}>
+                    <CustomColourPicker colour={gameData.titleColour} setColour={setTitleColour}/>
+                  </View>
+                </View>
 
-              {/* <View style={styles.colourPickerInput}>
+                <View style={styles.colourPickerInput}>
+                  <Text style={styles.statTitle}>Header Colour: </Text>
+                  <View style={styles.colorPickerContainer}>
+                    <CustomColourPicker colour={gameData.headerColour} setColour={setHeaderColour}/>
+                  </View>
+                </View>
+
+                {/* <View style={styles.colourPickerInput}>
                 <Text style={styles.statTitle}>Background Colour: </Text>
                 <View style={styles.colorPickerContainer}>
                   <ColorPicker
@@ -177,34 +178,55 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                 </View>
               </View> */}
 
-            </View>
+              </View>
 
-            <View style={styles.editBtnContainer}>
-              <DeleteGameEntryBtn pressFunction={handleDeleteGamePress}/>
-              <View style={styles.editBtnsRight}>
-                <ToggleModeBtn
-                  type='editGame'
-                  iconName='thumbs-down' 
-                  isDisabled={false} 
-                  pressFunction={handleCloseGamePress}
-                />
-                <ToggleModeBtn
-                  type='editGame'
-                  iconName='save' 
-                  isDisabled={false} 
-                  pressFunction={handleUpdateGamePress} 
-                />
+              <View style={styles.editBtnContainer}>
+
+                <View style={styles.editBtnsRight}>
+
+                </View>
               </View>
             </View>
-          </View>
 
+          </View>
+        </View>
+      </View>
+      <View>
+        <View style={styles.button}>
+          <ToggleModeBtn
+            type='editGame'
+            iconName='save' 
+            isDisabled={false} 
+            pressFunction={handleUpdateGamePress} 
+          />
+        </View>
+        <View style={styles.button}>
+          <ToggleModeBtn
+            type='editGame'
+            iconName='thumbs-down' 
+            isDisabled={false} 
+            pressFunction={handleCloseGamePress}
+          />
+        </View>
+        <View style={styles.button}>
+          <DeleteGameEntryBtn pressFunction={handleDeleteGamePress}/>
         </View>
       </View>
     </View>
+    
   );
 }
 
 const styles = StyleSheet.create({
+  button: {
+    alignSelf: 'center',
+    padding: Spacing.unit1o5
+  },
+  gameEntryContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   gameEntry: {
     flexDirection: 'column',
     gap: Spacing.unit1o5,
@@ -213,23 +235,22 @@ const styles = StyleSheet.create({
     // padding: Spacing.unit1o5,
     backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
-    borderWidth: Spacing.borderThick,
-    borderLeftColor: Colors.orange,
-    borderRightColor: Colors.orange,
+    borderWidth: Spacing.border,
+
     borderLeftWidth: 2,
     borderRightWidth: 2
   },
   gameHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: Spacing.unit1o5
+    paddingVertical: Spacing.unit1o5,
   },
   gameIndex: {
-    marginRight: Spacing.unit1o2,
-    color: Colors.white,
+    marginHorizontal: Spacing.unit1o3,
+    color: Colors.black,
     fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',
-    textShadow: `${Colors.yellowPrime} 1px 1px 5px`
+    textAlign: 'center'
   },
   titleText: {
     color: Colors.white,
@@ -241,7 +262,7 @@ const styles = StyleSheet.create({
   expandedGame: {
     flexDirection: 'row',
     width: '100%',
-    backgroundColor: Colors.blueMid
+    backgroundColor: Colors.trout
   },
   statContainer: {
     flexDirection: 'row',
@@ -278,6 +299,7 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.unit1o10,
   },
   titleInput: {
+    marginLeft: Spacing.unit1o3,
     color: Colors.white,
     fontSize: FontSizes.large,
     fontWeight: 'bold',

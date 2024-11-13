@@ -60,8 +60,8 @@ function SmallCustomButton({ size, iconName, isDisabled, isPressed, pressFunctio
       >
         <View style={{
           ...styles.smallTopOfButton, 
-          backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
-          borderColor: isPressed ? Colors.yellowEdge : Colors.grayEdge  
+          backgroundColor: isPressed ? Colors.gameCubeGreen : Colors.grayPrime,
+          borderColor: isPressed ? Colors.greenEdge : Colors.grayEdge  
         }}>
           <View style={styles.iconContainer}>  
             <FontAwesome size={FontSizes.mediumLess} name={iconName} color={Colors.white} />
@@ -70,8 +70,8 @@ function SmallCustomButton({ size, iconName, isDisabled, isPressed, pressFunctio
         </View>
         <View style={{
           ...styles.smallBottomOfButton, 
-          backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
-          borderColor: isPressed ? Colors.yellowEdge : Colors.grayEdge 
+          backgroundColor: isPressed ? Colors.gameCubeGreen : Colors.grayPrime,
+          borderColor: isPressed ? Colors.greenEdge : Colors.grayEdge 
         }}/>
       </Pressable>
 
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
   bigButtonContainer: {
     flex: 1,
     height: Spacing.unit3o2,
+    alignSelf: 'flex-end'
   },
   addGameButton: {
     alignItems: 'center',

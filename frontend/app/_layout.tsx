@@ -54,7 +54,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: Colors.black,
+    backgroundColor: Colors.gray,
+    borderWidth: Spacing.borderThick,
+    borderColor: Colors.grayPrime,
   },
   resetBtn: {
     alignSelf: 'center',

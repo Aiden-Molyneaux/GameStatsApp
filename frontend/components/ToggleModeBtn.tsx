@@ -25,6 +25,8 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
       return styles.editGame;
     case 'view':
       return styles.view;
+    case 'openGame':
+      return styles.edit;
     default:
       return styles.edit;
     }
@@ -42,9 +44,9 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
       onHoverOut={() => setIsHovered(false)}
     >
       <FontAwesome 
-        size={isHovered ? FontSizes.large : FontSizes.medium}
+        size={isHovered ? FontSizes.medium : FontSizes.large}
         name={iconName}
-        color={(isDisabled) ? Colors.gray : Colors.orange} 
+        color={(isDisabled) ? Colors.gray : Colors.black} 
       />
     </Pressable>
   );

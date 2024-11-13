@@ -82,8 +82,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: Colors.gray,
-    borderWidth: Spacing.borderThick,
-    borderColor: Colors.grayPrime,
+    // borderWidth: Spacing.borderThick,
+    // borderColor: Colors.grayPrime,
   },
   tabBar: {
     width: '100%',
