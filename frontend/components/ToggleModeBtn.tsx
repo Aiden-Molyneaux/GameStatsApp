@@ -46,7 +46,7 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
       <FontAwesome 
         size={isHovered ? FontSizes.medium : FontSizes.large}
         name={iconName}
-        color={(isDisabled) ? Colors.gray : Colors.black} 
+        color={(isDisabled) ? Colors.grayEdge : Colors.black} 
       />
     </Pressable>
   );

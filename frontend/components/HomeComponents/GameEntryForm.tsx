@@ -30,6 +30,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   
   const [showCalendar, setShowCalendar]  = useState(false);
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
+  const [showOtherUI, setShowOtherUI] = useState(true);
 
   useEffect(() => {
     setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.datePurchased !== null));
@@ -62,31 +63,34 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   }
   
   async function handleUpdateGamePress() {
-    if (gameData.name !== '' && gameData.hours && gameData.datePurchased) {
-      const updatedGame: GameListItem = {
-        id: gameData.id,
-        name: gameData.name,
-        hours: gameData.hours,
-        datePurchased: gameData.datePurchased,
-        titleColour: titleColour,
-        headerColour: headerColour,
-        mode: VIEW
-      };
+    if (gameData.name === '') { 
+      
+      return; 
+    }
 
-      try {
-        await requestUpdateGame(updatedGame).then((response) => {
-          if('error' in response) {
-            console.error(response.error);
-            return;
-          }
+    const updatedGame: GameListItem = {
+      id: gameData.id,
+      name: gameData.name,
+      hours: gameData.hours,
+      datePurchased: gameData.datePurchased,
+      titleColour: titleColour,
+      headerColour: headerColour,
+      mode: VIEW
+    };
 
-          setGameData({...gameData, titleColour: titleColour, headerColour: headerColour, mode: VIEW});
-          dispatch(updateGameAction({ game: updatedGame }));
-          closeModal();
-        });
-      } catch(err) {
-        console.error(err);
-      }
+    try {
+      await requestUpdateGame(updatedGame).then((response) => {
+        if('error' in response) {
+          console.error(response.error);
+          return;
+        }
+
+        setGameData({...gameData, titleColour: titleColour, headerColour: headerColour, mode: VIEW});
+        dispatch(updateGameAction({ game: updatedGame }));
+        closeModal();
+      });
+    } catch(err) {
+      console.error(err);
     }
 
     setIsPressed(false);
@@ -109,7 +113,12 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
         <View style={{...styles.gameHeader, backgroundColor: headerColour}}>
           <TextInput
             placeholder='Title'
-            style={{...styles.titleInput, color: titleColour, backgroundColor: headerColour}}
+            style={{
+              ...styles.titleInput, 
+              color: titleColour, 
+              backgroundColor: headerColour,
+              borderBottomColor: gameData.name === '' ? Colors.red : Colors.orange,
+            }}
             value={gameData.name ? gameData.name : ''}
             onChangeText={(value) => handleTextInputChange('name', value)}
           />
@@ -157,14 +166,14 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                 <View style={styles.colourPickerInput}>
                   <Text style={styles.statTitle}>Title Colour: </Text>
                   <View style={styles.colorPickerContainer}>
-                    <CustomColourPicker colour={gameData.titleColour} setColour={setTitleColour}/>
+                    <CustomColourPicker colour={gameData.titleColour} setColour={setTitleColour} setShowOtherUI={setShowOtherUI}/>
                   </View>
                 </View>
 
                 <View style={styles.colourPickerInput}>
                   <Text style={styles.statTitle}>Header Colour: </Text>
                   <View style={styles.colorPickerContainer}>
-                    <CustomColourPicker colour={gameData.headerColour} setColour={setHeaderColour}/>
+                    <CustomColourPicker colour={gameData.headerColour} setColour={setHeaderColour} setShowOtherUI={setShowOtherUI}/>
                   </View>
                 </View>
 
@@ -196,7 +205,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
           <ToggleModeBtn
             type='editGame'
             iconName='save' 
-            isDisabled={false} 
+            isDisabled={gameData.name === ''} 
             pressFunction={handleUpdateGamePress} 
           />
         </View>
@@ -220,7 +229,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
 const styles = StyleSheet.create({
   button: {
     alignSelf: 'center',
-    padding: Spacing.unit1o5
+    margin: Spacing.unit1o5,
   },
   gameEntryContainer: {
     flexDirection: 'row',
@@ -228,17 +237,10 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   gameEntry: {
+    flex: 1,
     flexDirection: 'column',
-    gap: Spacing.unit1o5,
-    width: Spacing.unit10 - Spacing.unit,
-    margin: Spacing.unit1o5 / 5,
-    // padding: Spacing.unit1o5,
-    backgroundColor: Colors.bluePrime,
     borderColor: Colors.yellowPrime,
     borderWidth: Spacing.border,
-
-    borderLeftWidth: 2,
-    borderRightWidth: 2
   },
   gameHeader: {
     flexDirection: 'row',
@@ -311,18 +313,18 @@ const styles = StyleSheet.create({
   statsInput: {
     color: Colors.black,
     fontSize: FontSizes.mediumLess,
-    borderBottomColor: Colors.orange,
     borderBottomWidth: Spacing.border,
     marginHorizontal: Spacing.unit1o10,
+    borderBottomColor: Colors.orange
   },
   colourPickerContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    margin: Spacing.unit1o2
+    margin: Spacing.unit1o2,
+    marginBottom: 0
   },
   colourPickerInput: {
     alignItems: 'center'
   },
-
 });

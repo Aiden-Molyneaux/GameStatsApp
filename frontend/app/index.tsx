@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: Spacing.unit * 2,
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.trout,
   },
   authForm: {
     gap: Spacing.unit1o5,

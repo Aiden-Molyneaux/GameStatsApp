@@ -31,14 +31,8 @@ export function CustomColourPicker({colour, setColour}: ColourPickerProps) {
 
   return (
     <>
-      <View>
-        <Pressable style={{...styles.openButton, backgroundColor: getColour()}} onPress={() => setShowModal(true)}></Pressable>
-        { showModal && 
-          <Pressable style={styles.closeButton} onPress={() => setShowModal(false)}>
-            <Text style={{ color: '#707070', fontWeight: 'bold' }}>Close</Text>
-          </Pressable>
-        }
-      </View>
+      
+      <Pressable style={{...styles.openButton, backgroundColor: getColour(), width: showModal ? '100%' : Spacing.unit}} onPress={() => setShowModal(true)}></Pressable>
 
       { showModal && <View>
         <View style={styles.container}>
@@ -51,7 +45,7 @@ export function CustomColourPicker({colour, setColour}: ColourPickerProps) {
               onChange={onColorSelect}
               boundedThumb
             >
-              <Preview/>
+
               <Panel1 style={styles.panelStyle} />
               <HueSlider style={styles.sliderStyle} />
               {/* <OpacitySlider style={styles.sliderStyle} /> */}
@@ -61,7 +55,9 @@ export function CustomColourPicker({colour, setColour}: ColourPickerProps) {
             </View> */}
             </ColorPicker>
           </View>
-
+          <Pressable style={styles.closeButton} onPress={() => setShowModal(false)}>
+            <Text style={{ color: '#707070', fontWeight: 'bold' }}>Close</Text>
+          </Pressable>
         </View>
       </View> }
     </>
@@ -77,24 +73,11 @@ const styles = StyleSheet.create({
   },
   openButton: {
     height: Spacing.unit,
-    width: Spacing.unit2,
-    borderRadius: Spacing.unit1o5,
-    backgroundColor: '#fff',
-
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+    width: Spacing.unit,
+    borderWidth: Spacing.border,
+    borderColor: Colors.black,
   },
   closeButton: {
-
-    borderRadius: Spacing.unit1o5,
-
     backgroundColor: '#fff',
 
     shadowColor: '#000',
@@ -108,23 +91,10 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     alignSelf: 'center',
-    width: 300,
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
+    width: 250,
 
-    elevation: 10,
   },
   panelStyle: {
-    borderRadius: 16,
-
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -137,7 +107,6 @@ const styles = StyleSheet.create({
   },
   sliderStyle: {
     borderRadius: 20,
-    marginTop: 20,
 
     shadowColor: '#000',
     shadowOffset: {

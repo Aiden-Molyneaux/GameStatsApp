@@ -142,20 +142,26 @@ const styles = StyleSheet.create({
   gameEntryContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderColor: Colors.gray,
+    borderTopWidth: Spacing.border
   },
   gameEntry: {
-    flexDirection: 'column',
     flex: 1,
+    flexDirection: 'column',
     marginVertical: Spacing.unit1o5,
-    backgroundColor: Colors.bluePrime,
-    borderColor: Colors.black,
-    borderWidth: Spacing.border,
+    // borderColor: Colors.black,
+    // borderWidth: Spacing.border,
+    borderRadius: 2000,
   },
   gameHeader: {
     flexDirection: 'row',
     alignItems: 'center',
+
     paddingVertical: Spacing.unit1o5,
+    borderColor: Colors.black,
+    borderWidth: Spacing.border,
+    borderRadius: 2000,
   },
   gameIndex: {
     marginHorizontal: Spacing.unit1o3,
@@ -168,8 +174,8 @@ const styles = StyleSheet.create({
     flex: 1,
     color: Colors.white,
     fontSize: FontSizes.large,
-    marginLeft: Spacing.unit1o3,
-    textAlign: 'left',
+
+    textAlign: 'center',
     fontWeight: 'bold',
     letterSpacing: 3,
     textShadow: `${Colors.black} 1px 1px 1px`
@@ -209,7 +215,7 @@ const styles = StyleSheet.create({
     borderRadius: 15
   },
   modalContainer: {
-
+    width: '100%'
   },
   ellipsis: {
     color: Colors.black,
