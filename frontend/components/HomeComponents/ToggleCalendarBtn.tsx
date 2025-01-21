@@ -37,13 +37,9 @@ const sharedStyles: ViewStyle = {
 
 const styles = StyleSheet.create({
   openBtn: {
-    ...sharedStyles,
-    padding: Spacing.unit1o5
+    ...sharedStyles
   },
   closeBtn: {
     ...sharedStyles,
-    position: 'absolute',
-    top: Spacing.unit1o5,
-    right: Spacing.unit1o5,
   }
 });

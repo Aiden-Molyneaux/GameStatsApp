@@ -21,6 +21,7 @@ export const Spacing = {
   unit8: em1 * 8,
   unit7: em1 * 7,
   unit5: em1 * 5,
+  unit3: em1 * 3,
   unit2: em1 * 2,
   unit3o2: em1 * 3/2,
   unit: em1,
@@ -32,17 +33,28 @@ export const Spacing = {
   screenWidth: width,
   screenHeight: height,
 
-  border: 2
+  border: 2,
+  borderThick: 5
 };
 
 export const Colors = {
   white: '#ffffff',
-  gray: '#808080',
+  gray: '#b9bbb6',
+  grayPrime: '#777b7e',
+  grayEdge: '#46494b',
   black: '#111111',
-  blue: '#212833',
-  bluePrime: '#52637f',
-  yellow: '#ffce1f',
-  yellowPrime: '#997828',
+  blue: '#b9bbb6',// '#212833', white
+  blueMid: '#ffffff',
+  bluePrime: '#1d1c1a',
+  yellow: '#1d1c1a',// '#ffce1fFF', black
+  yellowPrime: '#000000', // '#997828FF', darker black
+  yellowEdge: '#c68611',
+  red: '#ff0000',
+  orange: '#FAA916',
+  trout: '#d1d5c0',
+  plum: '#6557a7',
+  gameCubeGreen: '#019190',
+  greenEdge: '#007269'
 };
 
 // const tintColorLight = '#0a7ea4';

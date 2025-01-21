@@ -1,30 +1,28 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Platform } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Platform, Dimensions  } from 'react-native';
 import { Tabs } from 'expo-router';
 import { persistor, store } from '../../store/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import NavigationButton from '@/components/HomeComponents/NavigationButton';
+import Header from '@/components/Header';
 
 const TabBarScreenOptions = (web: boolean) => {
   const style = web
     ? {
-      position: 'absolute',
-      top: 0,
-      left: Spacing.screenWidth / 2,
-      transform: 'translate(-50%, -0%)',
-      width: Spacing.unit10,
       ...styles.tabBar,
     }
     : {
-      paddingBottom: 0,
+
+      paddingBottom: Spacing.unit1o10,
       ...styles.tabBar,
     };
 
   return {
     headerShown: false,
-    tabBarActiveTintColor: Colors.yellow,
+    tabBarActiveTintColor: Colors.orange,
     tabBarInactiveTintColor: Colors.white,
     tabBarLabelStyle: { fontSize: FontSizes.medium },
     tabBarStyle: style,
@@ -32,26 +30,44 @@ const TabBarScreenOptions = (web: boolean) => {
 };
 
 export default function RootLayout() {
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaView style={styles.container}>
+          
           <Tabs screenOptions={TabBarScreenOptions(Platform.OS === 'web')}>
             <Tabs.Screen
               name='index'
               options={{
-                tabBarLabel: 'Home',
-                tabBarLabelStyle: styles.tabBarText,
+                tabBarLabel: '',
                 tabBarLabelPosition: 'beside-icon',
-                tabBarIcon: ({ color }) => <FontAwesome size={FontSizes.large} name='home' color={color} />,
+                tabBarIcon: ({ focused }) => (
+                  <View style={styles.hmm}>
+                    <NavigationButton
+                      labelText='Games'
+                      iconName='home'
+                      isPressed={focused}
+                    />
+                  </View>
+                ),
               }}
-            />
+            /> 
             <Tabs.Screen
               name='Profile'
               options={{
-                tabBarLabel: 'Profile',
-                tabBarLabelStyle: styles.tabBarText,
-                tabBarIcon: ({ color }) => <FontAwesome size={FontSizes.large} name='user' color={color} />,
+                tabBarLabel: '',
+                tabBarLabelPosition: 'beside-icon',
+                tabBarIcon: ({ focused }) => (
+                  <View style={styles.hmm}>
+                    <NavigationButton
+                      labelText='Profile'
+                      iconName='user'
+                      isPressed={focused}
+                    />
+                  </View>
+
+                ),
               }}
             />
           </Tabs>
@@ -64,15 +80,23 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.blue,
+    justifyContent: 'center',
+    backgroundColor: Colors.gray,
+    // borderWidth: Spacing.borderThick,
+    // borderColor: Colors.grayPrime,
   },
   tabBar: {
-    height: Spacing.unit3o2,
-    backgroundColor: Colors.blue,
-    borderTopColor: Colors.yellowPrime,
-    borderBottomColor: Colors.yellowPrime,
-    borderTopWidth: Spacing.border,
-    borderBottomWidth: Spacing.border,
+    width: '100%',
+    justifyContent: 'center',
+    marginBottom: Spacing.unit1o5,
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+  },
+  hmm: {
+    flex: 1,
+    width: Spacing.unit5,
+    justifyContent: 'flex-end',
+    marginLeft: 20
   },
   tabBarText: {
     fontFamily: Fonts.monospace,

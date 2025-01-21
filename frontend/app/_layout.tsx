@@ -22,7 +22,6 @@ function Layout() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header/>
       <Stack>
         <Stack.Screen
           name='index'
@@ -34,9 +33,9 @@ function Layout() {
         />
       </Stack>
 
-      <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>
+      {/* <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>
         <Text style={styles.resetText}>Reset Storage</Text>
-      </Pressable>
+      </Pressable> */}
     </SafeAreaView>
   );
 }
@@ -54,12 +53,16 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.blue,
+    
+    justifyContent: 'center',
+    backgroundColor: Colors.gray,
+    borderWidth: Spacing.borderThick,
+    borderColor: Colors.grayPrime,
   },
   resetBtn: {
     alignSelf: 'center',
     justifyContent: 'center',
-    width: Spacing.unit * 3,
+    width: Spacing.unit3,
     height: Spacing.unit1o2,
     margin: Spacing.unit1o3,
     backgroundColor: Colors.yellowPrime,

@@ -8,6 +8,9 @@ import { Text } from '@/components/Customs';
 import SortBar from '@/components/HomeComponents/SortBar';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
+import Header from '@/components/Header';
+import CustomButton from '@/components/HomeComponents/CustomButton';
+import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
 
 export default function Home() {
   const { games } = useSelector((state: RootState) => state.gameData);
@@ -18,9 +21,7 @@ export default function Home() {
 
   const gameListRef = useRef<FlatList>(null);
 
-  const state = store.getState();
-
-  console.log(state);
+  const [isPressed, setIsPressed] = useState(false);
 
   // keep track of if we have a game open for edit (or new)
   useEffect(() => {
@@ -36,21 +37,32 @@ export default function Home() {
 
   return (
     <View style={styles.homePage}>
-      <Text style={styles.playTimeText}>Your Play-Time</Text>
+      <Header/>
 
-      <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
+      <View style={styles.screenContainer}>
+        <View style={styles.screen}>
+          <View>
+            <Text style={styles.usernameText}>Sammy Jack</Text>
+          </View>
+          <GameList
+            games={games} 
+            sortMode={sortMode}
+            ref={gameListRef}
+            setIsPressed={setIsPressed}
+          />
+        </View>
 
-      <GameList
-        games={games} 
-        sortMode={sortMode}
-        ref={gameListRef}
-      />
-
-      <AddGameBtn
-        isDisabled={disableAddBtn}
-        gameCount={gameCount}
-        onAddGame={handleAddGame}
-      />
+      </View>
+      <View style={styles.buttons}>
+        <SortBar currentSortMode={sortMode} setSortMode={setSortMode}/>
+        <AddGameBtn
+          isDisabled={disableAddBtn}
+          onAddGame={handleAddGame}
+          isPressed={isPressed}
+          setIsPressed={setIsPressed}
+        />
+        <OpenCloseBar currentSortMode={sortMode} setSortMode={setSortMode}/>
+      </View>
     </View>
   );
 }
@@ -62,12 +74,38 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     alignItems: 'center',
-    paddingTop: isIOS ? 0 : Spacing.unit3o2,
+    overflow: 'hidden',
     backgroundColor: Colors.blue,
   },
-  playTimeText: {
-    marginVertical: Spacing.unit1o3,
-    color: Colors.yellow,
-    fontSize: FontSizes.large,
+  screenContainer: {
+    flex: 1,
+    width: '95%',
+    borderWidth: Spacing.borderThick,
+    borderColor: Colors.grayPrime,
+    borderRadius: 15,
+    marginBottom: Spacing.unit1o3,
+    elevation: 8
+  },
+  screen: {
+    flex: 1,
+    backgroundColor: Colors.trout,
+    borderWidth: Spacing.border,
+    borderColor: Colors.grayEdge,
+    borderRadius: 9,
+    overflow: 'hidden'
+  },
+  buttons: {
+    height: Spacing.unit3o2,
+    flexDirection: 'row',
+    gap: Spacing.unit,
+    width: '95%',
+    marginBottom: isIOS ? Spacing.unit1o3 : Spacing.unit
+  },
+  usernameText: {
+    padding: 5,
+    color: Colors.black,
+    textAlign: 'left',
+    borderBottomColor: Colors.gray,
+    borderBottomWidth: Spacing.border 
   }
 });

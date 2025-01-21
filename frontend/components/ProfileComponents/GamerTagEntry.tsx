@@ -60,7 +60,12 @@ export default function GamerTagEntry({ gamerTag }: GamerTagFormProps) {
     <View style={styles.gamerTagEntry}>
       { getSelectedLogo(gamerTagData.platform) }
       <Text style={{ color: Colors.yellow }}>{gamerTagData.tag === '' ? 'new Gamertag' : gamerTagData.tag}</Text>
-      <ToggleModeBtn iconName='edit' isDisabled={false} pressFunction={setModeEdit}/>
+      <ToggleModeBtn
+        type='edit' 
+        iconName='edit' 
+        isDisabled={false} 
+        pressFunction={setModeEdit}
+      />
     </View>
   ) : (
     <GamerTagForm gamerTag={gamerTagData}/>

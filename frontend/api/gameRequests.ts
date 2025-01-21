@@ -41,6 +41,7 @@ type requestCreateGameReturn = { game: Game } | { error: string };
 
 export async function requestCreateGame(newGame: PartialGame): Promise<requestCreateGameReturn> {  
   try {
+    console.log(newGame);
     const response = await api.post<requestCreateGameReturn>('api/games', { newGame });
 
     if (response.status !== 200) {
