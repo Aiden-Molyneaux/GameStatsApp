@@ -41,6 +41,9 @@ export default function Home() {
 
       <View style={styles.screenContainer}>
         <View style={styles.screen}>
+          <View>
+            <Text style={styles.usernameText}>Sammy Jack</Text>
+          </View>
           <GameList
             games={games} 
             sortMode={sortMode}
@@ -80,7 +83,8 @@ const styles = StyleSheet.create({
     borderWidth: Spacing.borderThick,
     borderColor: Colors.grayPrime,
     borderRadius: 15,
-    marginBottom: Spacing.unit1o3
+    marginBottom: Spacing.unit1o3,
+    elevation: 8
   },
   screen: {
     flex: 1,
@@ -97,4 +101,11 @@ const styles = StyleSheet.create({
     width: '95%',
     marginBottom: isIOS ? Spacing.unit1o3 : Spacing.unit
   },
+  usernameText: {
+    padding: 5,
+    color: Colors.black,
+    textAlign: 'left',
+    borderBottomColor: Colors.gray,
+    borderBottomWidth: Spacing.border 
+  }
 });

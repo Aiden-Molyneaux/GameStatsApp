@@ -3,11 +3,12 @@ import { View, Platform, StyleSheet } from 'react-native';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
 import { Text } from '../../components/Customs';
 import ProfileDetails from '../../components/ProfileComponents/ProfileDetails';
+import Header from '@/components/Header';
 
 export default function Profile() {
   return (
     <View style={styles.profilePage}>
-      <Text style={styles.profileText}>Your Profile</Text>
+      <Header/>
     
       <ProfileDetails/>
     </View>
@@ -18,9 +19,10 @@ const isIOS = Platform.OS === 'ios';
 
 const styles = StyleSheet.create({
   profilePage: {
-    alignItems: 'center',
+    flex: 1,
     height: '100%',
-    paddingTop: isIOS ? 0 : Spacing.unit3o2,
+    alignItems: 'center',
+    overflow: 'hidden',
     backgroundColor: Colors.blue,
   },
   profileText: {

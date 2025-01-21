@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: Spacing.unit * 2,
+    // padding: Spacing.unit * 2,
     backgroundColor: Colors.trout,
   },
   authForm: {

@@ -234,25 +234,31 @@ const styles = StyleSheet.create({
   gameEntryContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    borderColor: Colors.gray,
+    borderTopWidth: Spacing.border
   },
   gameEntry: {
     flex: 1,
     flexDirection: 'column',
-    borderColor: Colors.yellowPrime,
-    borderWidth: Spacing.border,
+    marginVertical: Spacing.unit1o5,
+    borderRadius: 2000,
   },
   gameHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: Spacing.unit1o5,
+    borderColor: Colors.black,
+    borderWidth: Spacing.border,
+    borderRadius: 2000,
   },
   gameIndex: {
     marginHorizontal: Spacing.unit1o3,
     color: Colors.black,
     fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    
   },
   titleText: {
     color: Colors.white,
@@ -306,6 +312,7 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.large,
     fontWeight: 'bold',
     letterSpacing: 3,
+    textAlign: 'center',
     textShadow: `${Colors.black} 1px 1px 1px`,
     borderBottomColor: Colors.orange,
     borderBottomWidth: Spacing.border
