@@ -67,61 +67,6 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
     }).start();
   }, [viewMode]);
 
-  function getTruncatedString(text, maxWidth, font, maxLines = 2) {
-    // Create an offscreen canvas
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-
-    // Set the font style (important for accurate measurements)
-    context.font = font;
-
-    // Split the text into words for line calculation
-    const words = text.split(' ');
-    let currentLine = '';
-    const lines = [];
-
-    for (const word of words) {
-      const testLine = currentLine + (currentLine ? ' ' : '') + word;
-      const testWidth = context.measureText(testLine).width;
-
-      if (testWidth > maxWidth) {
-        // Push the current line to lines and reset for the next line
-        lines.push(currentLine);
-        currentLine = word;
-
-        // Stop if we've reached the maximum number of lines
-        if (lines.length >= maxLines) {
-          lines.push('...');
-          break;
-        }
-      } else {
-        currentLine = testLine;
-      }
-    }
-
-    // Add the last line if it's within the limit
-    if (lines.length < maxLines && currentLine) {
-      lines.push(currentLine);
-    }
-
-    // If there are too many lines, truncate the last one
-    if (lines.length > maxLines) {
-      let truncatedLine = '';
-      for (const char of currentLine) {
-        const testLine = truncatedLine + char;
-        const testWidth = context.measureText(testLine + '...').width;
-
-        if (testWidth > maxWidth) {
-          break;
-        }
-        truncatedLine = testLine;
-      }
-      lines[maxLines - 1] = truncatedLine + '...';
-    }
-
-    return lines.join('\n');
-  }
-
   return (
     <>
       { !isModalVisible ?
@@ -129,13 +74,9 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
         <View style={styles.gameEntryContainer}>
           <Text style={styles.gameIndex}>{index + 1}</Text>
           <View style={{...styles.gameEntry}}>
-            <View style={{...styles.gameHeader, backgroundColor: gameData.headerColour, borderRadius: gameData.name.length > 10 ? 40 : 2000  }}>
+            <View style={{...styles.gameHeader, backgroundColor: gameData.headerColour }}>
           
               <Text style={{...styles.titleText, color: gameData.titleColour}}>{gameData.name}</Text>
-              { gameData.name.length > 25 
-                ? <Text style={{...styles.titleText, color: gameData.titleColour}}>...</Text>
-                : null 
-              }
             </View> 
       
             {viewMode === 'OPEN' && ( 
@@ -170,30 +111,8 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
               pressFunction={setModeEdit} 
             />
           </View>
-
-          {/* <Modal
-            animationType='slide'
-            transparent={true}
-            visible={isModalVisible}
-            onRequestClose={() => setIsModalVisible(false)} // Handle the modal close
-          >
-            <View style={styles.modalBackground}>
-              <View style={styles.modalContainer}>
-                <Text style={styles.ellipsis}>⋮</Text>
-                <GameEntryForm
-                  index={index}
-                  gameData={gameData}
-                  setGameData={setGameData}
-                  setIs
-                  closeModal={() => setIsModalVisible(false)}
-                  setIsPressed={setIsPressed}
-                />
-                <Text style={styles.ellipsis}>⋮</Text>
-              </View>
-            </View>
-          </Modal> */}
         </View>
-        :               <GameEntryForm
+        : <GameEntryForm
           index={index}
           gameData={gameData}
           setGameData={setGameData}
@@ -224,10 +143,10 @@ const styles = StyleSheet.create({
   },
   gameHeader: {
     alignItems: 'center',
-
     padding: Spacing.unit1o5,
     borderColor: Colors.black,
     borderWidth: Spacing.border,
+    borderRadius: 10,
     overflow: 'hidden'
   },
   gameIndex: {
@@ -244,8 +163,7 @@ const styles = StyleSheet.create({
 
     textAlign: 'center',
     fontWeight: 'bold',
-    letterSpacing: 3,
-    textShadow: `${Colors.black} 1px 1px 1px`
+    letterSpacing: 3
   },
   expandedGame: {
     position: 'absolute',
@@ -272,21 +190,4 @@ const styles = StyleSheet.create({
     color: Colors.black,
     fontSize: FontSizes.mediumLess
   },
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(209, 213, 192, 1)', // Dark background for modal
-    borderColor: Colors.grayPrime,
-    borderWidth: 5,
-    borderRadius: 15
-  },
-  modalContainer: {
-    width: '100%'
-  },
-  ellipsis: {
-    color: Colors.black,
-    fontSize: FontSizes.header,
-    fontWeight: 'bold'
-  }
 });

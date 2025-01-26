@@ -106,6 +106,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   const [titleColour, setTitleColour] = useState(gameData.titleColour);
   const [headerColour, setHeaderColour] = useState(gameData.headerColour);
 
+  const [inputHeight, setInputHeight] = useState(40); // Default height
+
   return (
     <View style={styles.gameEntryContainer}>
       <Text style={styles.gameIndex}>{index + 1}</Text>
@@ -118,9 +120,16 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
               color: titleColour, 
               backgroundColor: headerColour,
               borderBottomColor: gameData.name === '' ? Colors.red : Colors.orange,
+              // height: inputHeight
             }}
+            // onContentSizeChange={(event) => {
+            //   setInputHeight(event.nativeEvent.contentSize.height);
+            // }}
             value={gameData.name ? gameData.name : ''}
             onChangeText={(value) => handleTextInputChange('name', value)}
+            maxLength={60}
+            multiline={true}
+            scrollEnabled={false}
           />
         </View>
         
@@ -241,16 +250,14 @@ const styles = StyleSheet.create({
   gameEntry: {
     flex: 1,
     flexDirection: 'column',
-    marginVertical: Spacing.unit1o5,
-    borderRadius: 2000,
+    marginVertical: Spacing.unit1o5
   },
   gameHeader: {
-    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Spacing.unit1o5,
+    padding: Spacing.unit1o5,
     borderColor: Colors.black,
     borderWidth: Spacing.border,
-    borderRadius: 2000,
+    borderRadius: 10,
   },
   gameIndex: {
     marginHorizontal: Spacing.unit1o3,
@@ -258,14 +265,6 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',
     textAlign: 'center',
-    
-  },
-  titleText: {
-    color: Colors.white,
-    fontSize: FontSizes.large,
-    fontWeight: 'bold',
-    letterSpacing: 3,
-    textShadow: `${Colors.black} 1px 1px 1px`
   },
   expandedGame: {
     flexDirection: 'row',
@@ -307,15 +306,15 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.unit1o10,
   },
   titleInput: {
-    marginLeft: Spacing.unit1o3,
+    width: '80%',
     color: Colors.white,
     fontSize: FontSizes.large,
     fontWeight: 'bold',
     letterSpacing: 3,
     textAlign: 'center',
-    textShadow: `${Colors.black} 1px 1px 1px`,
     borderBottomColor: Colors.orange,
-    borderBottomWidth: Spacing.border
+    borderBottomWidth: Spacing.border,
+    textAlignVertical: 'top'
   },
   statsInput: {
     color: Colors.black,
