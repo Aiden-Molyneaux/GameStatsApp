@@ -14,6 +14,8 @@ CREATE TABLE games (
 	name		VARCHAR(60) NOT NULL,
   hours   INT,
 	datePurchased 	DATE,
+	titleColour VARCHAR(16),
+	headerColour VARCHAR(16),
 	FOREIGN KEY (userId) REFERENCES users (id) ON DELETE CASCADE
 );
 
