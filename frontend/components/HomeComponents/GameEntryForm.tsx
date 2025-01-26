@@ -44,6 +44,28 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
     setGameData({...gameData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
   }
 
+  function formatDateInput(value: string): string {
+    // Remove any non-digit characters from input
+    const numbers = value.replace(/\D/g, '');
+    
+    // Handle empty input
+    if (numbers.length === 0) {
+      return '';
+    }
+    
+    // Format the date with hyphens
+    let formattedDate = numbers;
+    if (numbers.length >= 4) {
+      formattedDate = numbers.slice(0, 4) + '-' + numbers.slice(4);
+    }
+    if (numbers.length >= 6) {
+      formattedDate = formattedDate.slice(0, 7) + '-' + formattedDate.slice(7);
+    }
+    
+    // Limit to 8 digits (YYYYMMDD)
+    return numbers.length <= 8 ? formattedDate : formattedDate;
+  }
+
   async function handleDeleteGamePress() {
     setIsPressed(false);
     
@@ -106,8 +128,6 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   const [titleColour, setTitleColour] = useState(gameData.titleColour);
   const [headerColour, setHeaderColour] = useState(gameData.headerColour);
 
-  const [inputHeight, setInputHeight] = useState(40); // Default height
-
   return (
     <View style={styles.gameEntryContainer}>
       <Text style={styles.gameIndex}>{index + 1}</Text>
@@ -119,16 +139,13 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
               ...styles.titleInput, 
               color: titleColour, 
               backgroundColor: headerColour,
+
               borderBottomColor: gameData.name === '' ? Colors.red : Colors.orange,
-              // height: inputHeight
             }}
-            // onContentSizeChange={(event) => {
-            //   setInputHeight(event.nativeEvent.contentSize.height);
-            // }}
-            value={gameData.name ? gameData.name : ''}
+            value={gameData.name || ''}
             onChangeText={(value) => handleTextInputChange('name', value)}
             maxLength={60}
-            multiline={true}
+            // multiline={true}
             scrollEnabled={false}
           />
         </View>
@@ -139,37 +156,26 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
               <View style={styles.statContainer}>
                 <Text style={styles.statTitle}>Hours: </Text>
                 <TextInput 
-                  placeholder='Hours played'
-                  style={{...styles.statsInput, width: Spacing.unit * 2.3}}
-                  value={gameData.hours ? String(gameData.hours) : '0'} 
-                  onChangeText={(value) => handleTextInputChange('hours', value)}
+                  placeholder='0'
+                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
+                  value={ gameData.hours ? String(gameData.hours) : '' } 
+                  onChangeText={ (value) => handleTextInputChange('hours', value) }
                   keyboardType='numeric'
                 />
               </View>
               <View style={styles.statContainer}>
                 <Text style={styles.statTitle}>Date Purchased: </Text>
-                { showCalendar ? (
-                  <CustomCalendar 
-                    gameData={gameData}
-                    setGameData={setGameData}
-                    setShowCalendar={setShowCalendar}
-                  />
-                ) : (
-                  <View style={styles.datePurchasedContainer}>
-                    <TextInput 
-                      placeholder='0'
-                      style={{...styles.statsInput, width: Spacing.unit * 2.3}}
-                      value={gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'zilch'} 
-                      onChangeText={(value) => handleTextInputChange('datePurchased', value)}
-                    />
-
-                    <ToggleCalendarBtn 
-                      styleType={'openBtn'} 
-                      iconName='calendar' 
-                      pressFunction={openCalendar}
-                    />
-                  </View>
-                )}
+                <TextInput 
+                  placeholder='YYYY-MM-DD'
+                  maxLength={10}
+                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
+                  value={ gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : '' }
+                  onChangeText={(value) => {
+                    const formattedDate = formatDateInput(value);
+                    handleTextInputChange('datePurchased', formattedDate);
+                  }}
+                  keyboardType='number-pad'
+                />
               </View>
               <View style={styles.colourPickerContainer}>
                 <View style={styles.colourPickerInput}>
@@ -314,7 +320,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderBottomColor: Colors.orange,
     borderBottomWidth: Spacing.border,
-    textAlignVertical: 'top'
+    textAlignVertical: 'top',
+    outlineStyle: 'none',
+    outlineWidth: 2,
+    outlineColor: 'red',
   },
   statsInput: {
     color: Colors.black,

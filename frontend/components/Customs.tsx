@@ -22,7 +22,6 @@ export const TextInput: React.FC<CustomTextInputProps> = ({ style, ...props }) =
     placeholderTextColor={Colors.gray}
     onFocus={() => {
       setIsFocused(true);
-      console.log('focused');
     }}
     onBlur={() => setIsFocused(false)}
     {...props} 
@@ -39,10 +38,11 @@ const styles = StyleSheet.create({
   defaultTextInputStyle: {
     color: Colors.white,
     fontFamily: Fonts.monospace,
-    fontSize: FontSizes.medium,
+    fontSize: FontSizes.medium
   } as TextStyle,
   inputFocused: {
-    border: 'none',
-    borderWidth: 0
+    outlineStyle: 'none',
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.red,
   } as TextStyle
 });
