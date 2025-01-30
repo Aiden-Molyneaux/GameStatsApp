@@ -72,19 +72,21 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
       { !isModalVisible ?
       
         <View style={styles.gameEntryContainer}>
-          <Text style={styles.gameIndex}>{index + 1}</Text>
+          <View style={styles.gameIndexContainer}>
+            <Text style={styles.gameIndex}>{index + 1}</Text>
+          </View>
           <View style={{...styles.gameEntry}}>
             <View style={{...styles.gameHeader, backgroundColor: gameData.headerColour }}>
           
               <Text style={{...styles.titleText, color: gameData.titleColour}}>{gameData.name}</Text>
             </View> 
       
-            {viewMode === 'OPEN' && ( 
+            { viewMode === 'OPEN' && ( 
               <Animated.View style={{ height: animatedHeight, overflow: 'hidden' }}>  
                 <View style={styles.expandedGame}>
                   <View style={styles.gameStats}>
                     <View style={styles.statContainer}>
-                      <Text style={styles.statTitle}>Hours: </Text><Text style={styles.statText}>{gameData.hours}</Text>
+                      <Text style={styles.statTitle}>Hours Played: </Text><Text style={styles.statText}>{gameData.hours}</Text>
                     </View>
                     <View style={styles.statContainer}>
                       <Text style={styles.statTitle}>Date Purchased: </Text><Text style={styles.statText}>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
@@ -149,8 +151,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden'
   },
+  gameIndexContainer: {
+    alignItems: 'center',
+    width: Spacing.unit,
+  },
   gameIndex: {
-    marginHorizontal: Spacing.unit1o3,
     color: Colors.black,
     fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',

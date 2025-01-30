@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
   inputFocused: {
     outlineStyle: 'none',
-    borderBottomWidth: 2,
-    borderBottomColor: Colors.red,
+    // borderBottomWidth: 2,
+    // borderBottomColor: Colors.red,
   } as TextStyle
 });

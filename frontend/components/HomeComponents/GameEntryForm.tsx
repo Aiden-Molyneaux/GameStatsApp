@@ -27,21 +27,29 @@ interface GameEntryFormProps {
 
 export default function GameEntryForm({ index, gameData, setGameData, closeModal, setIsPressed }: GameEntryFormProps) {
   const dispatch = useDispatch();
+  const [formData, setFormData] = useState(gameData); // Local state for form
   
-  const [showCalendar, setShowCalendar]  = useState(false);
   const [disableSaveBtn, setDisableSaveBtn] = useState(false);
   const [showOtherUI, setShowOtherUI] = useState(true);
 
   useEffect(() => {
-    setDisableSaveBtn(!(gameData.name && gameData.hours && gameData.datePurchased !== null));
-  }, [gameData]);
-
-  function openCalendar() {
-    setShowCalendar(true);
-  }
+    setDisableSaveBtn(!(formData.name && formData.hours && formData.datePurchased !== null));
+  }, [formData]);
 
   function handleTextInputChange(field: string, value: string) {
-    setGameData({...gameData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
+    setFormData({...formData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
+  }
+
+  function isDateValid(date: string | null): boolean {
+    // empty date is valid
+    if (!date) return true;
+
+    // a valid date must be 10 characters long
+    if (date.length !== 10) return false;
+
+    // a valid date must be a valid date ;)
+    const dateObj = new Date(date);
+    return dateObj instanceof Date && !isNaN(dateObj.getTime());
   }
 
   function formatDateInput(value: string): string {
@@ -49,9 +57,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
     const numbers = value.replace(/\D/g, '');
     
     // Handle empty input
-    if (numbers.length === 0) {
-      return '';
-    }
+    if (numbers.length === 0) { return ''; }
     
     // Format the date with hyphens
     let formattedDate = numbers;
@@ -85,16 +91,11 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   }
   
   async function handleUpdateGamePress() {
-    if (gameData.name === '') { 
-      
-      return; 
-    }
-
     const updatedGame: GameListItem = {
       id: gameData.id,
-      name: gameData.name,
-      hours: gameData.hours,
-      datePurchased: gameData.datePurchased,
+      name: formData.name,
+      hours: formData.hours,
+      datePurchased: formData.datePurchased === '' ? null : formData.datePurchased,
       titleColour: titleColour,
       headerColour: headerColour,
       mode: VIEW
@@ -107,8 +108,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
           return;
         }
 
-        setGameData({...gameData, titleColour: titleColour, headerColour: headerColour, mode: VIEW});
-        dispatch(updateGameAction({ game: updatedGame }));
+        setGameData(updatedGame); // Update parent state
+        dispatch(updateGameAction({ game: updatedGame })); // Update Redux only on save
         closeModal();
       });
     } catch(err) {
@@ -120,13 +121,13 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
 
   function handleCloseGamePress() {
     setGameData({...gameData, mode: VIEW});
-    dispatch(updateGameAction({ game: {...gameData, mode: VIEW} }));
+    // dispatch(updateGameAction({ game: {...formData, mode: VIEW} }));
     closeModal();
     setIsPressed(false);
   }
 
-  const [titleColour, setTitleColour] = useState(gameData.titleColour);
-  const [headerColour, setHeaderColour] = useState(gameData.headerColour);
+  const [titleColour, setTitleColour] = useState(formData.titleColour);
+  const [headerColour, setHeaderColour] = useState(formData.headerColour);
 
   return (
     <View style={styles.gameEntryContainer}>
@@ -140,9 +141,9 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
               color: titleColour, 
               backgroundColor: headerColour,
 
-              borderBottomColor: gameData.name === '' ? Colors.red : Colors.orange,
+              borderBottomColor: formData.name === '' ? Colors.red : Colors.orange,
             }}
-            value={gameData.name || ''}
+            value={formData.name || ''}
             onChangeText={(value) => handleTextInputChange('name', value)}
             maxLength={60}
             // multiline={true}
@@ -154,11 +155,11 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
           <View style={styles.expandedGame}>
             <View style={styles.gameStats}>
               <View style={styles.statContainer}>
-                <Text style={styles.statTitle}>Hours: </Text>
+                <Text style={styles.statTitle}>Hours Played: </Text>
                 <TextInput 
                   placeholder='0'
                   style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
-                  value={ gameData.hours ? String(gameData.hours) : '' } 
+                  value={ formData.hours ? String(formData.hours) : '' } 
                   onChangeText={ (value) => handleTextInputChange('hours', value) }
                   keyboardType='numeric'
                 />
@@ -168,8 +169,12 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                 <TextInput 
                   placeholder='YYYY-MM-DD'
                   maxLength={10}
-                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
-                  value={ gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : '' }
+                  style={{ 
+                    ...styles.statsInput, 
+                    width: Spacing.unit * 2.5,
+                    borderBottomColor: isDateValid(String(formData.datePurchased)) ? Colors.orange : Colors.red, 
+                  }}
+                  value={ formData.datePurchased ? String(formData.datePurchased).split('T')[0] : '' }
                   onChangeText={(value) => {
                     const formattedDate = formatDateInput(value);
                     handleTextInputChange('datePurchased', formattedDate);
@@ -181,14 +186,14 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                 <View style={styles.colourPickerInput}>
                   <Text style={styles.statTitle}>Title Colour: </Text>
                   <View style={styles.colorPickerContainer}>
-                    <CustomColourPicker colour={gameData.titleColour} setColour={setTitleColour} setShowOtherUI={setShowOtherUI}/>
+                    <CustomColourPicker colour={formData.titleColour} setColour={setTitleColour} setShowOtherUI={setShowOtherUI}/>
                   </View>
                 </View>
 
                 <View style={styles.colourPickerInput}>
                   <Text style={styles.statTitle}>Header Colour: </Text>
                   <View style={styles.colorPickerContainer}>
-                    <CustomColourPicker colour={gameData.headerColour} setColour={setHeaderColour} setShowOtherUI={setShowOtherUI}/>
+                    <CustomColourPicker colour={formData.headerColour} setColour={setHeaderColour} setShowOtherUI={setShowOtherUI}/>
                   </View>
                 </View>
 
@@ -220,7 +225,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
           <ToggleModeBtn
             type='editGame'
             iconName='save' 
-            isDisabled={gameData.name === ''} 
+            isDisabled={formData.name === '' || !isDateValid(String(formData.datePurchased))} 
             pressFunction={handleUpdateGamePress} 
           />
         </View>
