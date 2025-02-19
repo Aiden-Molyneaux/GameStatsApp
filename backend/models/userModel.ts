@@ -4,7 +4,7 @@ import { GamerTag } from './gamerTagModel';
 export interface User {
   id: number;
   username: string;
-  password: string;
+  passwordDigest: string;
   email: string | null;
   favouriteGame: string | null;
   preferredPlatform: string | null;
@@ -24,7 +24,7 @@ export async function postUser(username: string, hashedPassword: string): Promis
 
   try {
     const result = await pool.query(
-      'INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *',
+      'INSERT INTO users (username, passwordDigest) VALUES ($1, $2) RETURNING *',
       [username, hashedPassword]
     );
 

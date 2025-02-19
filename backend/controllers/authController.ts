@@ -21,7 +21,7 @@ export async function handleRegistration(req: Request, res: Response) {
     const response = await findUserByUsername(username);
     if (response.success) {
       return res.status(400).json({ error: 'User already exists.' });
-    }
+    } 
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -54,6 +54,7 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
       return;
     }
 
+
     const user = response.existingUser;
 
     if (!response.success) {
@@ -61,7 +62,8 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
       return;
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    console.log(user);
+    const isMatch = await bcrypt.compare(password, user.passwordDigest);
     if (!isMatch) {
       res.status(400).json({ error: 'Invalid credentials.' });
       return;

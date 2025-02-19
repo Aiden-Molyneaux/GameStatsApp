@@ -1,7 +1,7 @@
 CREATE TABLE users (
 	id 			          SERIAL PRIMARY KEY,
 	username 	        VARCHAR(20) UNIQUE NOT NULL,
-	password 	        VARCHAR(60) UNIQUE NOT NULL,
+	passwordDigest 	        VARCHAR(60) UNIQUE NOT NULL,
 	email 		        VARCHAR(30) UNIQUE,
 	favouriteGame		  VARCHAR(60),
   preferredPlatform VARCHAR(30),

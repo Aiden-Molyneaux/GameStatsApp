@@ -27,17 +27,38 @@ interface GameEntryFormProps {
 
 export default function GameEntryForm({ index, gameData, setGameData, closeModal, setIsPressed }: GameEntryFormProps) {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState(gameData); // Local state for form
+  const [formData, setFormData] = useState(gameData);
+  const [disableSaveBtn, setDisableSaveBtn] = useState(formData.name === '' || !isDateValid(String(formData.datePurchased)));
   
-  const [disableSaveBtn, setDisableSaveBtn] = useState(false);
-  const [showOtherUI, setShowOtherUI] = useState(true);
+  // Color state management
+  const [titleColour, setTitleColour] = useState(formData.titleColour);
+  const [headerColour, setHeaderColour] = useState(formData.headerColour);
+  const [tempTitleColour, setTempTitleColour] = useState(formData.titleColour);
+  const [tempHeaderColour, setTempHeaderColour] = useState(formData.headerColour);
+  const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
+  const [showHeaderColourPicker, setShowHeaderColourPicker] = useState(false);
+  const setTitleColourPickerWrapper = (value: boolean) => {
+    if (value && showHeaderColourPicker) {
+      setShowHeaderColourPicker(false);
+    }
+    setShowTitleColourPicker(value);
+  };
+  const setHeaderColourPickerWrapper = (value: boolean) => {
+    if (value && showTitleColourPicker) {
+      setShowTitleColourPicker(false);
+    }
+    setShowHeaderColourPicker(value);
+  };
 
   useEffect(() => {
     setDisableSaveBtn(!(formData.name && formData.hours && formData.datePurchased !== null));
   }, [formData]);
 
   function handleTextInputChange(field: string, value: string) {
-    setFormData({...formData, [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value });
+    setFormData({
+      ...formData, 
+      [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value 
+    });
   }
 
   function isDateValid(date: string | null): boolean {
@@ -74,16 +95,13 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
 
   async function handleDeleteGamePress() {
     setIsPressed(false);
-    
     try {
-      await requestDeleteGame(gameData.id).then((response) => {
-        if('error' in response) {
-          console.error(response.error);
-          return;
-        }
-
-        dispatch(deleteGameAction({ deletedGameId: response.deletedGameId }));
-      });
+      const response = await requestDeleteGame(gameData.id);
+      if ('error' in response) {
+        console.error(response.error);
+        return;
+      }
+      dispatch(deleteGameAction({ deletedGameId: response.deletedGameId }));
     } catch(err) {
       console.error(err);
       // Handle error in UI
@@ -96,26 +114,23 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
       name: formData.name,
       hours: formData.hours,
       datePurchased: formData.datePurchased === '' ? null : formData.datePurchased,
-      titleColour: titleColour,
-      headerColour: headerColour,
+      titleColour,
+      headerColour,
       mode: VIEW
     };
 
     try {
-      await requestUpdateGame(updatedGame).then((response) => {
-        if('error' in response) {
-          console.error(response.error);
-          return;
-        }
-
-        setGameData(updatedGame); // Update parent state
-        dispatch(updateGameAction({ game: updatedGame })); // Update Redux only on save
-        closeModal();
-      });
+      const response = await requestUpdateGame(updatedGame);
+      if ('error' in response) {
+        console.error(response.error);
+        return;
+      }
+      setGameData(updatedGame);
+      dispatch(updateGameAction({ game: updatedGame }));
+      closeModal();
     } catch(err) {
       console.error(err);
     }
-
     setIsPressed(false);
   }
 
@@ -126,21 +141,17 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
     setIsPressed(false);
   }
 
-  const [titleColour, setTitleColour] = useState(formData.titleColour);
-  const [headerColour, setHeaderColour] = useState(formData.headerColour);
-
   return (
     <View style={styles.gameEntryContainer}>
       <Text style={styles.gameIndex}>{index + 1}</Text>
       <View style={styles.gameEntry}>
-        <View style={{...styles.gameHeader, backgroundColor: headerColour}}>
+        <View style={{...styles.gameHeader, backgroundColor: tempHeaderColour}}>
           <TextInput
             placeholder='Title'
             style={{
               ...styles.titleInput, 
-              color: titleColour, 
-              backgroundColor: headerColour,
-
+              color: tempTitleColour, 
+              backgroundColor: tempHeaderColour,
               borderBottomColor: formData.name === '' ? Colors.red : Colors.orange,
             }}
             value={formData.name || ''}
@@ -182,50 +193,45 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                   keyboardType='number-pad'
                 />
               </View>
-              <View style={styles.colourPickerContainer}>
-                <View style={styles.colourPickerInput}>
-                  <Text style={styles.statTitle}>Title Colour: </Text>
-                  <View style={styles.colorPickerContainer}>
-                    <CustomColourPicker colour={formData.titleColour} setColour={setTitleColour} setShowOtherUI={setShowOtherUI}/>
+              
+              <View style={styles.colorPickerSection}>
+                <View style={styles.colorPickerControls}>
+                  <View style={styles.colorPickerControl}>
+                    <Text style={styles.statTitle}>Title Colour: </Text>
+                    <View style={styles.colorPickerPreview}>
+                      <Pressable style={{...styles.openPickerButton, backgroundColor: tempTitleColour}} onPress={() => setTitleColourPickerWrapper(!showTitleColourPicker)}></Pressable>
+                      {/* { showTitleColourPicker &&  
+                      <Pressable style={styles.closePickerButton} onPress={() => setTitleColourPickerWrapper(!showTitleColourPicker)}>
+                        <Text style={{ color: '#707070', fontWeight: 'bold' }}>x</Text>
+                      </Pressable> 
+                      } */}
+                    </View>
+                  </View>
+
+                  <View style={styles.colorPickerControl}>
+                    <Text style={styles.statTitle}>Header Colour: </Text>
+                    <Pressable style={{...styles.openPickerButton, backgroundColor: tempHeaderColour}} onPress={() => setHeaderColourPickerWrapper(!showHeaderColourPicker)}></Pressable>
                   </View>
                 </View>
 
-                <View style={styles.colourPickerInput}>
-                  <Text style={styles.statTitle}>Header Colour: </Text>
-                  <View style={styles.colorPickerContainer}>
-                    <CustomColourPicker colour={formData.headerColour} setColour={setHeaderColour} setShowOtherUI={setShowOtherUI}/>
-                  </View>
-                </View>
-
-                {/* <View style={styles.colourPickerInput}>
-                <Text style={styles.statTitle}>Background Colour: </Text>
                 <View style={styles.colorPickerContainer}>
-                  <ColorPicker
-                    onColorSelected={handleColorChange}
-                    sliderComponent={Slider}
-                  />
+                  { showTitleColourPicker && <CustomColourPicker colour={tempTitleColour} setColour={setTempTitleColour}/> }
+                  { showHeaderColourPicker && <CustomColourPicker colour={tempHeaderColour} setColour={setTempHeaderColour}/> }
                 </View>
-              </View> */}
 
-              </View>
-
-              <View style={styles.editBtnContainer}>
-
-                <View style={styles.editBtnsRight}>
-
-                </View>
               </View>
             </View>
 
           </View>
         </View>
       </View>
+
       <View>
         <View style={styles.button}>
           <ToggleModeBtn
             type='editGame'
             iconName='save' 
-            isDisabled={formData.name === '' || !isDateValid(String(formData.datePurchased))} 
+            isDisabled={disableSaveBtn} 
             pressFunction={handleUpdateGamePress} 
           />
         </View>
@@ -242,7 +248,6 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
         </View>
       </View>
     </View>
-    
   );
 }
 
@@ -337,14 +342,34 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.unit1o10,
     borderBottomColor: Colors.orange
   },
-  colourPickerContainer: {
-    flex: 1,
-    flexDirection: 'row',
+  colorPickerSection: {
     justifyContent: 'space-between',
     margin: Spacing.unit1o2,
     marginBottom: 0
   },
-  colourPickerInput: {
-    alignItems: 'center'
+  colorPickerControls: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
+  colorPickerControl: {
+    alignItems: 'center',
+  },
+  colorPickerPreview: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+  openPickerButton: {
+    height: Spacing.unit,
+    width: Spacing.unit,
+    borderWidth: Spacing.border,
+    borderColor: Colors.black,
+  },
+  closePickerButton: {
+    height: Spacing.unit,
+    width: Spacing.unit,
+    backgroundColor: '#fff',
+  },
+  colorPickerContainer: {
+    margin: Spacing.unit1o5,
+  }
 });
