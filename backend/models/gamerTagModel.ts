@@ -30,7 +30,7 @@ export async function postGamerTag(gamerTag: PartialGamerTag): Promise<CreateGam
     console.log({gamerTag});
     try {
         const result = await pool.query(
-            'INSERT INTO gamertags ("userId", tag, platform) VALUES ($1, $2, $3) RETURNING *',
+            'INSERT INTO gamertags (user_id, tag, platform) VALUES ($1, $2, $3) RETURNING *',
             [gamerTag.userId, gamerTag.tag, gamerTag.platform]
         );
 
@@ -108,7 +108,7 @@ export async function getGamerTagsByUser(userId: number): Promise<GetGamerTagsBy
   
     try {
       const result = await pool.query(
-        'SELECT * FROM gamertags WHERE "userId" = $1;', 
+        'SELECT * FROM gamertags WHERE user_id = $1;', 
         [userId]
       );
   

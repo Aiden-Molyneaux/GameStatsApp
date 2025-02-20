@@ -24,7 +24,7 @@ export async function postUser(username: string, hashedPassword: string): Promis
 
   try {
     const result = await pool.query(
-      'INSERT INTO users (username, passwordDigest) VALUES ($1, $2) RETURNING *',
+      'INSERT INTO users (username, "password_digest") VALUES ($1, $2) RETURNING *',
       [username, hashedPassword]
     );
 
@@ -50,7 +50,7 @@ export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQue
   console.log({updatedUser})
   try {
     const result = await pool.query(
-      'UPDATE users SET username=$1, "favouriteGame"=$2, WHERE id=$3 RETURNING *',
+      'UPDATE users SET username=$1, favourite_game=$2 WHERE id=$3 RETURNING *',
       [updatedUser.username, updatedUser.favouriteGame, updatedUser.id]
     );
 
@@ -78,6 +78,8 @@ export async function findUserByUsername(username: string): Promise<FindUserByUs
       'SELECT * FROM users WHERE username = $1', 
       [username]
     );
+
+    console.log({result})
 
     if (result.rows.length > 0) {
       console.log(`-> Query SUCCESS: found user with given username.`);

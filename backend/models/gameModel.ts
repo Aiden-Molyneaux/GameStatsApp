@@ -37,7 +37,7 @@ export async function postGame(game: PartialGame): Promise<CreateGameQueryReturn
   
   try {
     const result = await pool.query(
-      'INSERT INTO games ("userId", name, hours, "datePurchased", "titleColour", "headerColour") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      'INSERT INTO games (user_id, name, hours, date_purchased, title_colour, header_colour) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [game.userId, game.name, game.hours, game.datePurchased, game.titleColour, game.headerColour]
     );
 
@@ -63,7 +63,7 @@ export async function patchGame(updatedGame: UpdatedGame): Promise<UpdateGameQue
   console.log({updatedGame})
   try {
     const result = await pool.query(
-      'UPDATE games SET name=$1, hours=$2, "datePurchased"=$3, "titleColour"=$4, "headerColour"=$5 WHERE id=$6 RETURNING *',
+      'UPDATE games SET name=$1, hours=$2, date_purchased=$3, title_colour=$4, header_colour=$5 WHERE id=$6 RETURNING *',
       [updatedGame.name, updatedGame.hours, updatedGame.datePurchased, updatedGame.titleColour, updatedGame.headerColour, updatedGame.id]
     );
 
@@ -113,7 +113,7 @@ export async function getGamesByUser(userId: number): Promise<GetGamesByUserQuer
 
   try {
     const result = await pool.query(
-      'SELECT * FROM games WHERE "userId" = $1;', 
+      'SELECT * FROM games WHERE user_id = $1;', 
       [userId]
     );
 
