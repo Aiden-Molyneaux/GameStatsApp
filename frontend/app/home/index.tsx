@@ -14,7 +14,7 @@ import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
 
 export default function Home() {
   const { games } = useSelector((state: RootState) => state.gameData);
-
+  const { username } = useSelector((state: RootState) => state.authData.user);
   const [gameCount, setGameCount] = useState(games.length);
   const [disableAddBtn, setDisableAddBtn] = useState(false);
   const [sortMode, setSortMode] = useState('entered');
@@ -42,7 +42,7 @@ export default function Home() {
       <View style={styles.screenContainer}>
         <View style={styles.screen}>
           <View>
-            <Text style={styles.usernameText}>Sammy Jack</Text>
+            <Text style={styles.usernameText}>{username}</Text>
           </View>
           <GameList
             games={games} 
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     overflow: 'hidden',
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.gray,
   },
   screenContainer: {
     flex: 1,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   },
   screen: {
     flex: 1,
-    backgroundColor: Colors.trout,
+    backgroundColor: Colors.screenGray,
     borderWidth: Spacing.border,
     borderColor: Colors.grayEdge,
     borderRadius: 9,

@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     height: '110%',
-    backgroundColor: Colors.trout
+    backgroundColor: Colors.screenGray
   },
   statContainer: {
     flexDirection: 'row',
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   statTitle: {
-    color: Colors.yellow,
+    color: Colors.black,
     fontSize: FontSizes.mediumLess
   },
   statText: {

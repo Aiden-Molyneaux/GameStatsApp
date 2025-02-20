@@ -42,19 +42,14 @@ export const Colors = {
   gray: '#b9bbb6',
   grayPrime: '#777b7e',
   grayEdge: '#46494b',
-  black: '#111111',
-  blue: '#b9bbb6',// '#212833', white
-  blueMid: '#ffffff',
-  bluePrime: '#1d1c1a',
-  yellow: '#1d1c1a',// '#ffce1fFF', black
-  yellowPrime: '#000000', // '#997828FF', darker black
-  yellowEdge: '#c68611',
-  red: '#ff0000',
+  black: '#1d1c1a',
   orange: '#FAA916',
-  trout: '#d1d5c0',
-  plum: '#6557a7',
+  orangeEdge: '#c68611',
+  screenGray: '#d1d5c0',
   gameCubeGreen: '#019190',
-  greenEdge: '#007269'
+  greenEdge: '#007269',
+  appTitlePurple: '#6557a7',
+  red: '#ff0000',
 };
 
 // const tintColorLight = '#0a7ea4';

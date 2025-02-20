@@ -104,7 +104,7 @@ function LargeCustomButton({ size, iconName, isDisabled, isPressed, pressFunctio
         <View style={{
           ...styles.bigTopOfButton, 
           backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
-          borderColor: isPressed ? Colors.yellowEdge : Colors.grayEdge 
+          borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge 
         }}>
           <View style={styles.iconContainer}>  
             <FontAwesome size={FontSizes.medium} name={iconName} color={Colors.white} />
@@ -114,7 +114,7 @@ function LargeCustomButton({ size, iconName, isDisabled, isPressed, pressFunctio
         <View style={{
           ...styles.bigBottomOfButton, 
           backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
-          borderColor: isPressed ? Colors.yellowEdge : Colors.grayEdge,
+          borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge,
         }}/>
       </Pressable>
 

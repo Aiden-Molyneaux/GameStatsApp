@@ -9,7 +9,7 @@ import SymbolDropdown from './SymbolDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSteam, faBattleNet } from '@fortawesome/free-brands-svg-icons';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
-import DelGamerTagBtn from './DelGamerTagBtn';
+import DelGamerTagBtn from './DeleteGamerTagBtn';
 import { requestUpdateGamerTag, requestDeleteGamerTag } from '@/api/gamerTagRequests';
 import ToggleModeBtn from '../ToggleModeBtn';
 import GamerTagForm from './GamerTagForm';
@@ -59,7 +59,7 @@ export default function GamerTagEntry({ gamerTag }: GamerTagFormProps) {
   return (gamerTagData.mode === VIEW) ? (
     <View style={styles.gamerTagEntry}>
       { getSelectedLogo(gamerTagData.platform) }
-      <Text style={{ color: Colors.yellow }}>{gamerTagData.tag === '' ? 'new Gamertag' : gamerTagData.tag}</Text>
+      <Text style={{ color: Colors.black }}>{gamerTagData.tag === '' ? 'new Gamertag' : gamerTagData.tag}</Text>
       <ToggleModeBtn
         type='edit' 
         iconName='edit' 
@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
   selectedText: { 
     color: Colors.white, 
     fontSize: FontSizes.mediumLess, 
-    backgroundColor: Colors.bluePrime 
+    backgroundColor: Colors.black 
   }
 });

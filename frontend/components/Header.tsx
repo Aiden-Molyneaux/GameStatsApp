@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <View style={styles.headerContainer}>
       <View style={styles.header}>
-        <Text style={styles.hmm}> </Text>
+        <Text style={styles.hmm}>   </Text>
         <Text style={styles.headerText}>n-Game</Text>
       </View>
       <Text style={styles.headerSubText}>The Root of Your Passion</Text>
@@ -18,9 +18,7 @@ export default function Header() {
 const styles = StyleSheet.create({
   headerContainer: {
     width: '100%',
-    margin: Spacing.unit1o2,
     marginLeft: Spacing.unit,
-    marginBottom: Spacing.unit1o10
   },
   header: {
     flexDirection: 'row',
@@ -28,33 +26,25 @@ const styles = StyleSheet.create({
   headerText: {
     paddingLeft: 5,
     borderWidth: 5,
-    borderColor: Colors.plum,
+    borderColor: Colors.appTitlePurple,
     borderRightWidth: 0,
     alignSelf: 'flex-start',
     textAlign: 'left',
-    color: Colors.plum,
+    color: Colors.appTitlePurple,
     fontSize: FontSizes.header,
     fontWeight: 'bold',
-    // fontStyle: 'italic',
     textTransform: 'uppercase',
-    letterSpacing: 3,
-    lineHeight: 30
-    // textShadow: `${Colors.orange} 1px 1px 4px`,
-    // borderWidth: Spacing.borderThick,
-    // borderColor: Colors.red, 
-    // borderRadius: 15,
-    // borderBottomWidth: 0,
-    // borderBottomLeftRadius: 0,
-    // borderBottomRightRadius: 0
+    letterSpacing: 2
   },
   headerSubText: {
     alignSelf: 'flex-start',
-    color: Colors.plum,
+    marginVertical: Spacing.unit1o10,
+    color: Colors.grayPrime,
     fontWeight: 'bold',
   },
   hmm: {
     borderTopWidth: 5,
     borderBottomWidth: 5,
-    borderColor: Colors.plum
+    borderColor: Colors.appTitlePurple
   }
 });

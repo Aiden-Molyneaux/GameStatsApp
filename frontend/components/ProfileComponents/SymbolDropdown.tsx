@@ -33,7 +33,7 @@ function SymbolDropdown({ data, value, onChange, selectedLogo }: CustomDropdownP
       selectedTextStyle={styles.selectedText}
       containerStyle={styles.container}
       showsVerticalScrollIndicator={false}
-      activeColor={Colors.blue}
+      activeColor={Colors.gray}
       onChange={onChange}
       renderItem={renderItem}
       renderLeftIcon={defaultRenderLeftIcon}
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.unit1o5,
     padding: Spacing.unit1o5,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
     color: Colors.white,
@@ -56,14 +56,14 @@ const styles = StyleSheet.create({
   container: {
     minWidth: Spacing.unit3o2,
     padding: Spacing.unit1o5,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
-    backgroundColor: Colors.bluePrime
+    backgroundColor: Colors.black
   },
   itemContainer: {
     alignItems: 'flex-end',
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
     margin: 1, 

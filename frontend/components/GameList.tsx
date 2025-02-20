@@ -26,7 +26,15 @@ export default function GameList() {
   }, [games]);
 
   function handlePlusPress() {
-    const defaultGame: GameListItem = {id: gameCount, name: '', hours: '', datePurchased: 'Date Purchased', titleColour: Colors.white, headerColour: Colors.bluePrime, mode: 'NEW' };
+    const defaultGame: GameListItem = {
+      id: gameCount, 
+      name: '', 
+      hours: 0, 
+      datePurchased: new Date(), 
+      titleColour: Colors.white, 
+      headerColour: Colors.black, 
+      mode: 'NEW' 
+    };
 
     dispatch(addGameAction(defaultGame));
   }
@@ -108,10 +116,10 @@ export default function GameList() {
 const styles = StyleSheet.create({
   filterByText: {
     paddingBottom: 3, 
-    color: Colors.yellowPrime,
+    color: Colors.black,
     fontSize: FontSizes.small,
     borderBottomWidth: Spacing.border / 2,
-    borderColor: Colors.yellowPrime
+    borderColor: Colors.black
   },
   gameListContainer: {
     flex: 1,
@@ -122,7 +130,7 @@ const styles = StyleSheet.create({
   },
   gameListText: {
     marginBottom: Spacing.unit1o5,
-    color: Colors.yellow,
+    color: Colors.black,
     fontSize: FontSizes.large,
   },
   sortBtn: {
@@ -132,8 +140,8 @@ const styles = StyleSheet.create({
     height: Spacing.unit1o2 + 8,
     margin: Spacing.unit1o5,
 
-    backgroundColor: Colors.yellowPrime,
-    borderColor: Colors.yellow,
+    backgroundColor: Colors.black,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderTopWidth: 5,
     borderRadius: Spacing.unit1o5,
@@ -150,8 +158,8 @@ const styles = StyleSheet.create({
     width: Spacing.unit,
     height: Spacing.unit + 10,
     margin: Spacing.unit1o3,
-    backgroundColor: Colors.yellowPrime,
-    borderColor: Colors.yellow,
+    backgroundColor: Colors.black,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderTopWidth: 10,
     borderRadius: Spacing.unit1o5,

@@ -1,33 +1,11 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, Platform, Dimensions  } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Platform } from 'react-native';
 import { Tabs } from 'expo-router';
 import { persistor, store } from '../../store/store';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import NavigationButton from '@/components/HomeComponents/NavigationButton';
-import Header from '@/components/Header';
-
-const TabBarScreenOptions = (web: boolean) => {
-  const style = web
-    ? {
-      ...styles.tabBar,
-    }
-    : {
-
-      paddingBottom: Spacing.unit1o10,
-      ...styles.tabBar,
-    };
-
-  return {
-    headerShown: false,
-    tabBarActiveTintColor: Colors.orange,
-    tabBarInactiveTintColor: Colors.white,
-    tabBarLabelStyle: { fontSize: FontSizes.medium },
-    tabBarStyle: style,
-  };
-};
 
 export default function RootLayout() {
 
@@ -36,7 +14,7 @@ export default function RootLayout() {
       <PersistGate loading={null} persistor={persistor}>
         <SafeAreaView style={styles.container}>
           
-          <Tabs screenOptions={TabBarScreenOptions(Platform.OS === 'web')}>
+          <Tabs screenOptions={tabBarScreenOptions}>
             <Tabs.Screen
               name='index'
               options={{
@@ -88,7 +66,6 @@ const styles = StyleSheet.create({
   tabBar: {
     width: '100%',
     justifyContent: 'center',
-    marginBottom: Spacing.unit1o5,
     backgroundColor: 'transparent',
     borderTopWidth: 0,
   },
@@ -103,3 +80,11 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.large,
   }
 });
+
+const tabBarScreenOptions = {
+  headerShown: false,
+  tabBarActiveTintColor: Colors.orange,
+  tabBarInactiveTintColor: Colors.white,
+  tabBarLabelStyle: { fontSize: FontSizes.medium },
+  tabBarStyle: styles.tabBar,
+};

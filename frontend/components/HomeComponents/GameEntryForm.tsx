@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 import { View, StyleSheet, Pressable, Modal } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
-import { createAsyncThunk } from '@reduxjs/toolkit';
 import { Text, TextInput} from '@/components/Customs';
 import ToggleModeBtn from '../ToggleModeBtn';
-import FontAwesome  from '@expo/vector-icons/FontAwesome';
 import { GameListItem, updateGameAction, deleteGameAction } from '@/store/gameReducer';
-import CustomCalendar from './CustomCalendar';
-import ToggleCalendarBtn from './ToggleCalendarBtn';
 import DeleteGameEntryBtn from './DeleteGameEntryBtn';
 import { Game, requestDeleteGame, requestUpdateGame } from '@/api/gameRequests';
 import { CustomColourPicker } from './CustomColourPicker';
@@ -31,8 +26,6 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   const [disableSaveBtn, setDisableSaveBtn] = useState(formData.name === '' || !isDateValid(String(formData.datePurchased)));
   
   // Color state management
-  const [titleColour, setTitleColour] = useState(formData.titleColour);
-  const [headerColour, setHeaderColour] = useState(formData.headerColour);
   const [tempTitleColour, setTempTitleColour] = useState(formData.titleColour);
   const [tempHeaderColour, setTempHeaderColour] = useState(formData.headerColour);
   const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
@@ -51,7 +44,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   };
 
   useEffect(() => {
-    setDisableSaveBtn(!(formData.name && formData.hours && formData.datePurchased !== null));
+    setDisableSaveBtn(!(formData.name && isDateValid(formData.datePurchased)));
   }, [formData]);
 
   function handleTextInputChange(field: string, value: string) {
@@ -61,24 +54,24 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
     });
   }
 
-  function isDateValid(date: string | null): boolean {
-    // empty date is valid
+  function isDateValid(date: Date | null): boolean {
+    // null date is valid
     if (!date) return true;
 
     // a valid date must be 10 characters long
-    if (date.length !== 10) return false;
+    if (String(date).length !== 10) return false;
 
-    // a valid date must be a valid date ;)
+    // a valid date must be a valid date
     const dateObj = new Date(date);
     return dateObj instanceof Date && !isNaN(dateObj.getTime());
   }
 
-  function formatDateInput(value: string): string {
+  function formatDateInput(value: string): string | null {
     // Remove any non-digit characters from input
     const numbers = value.replace(/\D/g, '');
     
     // Handle empty input
-    if (numbers.length === 0) { return ''; }
+    if (numbers.length === 0) { return null; }
     
     // Format the date with hyphens
     let formattedDate = numbers;
@@ -89,8 +82,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
       formattedDate = formattedDate.slice(0, 7) + '-' + formattedDate.slice(7);
     }
     
-    // Limit to 8 digits (YYYYMMDD)
-    return numbers.length <= 8 ? formattedDate : formattedDate;
+    return formattedDate;
   }
 
   async function handleDeleteGamePress() {
@@ -113,9 +105,9 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
       id: gameData.id,
       name: formData.name,
       hours: formData.hours,
-      datePurchased: formData.datePurchased === '' ? null : formData.datePurchased,
-      titleColour,
-      headerColour,
+      datePurchased: formData.datePurchased,
+      titleColour: tempTitleColour,
+      headerColour: tempHeaderColour,
       mode: VIEW
     };
 
@@ -136,7 +128,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
 
   function handleCloseGamePress() {
     setGameData({...gameData, mode: VIEW});
-    // dispatch(updateGameAction({ game: {...formData, mode: VIEW} }));
+    
     closeModal();
     setIsPressed(false);
   }
@@ -183,7 +175,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                   style={{ 
                     ...styles.statsInput, 
                     width: Spacing.unit * 2.5,
-                    borderBottomColor: isDateValid(String(formData.datePurchased)) ? Colors.orange : Colors.red, 
+                    borderBottomColor: isDateValid(formData.datePurchased) ? Colors.orange : Colors.red, 
                   }}
                   value={ formData.datePurchased ? String(formData.datePurchased).split('T')[0] : '' }
                   onChangeText={(value) => {
@@ -200,11 +192,6 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                     <Text style={styles.statTitle}>Title Colour: </Text>
                     <View style={styles.colorPickerPreview}>
                       <Pressable style={{...styles.openPickerButton, backgroundColor: tempTitleColour}} onPress={() => setTitleColourPickerWrapper(!showTitleColourPicker)}></Pressable>
-                      {/* { showTitleColourPicker &&  
-                      <Pressable style={styles.closePickerButton} onPress={() => setTitleColourPickerWrapper(!showTitleColourPicker)}>
-                        <Text style={{ color: '#707070', fontWeight: 'bold' }}>x</Text>
-                      </Pressable> 
-                      } */}
                     </View>
                   </View>
 
@@ -218,10 +205,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                   { showTitleColourPicker && <CustomColourPicker colour={tempTitleColour} setColour={setTempTitleColour}/> }
                   { showHeaderColourPicker && <CustomColourPicker colour={tempHeaderColour} setColour={setTempHeaderColour}/> }
                 </View>
-
               </View>
             </View>
-
           </View>
         </View>
       </View>
@@ -285,7 +270,7 @@ const styles = StyleSheet.create({
   expandedGame: {
     flexDirection: 'row',
     width: '100%',
-    backgroundColor: Colors.trout
+    backgroundColor: Colors.screenGray
   },
   statContainer: {
     flexDirection: 'row',
@@ -297,7 +282,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   statTitle: {
-    color: Colors.yellow,
+    color: Colors.black,
     fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',
     whiteSpace: 'nowrap'
@@ -361,8 +346,10 @@ const styles = StyleSheet.create({
   openPickerButton: {
     height: Spacing.unit,
     width: Spacing.unit,
+    marginTop: Spacing.unit1o5,
     borderWidth: Spacing.border,
     borderColor: Colors.black,
+    borderRadius: Spacing.unit1o5,
   },
   closePickerButton: {
     height: Spacing.unit,

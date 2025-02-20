@@ -36,7 +36,7 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
         <View style={{
           ...styles.bigTopOfButton, 
           backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
-          borderColor: isPressed ? Colors.yellowEdge : Colors.grayEdge 
+          borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge 
         }}>
           <View style={styles.iconContainer}>  
             <FontAwesome size={FontSizes.large} name={iconName} color={Colors.white} />
@@ -47,7 +47,7 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
         <View style={{
           ...styles.bigBottomOfButton, 
           backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
-          borderColor: isPressed ? Colors.yellowEdge : Colors.grayEdge,
+          borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge,
         }}/>
       </View>
 

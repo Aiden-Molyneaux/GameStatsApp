@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: Spacing.unit1o2,
-    backgroundColor: Colors.bluePrime,
-    borderColor: Colors.yellowPrime,
+    backgroundColor: Colors.black,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   },
@@ -173,27 +173,27 @@ const styles = StyleSheet.create({
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   },
   addGamerTagBtn: {
-    backgroundColor: Colors.yellowPrime,
+    backgroundColor: Colors.black,
     paddingLeft: Spacing.unit1o5,
     paddingRight: Spacing.unit1o5,
     paddingTop: Spacing.unit1o10,
     paddingBottom: Spacing.unit1o10,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   },
   usernameText: {
     marginBottom: Spacing.unit1o5,
-    color: Colors.yellow,
+    color: Colors.black,
     fontSize: FontSizes.large
   },
   labelText: {
-    color: Colors.yellow,
+    color: Colors.black,
     fontSize: FontSizes.medium
   }
 });

@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
-import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import { Colors, FontSizes } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
-interface ToggleCalendarBtnProps {
+interface DeleteGameEntryBtnProps {
   pressFunction: (data: unknown) => void
 }
 
-export default function DeleteGameEntryBtn({pressFunction}: ToggleCalendarBtnProps) {
+export default function DeleteGameEntryBtn({pressFunction}: DeleteGameEntryBtnProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (

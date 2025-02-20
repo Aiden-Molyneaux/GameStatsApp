@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     overflow: 'hidden',
-    backgroundColor: Colors.blue,
+    backgroundColor: Colors.gray,
   },
   profileText: {
     marginVertical: Spacing.unit1o3,
-    color: Colors.yellow,
+    color: Colors.black,
     fontSize: FontSizes.large,
   }
 });

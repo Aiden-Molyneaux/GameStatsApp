@@ -27,8 +27,6 @@ export default function Auth() {
             setAuthFail(true); 
             return;
           }
-
-          console.log(response.user);
           
           dispatch(loginSuccess({ token: response.token, user: response.user }));
           dispatch(changeUserAction({ user: response.user }));        
@@ -48,7 +46,7 @@ export default function Auth() {
             setAuthFail(true); 
             return; 
           }
-          console.log({response});
+          
           dispatch(loginSuccess({ token: response.token, user: response.user }));
         });
       } catch(err) {
@@ -131,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // padding: Spacing.unit * 2,
-    backgroundColor: Colors.trout,
+    backgroundColor: Colors.screenGray,
   },
   authForm: {
     gap: Spacing.unit1o5,
@@ -142,7 +140,7 @@ const styles = StyleSheet.create({
     padding: Spacing.unit1o5,
     color: Colors.black,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   },
@@ -150,7 +148,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     paddingLeft: Spacing.unit1o5,
     fontSize: FontSizes.large,
-    color: Colors.yellow
+    color: Colors.black
   },
   authBtns: {
     flexDirection: 'row',
@@ -159,20 +157,20 @@ const styles = StyleSheet.create({
   authBtn: {
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
-    backgroundColor: Colors.yellowPrime,
+    backgroundColor: Colors.black,
     fontSize: FontSizes.mediumLess,
     textAlign: 'center',
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   },
   modeBtn: {
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
-    backgroundColor: Colors.yellowPrime,
+    backgroundColor: Colors.black,
     fontSize: FontSizes.small,
     textAlign: 'center',
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   }

@@ -43,7 +43,7 @@ function TextDropdown({ data, value, onChange, labelField, valueField, style, re
       selectedTextStyle={styles.selectedText}
       containerStyle={styles.container}
       showsVerticalScrollIndicator={false}
-      activeColor={Colors.blue}
+      activeColor={Colors.gray}
       onChange={onChange}
       renderItem={renderItem || defaultRenderItem}
       renderLeftIcon={renderLeftIcon || defaultRenderLeftIcon}
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
     color: Colors.white,
@@ -67,13 +67,13 @@ const styles = StyleSheet.create({
   container: {
     width: Spacing.unit7,
     padding: Spacing.unit1o5,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
-    backgroundColor: Colors.bluePrime
+    backgroundColor: Colors.black
   },
   itemContainer: {
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
     margin: 1, 

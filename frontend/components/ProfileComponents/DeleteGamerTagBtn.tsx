@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { StyleSheet, Pressable } from 'react-native';
-import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import { Colors, FontSizes } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
-interface ToggleCalendarBtnProps {
+interface DeleteGamerTagBtnProps {
   pressFunction: (data: unknown) => void
 }
 
-export default function DelGamerTagBtn({pressFunction}: ToggleCalendarBtnProps) {
+export default function DeleteGamerTagBtn({pressFunction}: DeleteGamerTagBtnProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Pressable 
-      style={styles.delBtn}
+      style={styles.deleteBtn}
       onPress={pressFunction}
       onHoverIn={() => setIsHovered(true)}
       onHoverOut={() => setIsHovered(false)}
@@ -20,14 +20,14 @@ export default function DelGamerTagBtn({pressFunction}: ToggleCalendarBtnProps) 
       <FontAwesome
         name={'trash'}
         size={isHovered ? FontSizes.large : FontSizes.medium}
-        color={Colors.yellow} 
+        color={Colors.black} 
       />
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  delBtn: {
+  deleteBtn: {
     width: FontSizes.large,
     height: FontSizes.large,
     justifyContent: 'center',

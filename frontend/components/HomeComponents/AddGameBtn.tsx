@@ -24,7 +24,14 @@ export default function AddGameBtn({ isDisabled, onAddGame, isPressed, setIsPres
   const dispatch = useDispatch();
 
   async function handlePlusPress() {
-    const newGame: PartialGame = { userId: userId, name: '', hours: 0, datePurchased: null, titleColour: Colors.white, headerColour: Colors.bluePrime };
+    const newGame: PartialGame = { 
+      userId: userId, 
+      name: '', 
+      hours: 0, 
+      datePurchased: null, 
+      titleColour: Colors.white, 
+      headerColour: Colors.black 
+    };
     setIsPressed(true);
     await timeout(300);
     try {

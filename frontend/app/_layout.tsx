@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, SafeAreaView, Pressable } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
-import Header from '../components/Header';
-import { Text } from '@/components/Customs';
-import { persistor, RootState, store, purgeStoredState } from '../store/store';
+import { persistor, RootState, store } from '../store/store';
 import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
@@ -53,8 +51,6 @@ export default function RootLayout() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
-    justifyContent: 'center',
     backgroundColor: Colors.gray,
     borderWidth: Spacing.borderThick,
     borderColor: Colors.grayPrime,
@@ -65,8 +61,8 @@ const styles = StyleSheet.create({
     width: Spacing.unit3,
     height: Spacing.unit1o2,
     margin: Spacing.unit1o3,
-    backgroundColor: Colors.yellowPrime,
-    borderColor: Colors.yellow,
+    backgroundColor: Colors.black,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
   },

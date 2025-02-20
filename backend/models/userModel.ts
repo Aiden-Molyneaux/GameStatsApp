@@ -59,7 +59,6 @@ type UpdateUserQueryReturn = { success: true; user: User } | { success: false; e
 export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQueryReturn> {
   console.log("Executing patchUser query...");
 
-  console.log({updatedUser})
   try {
     const result = await pool.query(
       'UPDATE users SET username=$1, favourite_game=$2 WHERE id=$3 RETURNING *',
@@ -84,8 +83,6 @@ type FindUserByUsernameQueryReturn = { success: true; existingUser: User } | { s
 
 export async function findUserByUsername(username: string): Promise<FindUserByUsernameQueryReturn> {
   console.log("Executing findUserByUsername query...");
-
-  console.log({username})
   
   try {
     const result = await pool.query(

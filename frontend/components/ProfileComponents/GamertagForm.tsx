@@ -9,7 +9,7 @@ import SymbolDropdown from './SymbolDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSteam, faBattleNet } from '@fortawesome/free-brands-svg-icons';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
-import DelGamerTagBtn from './DelGamerTagBtn';
+import DelGamerTagBtn from './DeleteGamerTagBtn';
 import { requestUpdateGamerTag, requestDeleteGamerTag } from '@/api/gamerTagRequests';
 import ToggleModeBtn from '../ToggleModeBtn';
 
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.yellow,
+    borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
     color: Colors.white,
@@ -128,6 +128,6 @@ const styles = StyleSheet.create({
   selectedText: { 
     color: Colors.white, 
     fontSize: FontSizes.mediumLess, 
-    backgroundColor: Colors.bluePrime 
+    backgroundColor: Colors.black 
   }
 });
