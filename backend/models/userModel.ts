@@ -19,6 +19,18 @@ export interface UpdatedUser {
 
 type PostUserQueryReturn = { success: true; user: User } | { success: false; error: string };
 
+function mapUserToCamelCase(user: any): User {
+  return {
+    id: user.id,
+    username: user.username,
+    passwordDigest: user.password_digest,
+    email: user.email,
+    favouriteGame: user.favourite_game,
+    preferredPlatform: user.preferred_platform,
+    numberOfGames: user.number_of_games
+  };
+}
+
 export async function postUser(username: string, hashedPassword: string): Promise<PostUserQueryReturn> {
   console.log("Executing postUser query...");
 
@@ -29,7 +41,7 @@ export async function postUser(username: string, hashedPassword: string): Promis
     );
 
     if (result.rows.length > 0) {
-      const user = result.rows[0];
+      const user = mapUserToCamelCase(result.rows[0]);
       console.log(`-> Query SUCCESS: created user with id ${user.id}.`);
       return { success: true, user } 
     } else {
@@ -55,7 +67,7 @@ export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQue
     );
 
     if (result.rows.length > 0) {
-      const user = result.rows[0];
+      const user = mapUserToCamelCase(result.rows[0]);
       console.log(`-> Query SUCCESS: updated entity with ID (${user.id}).`);
       return { success: true, user };
     } else {
@@ -72,6 +84,8 @@ type FindUserByUsernameQueryReturn = { success: true; existingUser: User } | { s
 
 export async function findUserByUsername(username: string): Promise<FindUserByUsernameQueryReturn> {
   console.log("Executing findUserByUsername query...");
+
+  console.log({username})
   
   try {
     const result = await pool.query(
@@ -79,11 +93,10 @@ export async function findUserByUsername(username: string): Promise<FindUserByUs
       [username]
     );
 
-    console.log({result})
-
     if (result.rows.length > 0) {
       console.log(`-> Query SUCCESS: found user with given username.`);
-      return { success: true, existingUser: result.rows[0]}
+      const existingUser = mapUserToCamelCase(result.rows[0]);  
+      return { success: true, existingUser }
     } else {
       console.log(`-> Query FAILURE: no user found with given username '${username}'.`)
       return { success: false, error: `No user found with given username '${username}'.`}

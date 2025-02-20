@@ -24,6 +24,15 @@ export interface UpdatedGamerTag {
 
 type CreateGamerTagQueryReturn = { success: true; gamerTag: GamerTag} | { success: false; error: string };
 
+function mapGamerTagToCamelCase(gamerTag: any): GamerTag {
+  return {
+    id: gamerTag.id,
+    userId: gamerTag.user_id,
+    tag: gamerTag.tag,
+    platform: gamerTag.platform
+  };
+}
+
 export async function postGamerTag(gamerTag: PartialGamerTag): Promise<CreateGamerTagQueryReturn> {
     console.log("Executing postGamerTag query...");
 
@@ -35,7 +44,7 @@ export async function postGamerTag(gamerTag: PartialGamerTag): Promise<CreateGam
         );
 
         if (result.rows.length > 0) {
-            const gamerTag = result.rows[0];
+            const gamerTag = mapGamerTagToCamelCase(result.rows[0]);
             console.log(`-> Query SUCCESS: created gamerTag entity with ID (${gamerTag.id}).`);
             return { success: true, gamerTag };
           } else {
@@ -61,7 +70,7 @@ export async function patchGamerTag(gamerTag: UpdatedGamerTag): Promise<UpdateGa
         );
 
         if (result.rows.length > 0) {
-            const gamerTag = result.rows[0];
+            const gamerTag = mapGamerTagToCamelCase(result.rows[0]);
             console.log(`-> Query SUCCESS: updated gamerTag entity with ID (${gamerTag.id}).`);
             return { success: true, gamerTag };
           } else {
@@ -113,7 +122,7 @@ export async function getGamerTagsByUser(userId: number): Promise<GetGamerTagsBy
       );
   
       if (result.rows.length > 0) {
-        const gamerTags = result.rows;
+        const gamerTags = result.rows.map(mapGamerTagToCamelCase);
         console.log(`-> Query SUCCESS: fetched gamerTags for user with given ID ${userId}`);
         return { success: true, gamerTags };
       } else {

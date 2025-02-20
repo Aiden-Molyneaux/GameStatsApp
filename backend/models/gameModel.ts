@@ -30,6 +30,18 @@ export interface UpdatedGame {
 
 type CreateGameQueryReturn = { success: true; game: Game } | { success: false; error: string };
 
+function mapGameToCamelCase(game: any): Game {
+  return {
+    id: game.id,
+    userId: game.user_id,
+    name: game.name,
+    hours: game.hours,
+    datePurchased: game.date_purchased,
+    titleColour: game.title_colour,
+    headerColour: game.header_colour
+  };
+}
+
 export async function postGame(game: PartialGame): Promise<CreateGameQueryReturn> {
   console.log("Executing postGame query...");
 
@@ -42,7 +54,7 @@ export async function postGame(game: PartialGame): Promise<CreateGameQueryReturn
     );
 
     if (result.rows.length > 0) {
-      const game = result.rows[0];
+      const game = mapGameToCamelCase(result.rows[0]);
       console.log(`-> Query SUCCESS: created entity with ID (${game.id}).`);
       return { success: true, game };
     } else {
@@ -68,7 +80,7 @@ export async function patchGame(updatedGame: UpdatedGame): Promise<UpdateGameQue
     );
 
     if (result.rows.length > 0) {
-      const game = result.rows[0];
+      const game = mapGameToCamelCase(result.rows[0]);
       console.log(`-> Query SUCCESS: updated entity with ID (${game.id}).`);
       return { success: true, game };
     } else {
@@ -118,7 +130,7 @@ export async function getGamesByUser(userId: number): Promise<GetGamesByUserQuer
     );
 
     if (result.rows.length > 0) {
-      const games = result.rows;
+      const games = result.rows.map(mapGameToCamelCase);
       console.log(`-> Query SUCCESS: fetched games for user with given ID ${userId}`);
       return { success: true, games };
     } else {

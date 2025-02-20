@@ -49,12 +49,14 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
   try {
     const response = await findUserByUsername(username);
 
+    console.log('Made it');
+
     if (!('existingUser' in response)) {
       res.status(401).json({ error: '-> User Authorization ERROR:' });
       return;
     }
 
-
+    console.log('Existing user:', response.existingUser);
     const user = response.existingUser;
 
     if (!response.success) {
