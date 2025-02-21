@@ -1,34 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, Slot } from 'expo-router';
 import { persistor, RootState, store } from '../store/store';
 import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import * as Font from 'expo-font';
 
 function Layout() {
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.replace('/');
-    } else if (isAuthenticated) {
-      router.replace('/home');
+    async function loadFonts() {
+      await Font.loadAsync({
+        'MonomaniacOne-Regular': require('../assets/fonts/MonomaniacOne-Regular.ttf'),
+      });
+      setFontsLoaded(true);
     }
-  }, [isAuthenticated]);
+    loadFonts();
+  }, []);
+
+  useEffect(() => {
+    if (fontsLoaded) {
+      if (!isAuthenticated) {
+        router.replace('/');
+      } else {
+        router.replace('/home');
+      }
+    }
+  }, [isAuthenticated, fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null; // Or a loading screen component
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <Stack>
-        <Stack.Screen
-          name='index'
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name='home'
-          options={{ headerShown: false }}
-        />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name='index' />
+        <Stack.Screen name='home' />
       </Stack>
 
       {/* <Pressable style={styles.resetBtn} onPress={() => purgeStoredState()}>

@@ -6,6 +6,7 @@ const em1 = height / 24;
 
 export const Fonts = {
   monospace: 'monospace',
+  monomaniac: 'MonomaniacOne-Regular'
 };
 
 export const FontSizes = {

@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.unit,
     width: '95%',
-    marginBottom: isIOS ? Spacing.unit1o3 : Spacing.unit
+    marginBottom: Spacing.unit1o2 + Spacing.unit1o5
   },
   usernameText: {
     padding: 5,
