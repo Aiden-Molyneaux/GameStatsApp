@@ -6,11 +6,15 @@ import { Provider, useSelector } from 'react-redux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import * as Font from 'expo-font';
+import { validateToken } from '../api/authRequests';
+import { useDispatch } from 'react-redux';
+import { logout } from '../store/authReducer';
 
 function Layout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function loadFonts() {
@@ -27,10 +31,27 @@ function Layout() {
       if (!isAuthenticated) {
         router.replace('/');
       } else {
-        router.replace('/home');
+        validateAuth();
       }
     }
   }, [isAuthenticated, fontsLoaded]);
+
+  async function validateAuth() {
+    if (isAuthenticated) {
+      try {
+        const response = await validateToken();
+        if ('error' in response) {
+          dispatch(logout());
+          router.replace('/');
+        } else {
+          router.replace('/home');
+        }
+      } catch (error) {
+        dispatch(logout());
+        router.replace('/');
+      }
+    }
+  }
 
   if (!fontsLoaded) {
     return null; // Or a loading screen component

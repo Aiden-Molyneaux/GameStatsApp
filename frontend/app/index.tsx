@@ -10,6 +10,10 @@ import { Text, TextInput } from '@/components/Customs';
 import { changeUserAction } from '@/store/userReducer';
 import { requestFetchGamerTagsByUser } from '@/api/gamerTagRequests';
 import { fetchGamerTagsSuccess } from '@/store/gamerTagReducer';
+import SortBar from '@/components/HomeComponents/SortBar';
+import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
+import Header from '@/components/Header';
+import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
 
 export default function Auth() {
   const [username, setUsername] = useState('');
@@ -21,36 +25,38 @@ export default function Auth() {
   async function attemptAuth() {
     if (authMode === 'Sign In') {
       try {
-        await requestLoginUser(username, password).then(async (response) => {
-          if ('error' in response) {
-            console.error(response.error);
-            setAuthFail(true); 
-            return;
-          }
-          
-          dispatch(loginSuccess({ token: response.token, user: response.user }));
-          dispatch(changeUserAction({ user: response.user }));        
-          await getGames().then(async () => {
-            await getGamerTags();
-          });
-        });
+        const response = await requestLoginUser(username, password);
+
+        console.log('Auth Response:', response);
+        if ('error' in response) {
+          console.error(response.error);
+          setAuthFail(true); 
+          return;
+        }
+        
+        dispatch(loginSuccess({ token: response.token, user: response.user }));
+        dispatch(changeUserAction({ user: response.user }));        
+        
+        // First fetch the data
+        await getGames();
+        await getGamerTags();        
       } catch(err) {
         console.error(err);
+        setAuthFail(true);
       }
-
     } else if (authMode === 'Register') {
       try {
-        await requestRegisterUser(username, password).then((response) => {
-          if ('error' in response) {
-            console.error(response.error);
-            setAuthFail(true); 
-            return; 
-          }
-          
-          dispatch(loginSuccess({ token: response.token, user: response.user }));
-        });
+        const response = await requestRegisterUser(username, password);
+        if ('error' in response) {
+          console.error(response.error);
+          setAuthFail(true); 
+          return; 
+        }
+        
+        dispatch(loginSuccess({ token: response.token, user: response.user }));
       } catch(err) {
         console.error(err);
+        setAuthFail(true);
       }
     }
   }
@@ -86,37 +92,59 @@ export default function Auth() {
   }
 
   return (
-    <View style={styles.authPage}>
-      <View style={styles.authForm}>
-        <Text style={styles.welcomeText}>{authMode === 'Sign In' ? 'Sign In' : 'Join In' }</Text>
+    <View style={styles.homePage}>
+      <Header type='device'/>
 
-        { authFail
-          ? <Text>Login failed</Text>
-          : null
-        }
-        <TextInput
-          style={styles.input}
-          placeholder='Username'
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder='Password'
-          value={password}
-          onChangeText={setPassword}
-          // secureTextEntry
-        />
-        <View style={styles.authBtns}>
-          <Pressable style={styles.modeBtn} onPress={() => setAuthMode(authMode === 'Sign In' ? 'Register' : 'Sign In')}>
-            <Text>or {authMode === 'Sign In' ? 'Join In' : 'Sign In'}</Text>
-          </Pressable>
+      <View style={styles.screenContainer}>
+        <View style={styles.screen}>
+          <View style={styles.authPage}>
+            <View style={styles.authForm}>
+              <View style={styles.inScreenHeader}>
+                <Header type='inScreen'/>
+              </View>
+              <Text style={styles.welcomeText}>{authMode === 'Sign In' ? 'Sign-In' : 'Join-Up' }</Text>
+
+              { authFail
+                ? <Text>Login failed</Text>
+                : null
+              }
+              <TextInput
+                style={styles.input}
+                placeholder='Username'
+                value={username}
+                onChangeText={setUsername}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder='Password'
+                value={password}
+                onChangeText={setPassword}
+                // secureTextEntry
+              />
+              <View style={styles.authBtns}>
+                <Pressable style={styles.modeBtn} onPress={() => setAuthMode(authMode === 'Sign In' ? 'Register' : 'Sign In')}>
+                  <Text>or {authMode === 'Sign In' ? 'Join In' : 'Sign In'}</Text>
+                </Pressable>
         
-          <Pressable style={styles.authBtn} onPress={attemptAuth}>
-            <Text>-&gt;</Text>
-          </Pressable>
+                <Pressable style={styles.authBtn} onPress={attemptAuth}>
+                  <Text>-&gt;</Text>
+                </Pressable>
+              </View>
+
+            </View>
+          </View>
         </View>
 
+      </View>
+      <View style={styles.buttons}>
+        <SortBar currentSortMode={''} setSortMode={() => {}}/>
+        <AddGameBtn
+          isDisabled={true}
+          onAddGame={() => {}}
+          isPressed={false}
+          setIsPressed={() => {}}
+        />
+        <OpenCloseBar currentSortMode={''} setSortMode={() => {}}/>
       </View>
     </View>
 
@@ -138,11 +166,7 @@ const styles = StyleSheet.create({
   input: {
     margin: Spacing.unit1o5,
     padding: Spacing.unit1o5,
-    color: Colors.black,
     fontSize: FontSizes.mediumLess,
-    borderColor: Colors.black,
-    borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5,
   },
   welcomeText: {
     alignSelf: 'flex-start',
@@ -173,5 +197,43 @@ const styles = StyleSheet.create({
     borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: Spacing.unit1o5,
+  },
+  homePage: {
+    flex: 1,
+    height: '100%',
+    alignItems: 'center',
+    overflow: 'hidden',
+    backgroundColor: Colors.gray,
+  },
+  screenContainer: {
+    flex: 1,
+    width: '95%',
+    borderWidth: Spacing.borderThick,
+    borderColor: Colors.grayPrime,
+    borderRadius: 15,
+    marginBottom: Spacing.unit1o3,
+    elevation: 8
+  },
+  screen: {
+    flex: 1,
+    backgroundColor: Colors.screenGray,
+    borderWidth: Spacing.border,
+    borderColor: Colors.grayEdge,
+    borderRadius: 9,
+    overflow: 'hidden'
+  },
+  buttons: {
+    height: Spacing.unit3o2,
+    flexDirection: 'row',
+    gap: Spacing.unit,
+    width: '95%',
+    marginBottom: Spacing.unit1o2 + Spacing.unit1o5
+  },
+  usernameText: {
+    padding: 5,
+    color: Colors.black,
+    textAlign: 'left',
+    borderBottomColor: Colors.gray,
+    borderBottomWidth: Spacing.border 
   }
 });

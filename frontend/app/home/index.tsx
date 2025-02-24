@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, Platform, FlatList } from 'react-native';
+import { View, StyleSheet, Platform, FlatList, Pressable } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState, store } from '../../store/store';
 import { GameListItem } from '@/store/gameReducer';
@@ -11,6 +11,9 @@ import { Colors, Spacing, FontSizes } from '@/constants/Constants';
 import Header from '@/components/Header';
 import CustomButton from '@/components/HomeComponents/CustomButton';
 import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
+import { logout } from '@/store/authReducer';
+import { useDispatch } from 'react-redux';
+import ToggleModeBtn from '@/components/ToggleModeBtn';
 
 export default function Home() {
   const { games } = useSelector((state: RootState) => state.gameData);
@@ -18,6 +21,7 @@ export default function Home() {
   const [gameCount, setGameCount] = useState(games.length);
   const [disableAddBtn, setDisableAddBtn] = useState(false);
   const [sortMode, setSortMode] = useState('entered');
+  const dispatch = useDispatch();
 
   const gameListRef = useRef<FlatList>(null);
 
@@ -37,12 +41,18 @@ export default function Home() {
 
   return (
     <View style={styles.homePage}>
-      <Header/>
+      <Header type='device'/>
 
       <View style={styles.screenContainer}>
         <View style={styles.screen}>
-          <View>
+          <View style={styles.usernameContainer}>
             <Text style={styles.usernameText}>{username}</Text>
+            <ToggleModeBtn
+              type='editGame'
+              iconName='sign-out' 
+              isDisabled={false} 
+              pressFunction={() => dispatch(logout())} 
+            />
           </View>
           <GameList
             games={games} 
@@ -105,6 +115,18 @@ const styles = StyleSheet.create({
     padding: 5,
     color: Colors.black,
     textAlign: 'left',
+  },
+  logoutBtn: {
+    width: 20,
+    height: 20,
+    backgroundColor: Colors.red,
+    borderRadius: 10,
+    margin: 5
+  },
+  usernameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: Spacing.unit1o5,
     borderBottomColor: Colors.gray,
     borderBottomWidth: Spacing.border 
   }

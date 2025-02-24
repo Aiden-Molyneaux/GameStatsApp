@@ -8,7 +8,7 @@ import Header from '@/components/Header';
 export default function Profile() {
   return (
     <View style={styles.profilePage}>
-      <Header/>
+      <Header type='device'/>
     
       <ProfileDetails/>
     </View>

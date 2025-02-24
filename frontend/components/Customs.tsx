@@ -1,4 +1,4 @@
-import { Colors, FontSizes, Fonts } from '@/constants/Constants';
+import { Colors, FontSizes, Fonts, Spacing } from '@/constants/Constants';
 import React, { useState } from 'react';
 import { Text as RNText, TextInput as RNTextInput, StyleSheet, TextStyle, TextProps, TextInputProps } from 'react-native';
 
@@ -15,15 +15,10 @@ export const Text: React.FC<CustomTextProps> = ({ style, ...props }) => {
 };
 
 export const TextInput: React.FC<CustomTextInputProps> = ({ style, ...props }) => {
-  const [isFocused, setIsFocused] = useState(false);
 
   return <RNTextInput 
-    style={[styles.defaultTextInputStyle, style, isFocused && styles.inputFocused ]}
+    style={[styles.defaultTextInputStyle, style]}
     placeholderTextColor={Colors.gray}
-    onFocus={() => {
-      setIsFocused(true);
-    }}
-    onBlur={() => setIsFocused(false)}
     {...props} 
   />;
 };
@@ -36,13 +31,9 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   } as TextStyle,
   defaultTextInputStyle: {
-    color: Colors.white,
     fontFamily: Fonts.monospace,
-    fontSize: FontSizes.medium
-  } as TextStyle,
-  inputFocused: {
-    outlineStyle: 'none',
-    // borderBottomWidth: 2,
-    // borderBottomColor: Colors.red,
+    fontSize: FontSizes.medium,
+    borderBottomColor: Colors.orange,
+    borderBottomWidth: Spacing.border
   } as TextStyle
 });

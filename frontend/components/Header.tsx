@@ -1,14 +1,17 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import { Text } from './Customs'; 
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 export default function Header() {
   return (
     <View style={styles.headerContainer}>
-      <View style={styles.header}>
-        <Text style={styles.hmm}>   </Text>
-        <Text style={styles.headerText}>n-Game</Text>
+      <View style={styles.imageContainer}>
+        <Image 
+          source={require('../assets/images/headerText.png')}
+          style={styles.logo}
+          resizeMode='contain'
+        />
       </View>
       <Text style={styles.headerSubText}>The Root of Your Passion</Text>
     </View>
@@ -17,34 +20,23 @@ export default function Header() {
 
 const styles = StyleSheet.create({
   headerContainer: {
+    width: '95%',
+    justifyContent: 'flex-start',
+  },
+  imageContainer: {
+    height: Spacing.unit3o2, // Adjust this value to match your image height needs
+    marginLeft: -Spacing.unit * 5,
+  },
+  logo: {
     width: '100%',
-    marginLeft: Spacing.unit,
-  },
-  header: {
-    flexDirection: 'row',
-  },
-  headerText: {
-    paddingLeft: 5,
-    borderWidth: 5,
-    borderColor: Colors.appTitlePurple,
-    borderRightWidth: 0,
-    alignSelf: 'flex-start',
-    textAlign: 'left',
-    color: Colors.appTitlePurple,
-    fontSize: FontSizes.header,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    letterSpacing: 2
+    height: '100%',
+
   },
   headerSubText: {
     alignSelf: 'flex-start',
-    marginVertical: Spacing.unit1o10,
+    paddingVertical: Spacing.unit1o10,
     color: Colors.grayPrime,
     fontWeight: 'bold',
+    letterSpacing: 1
   },
-  hmm: {
-    borderTopWidth: 5,
-    borderBottomWidth: 5,
-    borderColor: Colors.appTitlePurple
-  }
 });

@@ -66,11 +66,27 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
       res.status(400).json({ error: 'Invalid credentials.' });
       return;
     }
-
+  
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
-
     res.status(200).json({ token, user });
   } catch (err) {
     res.status(500).json({ error: `Backend server error while logging in user: ${err}` });
   }
 };
+
+export async function handleValidation(req: Request, res: Response): Promise<void> {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  console.log('HERE')
+  if (!token) {
+    res.status(401).json({ error: 'No token provided' });
+    return;
+  }
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET as string);
+    res.status(200).json({ message: 'Token is valid' });
+  } catch (err) {
+    res.status(403).json({ error: 'Invalid token' });
+  }
+}

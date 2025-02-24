@@ -308,24 +308,15 @@ const styles = StyleSheet.create({
   },
   titleInput: {
     width: '80%',
-    color: Colors.white,
     fontSize: FontSizes.large,
     fontWeight: 'bold',
     letterSpacing: 3,
     textAlign: 'center',
-    borderBottomColor: Colors.orange,
-    borderBottomWidth: Spacing.border,
-    textAlignVertical: 'top',
-    outlineStyle: 'none',
-    outlineWidth: 2,
-    outlineColor: 'red',
   },
   statsInput: {
+    marginHorizontal: Spacing.unit1o10,
     color: Colors.black,
     fontSize: FontSizes.mediumLess,
-    borderBottomWidth: Spacing.border,
-    marginHorizontal: Spacing.unit1o10,
-    borderBottomColor: Colors.orange
   },
   colorPickerSection: {
     justifyContent: 'space-between',
@@ -350,11 +341,6 @@ const styles = StyleSheet.create({
     borderWidth: Spacing.border,
     borderColor: Colors.black,
     borderRadius: Spacing.unit1o5,
-  },
-  closePickerButton: {
-    height: Spacing.unit,
-    width: Spacing.unit,
-    backgroundColor: '#fff',
   },
   colorPickerContainer: {
     margin: Spacing.unit1o5,

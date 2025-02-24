@@ -53,3 +53,17 @@ export async function requestRegisterUser(username: string, password: string): P
     return { error: `Register User Request ERROR: ${err}` };
   }
 };
+
+export async function validateToken(): Promise<{ valid: boolean } | { error: string }> {
+  try {
+    const response = await api.get('api/auth/validate');
+    
+    if (response.status === 200) {
+      return { valid: true };
+    }
+    
+    return { error: 'Token validation failed' };
+  } catch (err) {
+    return { error: `Token validation ERROR: ${err}` };
+  }
+}
