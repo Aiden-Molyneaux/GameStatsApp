@@ -13,7 +13,6 @@ export default function GameList() {
   const { games } = useSelector((state: RootState) => state.gameData);
   const [gameCount, setGameCount] = useState(games.length);
   const [disableAddBtn, setDisableAddBtn] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [sortMode, setSortMode] = useState('entered');
 
   // keep track of if we have a game open for edit (or new)
@@ -96,7 +95,6 @@ export default function GameList() {
         style={[
           disableAddBtn ? { ...styles.submitGameBtn, backgroundColor: Colors.gray } : styles.submitGameBtn,
           {
-            ...(isHovered ? styles.submitHovered : null),
             transitionProperty: 'height, background-color', // Specify properties to transition
             transitionDuration: '0.3s', // Duration of the transition
             transitionTimingFunction: 'ease-in-out', // Timing function for smooth transition
@@ -104,8 +102,6 @@ export default function GameList() {
         ]}
         onPress={handlePlusPress} 
         disabled={disableAddBtn}
-        onHoverIn={() => setIsHovered(true)}
-        onHoverOut={() => setIsHovered(false)}
       >
         <FontAwesome size={FontSizes.medium} name='plus' color={Colors.white} />
       </Pressable>
@@ -165,8 +161,5 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.unit1o5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5
-  },
-  submitHovered: {
-    height: Spacing.unit
-  },
+  }
 });

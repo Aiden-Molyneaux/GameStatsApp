@@ -77,7 +77,7 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
 export async function handleValidation(req: Request, res: Response): Promise<void> {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
-  console.log('HERE')
+
   if (!token) {
     res.status(401).json({ error: 'No token provided' });
     return;

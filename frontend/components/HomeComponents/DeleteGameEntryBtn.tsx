@@ -8,18 +8,14 @@ interface DeleteGameEntryBtnProps {
 }
 
 export default function DeleteGameEntryBtn({pressFunction}: DeleteGameEntryBtnProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <Pressable 
       style={ styles.deleteBtn }
       onPress={pressFunction}
-      onHoverIn={() => setIsHovered(true)}
-      onHoverOut={() => setIsHovered(false)}
     >
       <FontAwesome
         name={'trash'}
-        size={isHovered ? FontSizes.large : FontSizes.medium}
+        size={FontSizes.medium}
         color={Colors.red} 
       />
     </Pressable>

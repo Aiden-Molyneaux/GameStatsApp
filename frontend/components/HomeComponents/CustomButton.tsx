@@ -1,12 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Animated } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import {  GameListItem, PartialGameListItem, addGameAction } from '@/store/gameReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
-import { RootState } from '../../store/store';
-import { requestCreateGame } from '@/api/gameRequests';
-import { Game, PartialGame } from '../../../backend/models/gameModel';
 
 interface AddGameBtnProps {
   size: string,
@@ -20,13 +15,11 @@ export default function CustomButton({ size, iconName, isDisabled, isPressed, pr
   return ( 
     size === 'small' 
       ? <SmallCustomButton
-        size={size}
         iconName={iconName}
         isDisabled={isDisabled}
         isPressed={isPressed}
         pressFunction={pressFunction}/>
       : <LargeCustomButton
-        size={size}
         iconName={iconName}
         isDisabled={isDisabled}
         isPressed={isPressed}
@@ -34,18 +27,17 @@ export default function CustomButton({ size, iconName, isDisabled, isPressed, pr
   );
 }
 
-function SmallCustomButton({ size, iconName, isDisabled, isPressed, pressFunction }: AddGameBtnProps) {
-  const [isHovered, setIsHovered] = useState(false);
+function SmallCustomButton({ iconName, isDisabled, isPressed, pressFunction }: AddGameBtnProps) {
 
-  const animatedHeight = useRef(new Animated.Value(isHovered || isPressed ? Spacing.unit - Spacing.unit1o5 : Spacing.unit)).current;
+  const animatedHeight = useRef(new Animated.Value(isPressed ? Spacing.unit - Spacing.unit1o5 : Spacing.unit)).current;
 
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: isHovered || isPressed ? Spacing.unit - Spacing.unit1o10 / 2 : Spacing.unit + Spacing.unit1o10, // Adjust height for open/closed
+      toValue: isPressed ? Spacing.unit - Spacing.unit1o10 / 2 : Spacing.unit + Spacing.unit1o10, // Adjust height for open/closed
       duration: 300, // Animation duration
       useNativeDriver: false, // Height requires useNativeDriver to be false
     }).start();
-  }, [isHovered, isPressed ]);
+  }, [ isPressed ]);
 
   const isCaret = iconName === 'caret-up' || iconName === 'caret-down';
 
@@ -55,8 +47,6 @@ function SmallCustomButton({ size, iconName, isDisabled, isPressed, pressFunctio
         style={[ isDisabled ? { ...styles.addGameButton, backgroundColor: Colors.gray } : styles.addGameButton ]}
         disabled={isDisabled}
         onPress={pressFunction} 
-        onHoverIn={() => setIsHovered(true)}
-        onHoverOut={() => setIsHovered(false)}
       >
         <View style={{
           ...styles.smallTopOfButton, 
@@ -79,18 +69,16 @@ function SmallCustomButton({ size, iconName, isDisabled, isPressed, pressFunctio
   );
 }
 
-function LargeCustomButton({ size, iconName, isDisabled, isPressed, pressFunction }: AddGameBtnProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const animatedHeight = useRef(new Animated.Value(isHovered || isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2)).current;
+function LargeCustomButton({ iconName, isDisabled, isPressed, pressFunction }: AddGameBtnProps) {
+  const animatedHeight = useRef(new Animated.Value(isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2)).current;
 
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: isHovered || isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2, // Adjust height for open/closed
+      toValue: isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2, // Adjust height for open/closed
       duration: 300, // Animation duration
       useNativeDriver: false, // Height requires useNativeDriver to be false
     }).start();
-  }, [isHovered, isPressed ]);
+  }, [ isPressed ]);
 
   return (
     <Animated.View style={{...styles.bigButtonContainer, height: animatedHeight }}>
@@ -98,8 +86,6 @@ function LargeCustomButton({ size, iconName, isDisabled, isPressed, pressFunctio
         style={[ isDisabled ? { ...styles.addGameButton, backgroundColor: Colors.gray } : styles.addGameButton ]}
         disabled={isDisabled}
         onPress={pressFunction} 
-        onHoverIn={() => setIsHovered(true)}
-        onHoverOut={() => setIsHovered(false)}
       >
         <View style={{
           ...styles.bigTopOfButton, 

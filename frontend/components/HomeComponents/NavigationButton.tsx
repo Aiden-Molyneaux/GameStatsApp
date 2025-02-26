@@ -16,17 +16,15 @@ interface NavigationButtonProps {
 }
 
 export default function NavigationButton({labelText, iconName, isPressed}: NavigationButtonProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const animatedHeight = useRef(new Animated.Value(isHovered || isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2)).current;
+  const animatedHeight = useRef(new Animated.Value(isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2)).current;
 
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: isHovered || isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2, // Adjust height for open/closed
+      toValue: isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2, // Adjust height for open/closed
       duration: 300, // Animation duration
       useNativeDriver: false, // Height requires useNativeDriver to be false
     }).start();
-  }, [isHovered, isPressed ]);
+  }, [ isPressed ]);
 
   return (
     <Animated.View style={{...styles.bigButtonContainer, height: animatedHeight }}>
@@ -68,7 +66,6 @@ const styles = StyleSheet.create({
   },
 
   addGameButton: {
-    
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',

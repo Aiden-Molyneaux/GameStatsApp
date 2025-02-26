@@ -11,8 +11,6 @@ interface ToggleModeBtnProps {
 }
 
 export default function ToggleModeBtn({type, iconName, isDisabled = false, pressFunction}: ToggleModeBtnProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  
   const getStyleByType = (type: string) => {
     switch (type) {
     case 'edit':
@@ -40,11 +38,9 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
       ]}
       disabled={isDisabled}
       onPress={pressFunction}
-      onHoverIn={() => setIsHovered(true)}
-      onHoverOut={() => setIsHovered(false)}
     >
       <FontAwesome 
-        size={isHovered ? FontSizes.medium : FontSizes.large}
+        size={FontSizes.large}
         name={iconName}
         color={(isDisabled) ? Colors.grayEdge : Colors.black} 
       />
