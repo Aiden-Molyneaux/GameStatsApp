@@ -63,8 +63,8 @@ function SmallCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
           backgroundColor: isPressed ? Colors.gameCubeGreen : Colors.grayPrime,
           borderColor: isPressed ? Colors.greenEdge : Colors.grayEdge 
         }}/>
+        <View style={styles.smallIndentation}/>
       </Pressable>
-
     </Animated.View>
   );
 }
@@ -102,6 +102,7 @@ function LargeCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
           backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
           borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge,
         }}/>
+        <View style={styles.largeIndentation}/>
       </Pressable>
 
     </Animated.View>
@@ -138,6 +139,25 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: Colors.black,
     borderWidth: Spacing.border,
+    borderBottomWidth: Spacing.border,
+  },
+  largeIndentation: {
+    position: 'absolute',
+    bottom: -Spacing.unit1o10,
+    backgroundColor: Colors.grayEdge,
+    height: '60%',
+    width: '102%',
+    borderRadius: 15,
+    zIndex: -1
+  },
+  smallIndentation: {
+    position: 'absolute',
+    bottom: -Spacing.unit1o10,
+    backgroundColor: Colors.grayEdge,
+    height: '80%',
+    width: '102%',
+    borderRadius: 30,
+    zIndex: -1
   },
 
   iconContainer: {

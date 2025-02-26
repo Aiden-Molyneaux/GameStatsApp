@@ -14,6 +14,7 @@ import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
 import { logout } from '@/store/authReducer';
 import { useDispatch } from 'react-redux';
 import ToggleModeBtn from '@/components/ToggleModeBtn';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Home() {
   const { games } = useSelector((state: RootState) => state.gameData);
@@ -44,7 +45,20 @@ export default function Home() {
       <Header type='device'/>
 
       <View style={styles.screenContainer}>
+
         <View style={styles.screen}>
+          {/* <LinearGradient
+            colors={[Colors.screenGray, Colors.screenGray]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.pixelationOverlay}
+          />
+          <LinearGradient
+            colors={[Colors.screenGray, Colors.appTitlePurple]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={[styles.pixelationOverlay, { opacity: 0.5 }]}
+          /> */}
           <View style={styles.usernameContainer}>
             <Text style={styles.usernameText}>{username}</Text>
             <ToggleModeBtn
@@ -94,7 +108,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.grayPrime,
     borderRadius: 15,
     marginBottom: Spacing.unit1o3,
-    elevation: 8
+    elevation: 8,
+    position: 'relative',
   },
   screen: {
     flex: 1,
@@ -129,5 +144,13 @@ const styles = StyleSheet.create({
     padding: Spacing.unit1o5,
     borderBottomColor: Colors.gray,
     borderBottomWidth: Spacing.border 
-  }
+  },
+  pixelationOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    opacity: 0.7,
+  },
 });

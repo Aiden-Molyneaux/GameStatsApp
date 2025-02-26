@@ -9,7 +9,6 @@ import { PartialGame } from '../../../backend/models/gameModel';
 import CustomButton from './CustomButton';
 
 interface AddGameBtnProps {
-  isDisabled: boolean,
   onAddGame: () => void,
   isPressed: boolean,
   setIsPressed: (data: boolean) => void
@@ -19,7 +18,7 @@ const timeout = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-export default function AddGameBtn({ isDisabled, onAddGame, isPressed, setIsPressed }: AddGameBtnProps) {
+export default function AddGameBtn({ onAddGame, isPressed, setIsPressed }: AddGameBtnProps) {
   const userId = useSelector((state: RootState) => state.userData.id);
   const dispatch = useDispatch();
 
@@ -34,6 +33,7 @@ export default function AddGameBtn({ isDisabled, onAddGame, isPressed, setIsPres
     };
     setIsPressed(true);
     await timeout(300);
+    setIsPressed(false);
     try {
       await requestCreateGame(newGame).then((response) => {
         if ('error' in response) { 

@@ -29,7 +29,7 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
   return (
     <Animated.View style={{...styles.bigButtonContainer, height: animatedHeight }}>
       <View
-        style={[ styles.addGameButton ]}
+        style={styles.addGameButton}
       >
         <View style={{
           ...styles.bigTopOfButton, 
@@ -37,7 +37,12 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
           borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge 
         }}>
           <View style={styles.iconContainer}>  
-            <FontAwesome size={FontSizes.large} name={iconName} color={Colors.white} />
+            <FontAwesome 
+              size={FontSizes.large} 
+              name={iconName} 
+              color={Colors.white}
+              style={styles.icon}
+            />
             <Text style={styles.navButtonText}>{labelText}</Text>
           </View>
 
@@ -55,7 +60,6 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
 
 const styles = StyleSheet.create({
   bigButtonContainer: {
-
     height: Spacing.unit3o2,
     width: Spacing.unit5,
   },
@@ -90,10 +94,12 @@ const styles = StyleSheet.create({
     borderColor: Colors.black,
     borderWidth: Spacing.border,
   },
-
   iconContainer: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: Spacing.unit1o5,
-    textShadow: `${Colors.black} 1px 1px 1px`
   },
+  icon: {
+    marginBottom: 2,
+  }
 });
