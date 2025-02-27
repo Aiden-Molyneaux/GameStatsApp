@@ -45,6 +45,7 @@ export const Colors = {
   grayEdge: '#46494b',
   black: '#1d1c1a',
   orange: '#FAA916',
+  orangePrime: '#f5a007',
   orangeEdge: '#c68611',
   screenGray: '#d1d5c0',
   gameCubeGreen: '#019190',

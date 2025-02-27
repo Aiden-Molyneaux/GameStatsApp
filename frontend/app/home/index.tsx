@@ -61,12 +61,17 @@ export default function Home() {
           /> */}
           <View style={styles.usernameContainer}>
             <Text style={styles.usernameText}>{username}</Text>
-            <ToggleModeBtn
-              type='editGame'
-              iconName='sign-out' 
-              isDisabled={false} 
-              pressFunction={() => dispatch(logout())} 
-            />
+            <View style={styles.logoutBtn}>
+              <Text style={styles.logoutText}>Logout</Text>
+              <View style={styles.logoutIcon}>
+                <ToggleModeBtn
+                  type='editGame'
+                  iconName='sign-out' 
+                  isDisabled={false} 
+                  pressFunction={() => dispatch(logout())} 
+                />
+              </View>
+            </View>
           </View>
           <GameList
             games={games} 
@@ -132,11 +137,19 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   logoutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  logoutIcon: {
     width: 20,
     height: 20,
-    backgroundColor: Colors.red,
     borderRadius: 10,
     margin: 5
+  },
+  logoutText: {
+    color: Colors.black,
+    textAlign: 'left',
   },
   usernameContainer: {
     flexDirection: 'row',

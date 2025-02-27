@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Animated } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
+import {LinearGradient} from 'expo-linear-gradient';
 
 interface AddGameBtnProps {
   size: string,
@@ -28,14 +29,13 @@ export default function CustomButton({ size, iconName, isDisabled, isPressed, pr
 }
 
 function SmallCustomButton({ iconName, isDisabled, isPressed, pressFunction }: AddGameBtnProps) {
-
   const animatedHeight = useRef(new Animated.Value(isPressed ? Spacing.unit - Spacing.unit1o5 : Spacing.unit)).current;
 
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: isPressed ? Spacing.unit - Spacing.unit1o10 / 2 : Spacing.unit + Spacing.unit1o10, // Adjust height for open/closed
-      duration: 300, // Animation duration
-      useNativeDriver: false, // Height requires useNativeDriver to be false
+      toValue: isPressed ? Spacing.unit - Spacing.unit1o10 / 2 : Spacing.unit + Spacing.unit1o10,
+      duration: 300,
+      useNativeDriver: false,
     }).start();
   }, [ isPressed ]);
 
@@ -50,19 +50,34 @@ function SmallCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
       >
         <View style={{
           ...styles.smallTopOfButton, 
-          backgroundColor: isPressed ? Colors.gameCubeGreen : Colors.grayPrime,
           borderColor: isPressed ? Colors.greenEdge : Colors.grayEdge  
         }}>
-          <View style={styles.iconContainer}>  
-            <FontAwesome size={FontSizes.mediumLess} name={iconName} color={Colors.white} />
-          </View>
-
+          <LinearGradient
+            colors={isPressed 
+              ? [Colors.gameCubeGreen, Colors.greenEdge] 
+              : [Colors.grayPrime, Colors.grayEdge]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.topGradient}
+          >
+            <View style={styles.iconContainer}>  
+              <FontAwesome size={FontSizes.mediumLess} name={iconName} color={Colors.white} />
+            </View>
+          </LinearGradient>
         </View>
         <View style={{
           ...styles.smallBottomOfButton, 
-          backgroundColor: isPressed ? Colors.gameCubeGreen : Colors.grayPrime,
           borderColor: isPressed ? Colors.greenEdge : Colors.grayEdge 
-        }}/>
+        }}>
+          <LinearGradient
+            colors={isPressed 
+              ? [Colors.gameCubeGreen, Colors.greenEdge]
+              : [Colors.grayPrime, Colors.grayEdge]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.bottomGradient}
+          />
+        </View>
         <View style={styles.smallIndentation}/>
       </Pressable>
     </Animated.View>
@@ -74,9 +89,9 @@ function LargeCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
 
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2, // Adjust height for open/closed
-      duration: 300, // Animation duration
-      useNativeDriver: false, // Height requires useNativeDriver to be false
+      toValue: isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2,
+      duration: 300,
+      useNativeDriver: false,
     }).start();
   }, [ isPressed ]);
 
@@ -89,22 +104,36 @@ function LargeCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
       >
         <View style={{
           ...styles.bigTopOfButton, 
-          backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
           borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge 
         }}>
-          <View style={styles.iconContainer}>  
-            <FontAwesome size={FontSizes.medium} name={iconName} color={Colors.white} />
-          </View>
-
+          <LinearGradient
+            colors={isPressed 
+              ? [Colors.orange, Colors.orange]
+              : [Colors.grayPrime, Colors.grayEdge]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.topGradient}
+          >
+            <View style={styles.iconContainer}>  
+              <FontAwesome size={FontSizes.medium} name={iconName} color={Colors.white} />
+            </View>
+          </LinearGradient>
         </View>
         <View style={{
           ...styles.bigBottomOfButton, 
-          backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
           borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge,
-        }}/>
+        }}>
+          <LinearGradient
+            colors={isPressed 
+              ? [Colors.orange, Colors.orange]
+              : [Colors.grayPrime, Colors.grayEdge]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.bottomGradient}
+          />
+        </View>
         <View style={styles.largeIndentation}/>
       </Pressable>
-
     </Animated.View>
   );
 }
@@ -144,7 +173,7 @@ const styles = StyleSheet.create({
   largeIndentation: {
     position: 'absolute',
     bottom: -Spacing.unit1o10,
-    backgroundColor: Colors.grayEdge,
+    backgroundColor: Colors.grayPrime,
     height: '60%',
     width: '102%',
     borderRadius: 15,
@@ -153,17 +182,12 @@ const styles = StyleSheet.create({
   smallIndentation: {
     position: 'absolute',
     bottom: -Spacing.unit1o10,
-    backgroundColor: Colors.grayEdge,
+    backgroundColor: Colors.grayPrime,
     height: '80%',
-    width: '102%',
+    width: '106%',
     borderRadius: 30,
     zIndex: -1
   },
-
-  iconContainer: {
-    textShadow: `${Colors.black} 1px 1px 1px`
-  },
-
   smallButtonContainer: {
     height: Spacing.unit,
     width: Spacing.unit
@@ -191,5 +215,27 @@ const styles = StyleSheet.create({
   },
   isCaret: {
     marginRight: 20
-  }
+  },
+  topGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bottomGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 13,
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

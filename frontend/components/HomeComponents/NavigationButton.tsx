@@ -8,6 +8,7 @@ import { RootState } from '../../store/store';
 import { requestCreateGame } from '@/api/gameRequests';
 import { Game, PartialGame } from '../../../backend/models/gameModel';
 import { Text } from '../Customs';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface NavigationButtonProps {
   labelText: string,
@@ -28,32 +29,45 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
 
   return (
     <Animated.View style={{...styles.bigButtonContainer, height: animatedHeight }}>
-      <View
-        style={styles.addGameButton}
-      >
+      <View style={styles.addGameButton}>
         <View style={{
           ...styles.bigTopOfButton, 
-          backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
           borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge 
         }}>
-          <View style={styles.iconContainer}>  
-            <FontAwesome 
-              size={FontSizes.large} 
-              name={iconName} 
-              color={Colors.white}
-              style={styles.icon}
-            />
-            <Text style={styles.navButtonText}>{labelText}</Text>
-          </View>
-
+          <LinearGradient
+            colors={isPressed 
+              ? [Colors.orange, Colors.orangePrime]
+              : [Colors.grayPrime, Colors.grayEdge]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.topGradient}
+          >
+            <View style={styles.iconContainer}>  
+              <FontAwesome 
+                size={FontSizes.large} 
+                name={iconName} 
+                color={Colors.white}
+                style={styles.icon}
+              />
+              <Text style={styles.navButtonText}>{labelText}</Text>
+            </View>
+          </LinearGradient>
         </View>
         <View style={{
           ...styles.bigBottomOfButton, 
-          backgroundColor: isPressed ? Colors.orange : Colors.grayPrime,
           borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge,
-        }}/>
+        }}>
+          <LinearGradient
+            colors={isPressed 
+              ? [Colors.orange, Colors.orangePrime]
+              : [Colors.grayPrime, Colors.grayEdge]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+            style={styles.bottomGradient}
+          />
+        </View>
       </View>
-
+      <View style={styles.largeIndentation}/>
     </Animated.View>
   );
 }
@@ -62,6 +76,7 @@ const styles = StyleSheet.create({
   bigButtonContainer: {
     height: Spacing.unit3o2,
     width: Spacing.unit5,
+    alignItems: 'center',
   },
   navButtonText: {
     fontWeight: 'bold',
@@ -101,5 +116,32 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginBottom: 2,
-  }
+  },
+  largeIndentation: {
+    position: 'absolute',
+    bottom: -Spacing.unit1o10,
+    backgroundColor: Colors.grayPrime,
+    height: '60%',
+    width: '102%',
+    borderRadius: 15,
+    zIndex: -1
+  },
+  topGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 13,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bottomGradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    borderRadius: 13,
+  },
 });

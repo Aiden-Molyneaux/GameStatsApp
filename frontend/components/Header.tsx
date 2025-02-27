@@ -12,8 +12,13 @@ export default function Header() {
           style={styles.logo}
           resizeMode='contain'
         />
+        <Image 
+          source={require('../assets/images/speakerGrill.png')}
+          style={styles.speaker}
+          resizeMode='contain'
+        />
       </View>
-      <Text style={styles.headerSubText}>The Root of Your Passion</Text>
+      <Text style={styles.headerSubText}>Where Your Passion Began</Text>
     </View>
   );
 }
@@ -39,4 +44,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1
   },
+  speaker: {
+    position: 'absolute',
+    top: Spacing.unit1o5,
+    right: -Spacing.unit1o2 * 14,
+    width: '115%',
+    height: '115%',
+
+  }
 });

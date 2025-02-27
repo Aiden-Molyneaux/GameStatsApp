@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'transparent',
     borderTopWidth: 0,
-    marginBottom: -Spacing.unit + -Spacing.unit1o5,
+    marginBottom: -Spacing.unit + -Spacing.unit1o10,
   },
   hmm: {
     flex: 1,
