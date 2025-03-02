@@ -8,14 +8,12 @@ import Header from '@/components/Header';
 export default function Profile() {
   return (
     <View style={styles.profilePage}>
-      <Header type='device'/>
+      <Header/>
     
       <ProfileDetails/>
     </View>
   );
 }
-
-const isIOS = Platform.OS === 'ios';
 
 const styles = StyleSheet.create({
   profilePage: {

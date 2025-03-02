@@ -93,16 +93,12 @@ export default function Auth() {
 
   return (
     <View style={styles.homePage}>
-      <Header type='device'/>
-      <View style={styles.speaker}></View>
+      <Header/>
 
       <View style={styles.screenContainer}>
         <View style={styles.screen}>
           <View style={styles.authPage}>
             <View style={styles.authForm}>
-              <View style={styles.inScreenHeader}>
-                <Header type='inScreen'/>
-              </View>
               <Text style={styles.welcomeText}>{authMode === 'Sign In' ? 'Sign-In' : 'Join-Up' }</Text>
 
               { authFail
@@ -236,14 +232,5 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     borderBottomColor: Colors.gray,
     borderBottomWidth: Spacing.border 
-  },
-  speaker: {
-    position: 'absolute',
-    top: Spacing.unit1o2,
-    right: Spacing.unit1o2,
-    height: Spacing.unit1o2,
-    width: Spacing.unit1o2,
-    backgroundColor: Colors.red,
-    borderRadius: Spacing.unit1o2
   }
 });

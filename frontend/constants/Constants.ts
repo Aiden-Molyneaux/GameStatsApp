@@ -6,7 +6,8 @@ const em1 = height / 24;
 
 export const Fonts = {
   monospace: 'monospace',
-  monomaniac: 'MonomaniacOne-Regular'
+  monomaniac: 'MonomaniacOne-Regular',
+  pixel: 'Jersey20-Regular'
 };
 
 export const FontSizes = {
@@ -45,10 +46,11 @@ export const Colors = {
   grayEdge: '#46494b',
   black: '#1d1c1a',
   orange: '#FAA916',
-  orangePrime: '#f5a007',
+  orangePrime: '#e69600',
   orangeEdge: '#c68611',
   screenGray: '#d1d5c0',
-  gameCubeGreen: '#019190',
+  green: '#019190',
+  greenPrime: '#037D7C',
   greenEdge: '#007269',
   appTitlePurple: '#6557a7',
   red: '#ff0000',

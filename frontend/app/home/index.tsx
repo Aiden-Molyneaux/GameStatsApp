@@ -1,15 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, Platform, FlatList, Pressable } from 'react-native';
+import { View, StyleSheet, FlatList, Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState, store } from '../../store/store';
+import { RootState } from '../../store/store';
 import { GameListItem } from '@/store/gameReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
 import SortBar from '@/components/HomeComponents/SortBar';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
-import { Colors, Spacing, FontSizes } from '@/constants/Constants';
+import { Colors, Spacing } from '@/constants/Constants';
 import Header from '@/components/Header';
-import CustomButton from '@/components/HomeComponents/CustomButton';
 import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
 import { logout } from '@/store/authReducer';
 import { useDispatch } from 'react-redux';
@@ -42,7 +41,7 @@ export default function Home() {
 
   return (
     <View style={styles.homePage}>
-      <Header type='device'/>
+      <Header/>
 
       <View style={styles.screenContainer}>
 
@@ -96,7 +95,8 @@ export default function Home() {
   );
 }
 
-const isIOS = Platform.OS === 'ios';
+const windowWidth = Dimensions.get('window').width;
+const isSmallScreen = windowWidth < 450;
 
 const styles = StyleSheet.create({
   homePage: {
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.unit,
     width: '95%',
-    marginBottom: Spacing.unit1o2 + Spacing.unit1o5
+    marginBottom: isSmallScreen ? Spacing.unit1o5 * 3 : Spacing.unit1o5 * 5
   },
   usernameText: {
     padding: 5,
@@ -145,11 +145,12 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    margin: 5
+    margin: 5,
+    justifyContent: 'center',
   },
   logoutText: {
     color: Colors.black,
-    textAlign: 'left',
+    alignSelf: 'center',
   },
   usernameContainer: {
     flexDirection: 'row',

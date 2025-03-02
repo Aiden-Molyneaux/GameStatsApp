@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, SafeAreaView, Platform } from 'react-native';
+import { View, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import { Tabs } from 'expo-router';
 import { persistor, store } from '../../store/store';
 import { Provider } from 'react-redux';
@@ -21,7 +21,7 @@ export default function RootLayout() {
                 tabBarLabel: '',
                 tabBarLabelPosition: 'beside-icon',
                 tabBarIcon: ({ focused }) => (
-                  <View style={styles.hmm}>
+                  <View style={styles.btnContainer}>
                     <NavigationButton
                       labelText='Games'
                       iconName='home'
@@ -37,7 +37,7 @@ export default function RootLayout() {
                 tabBarLabel: '',
                 tabBarLabelPosition: 'beside-icon',
                 tabBarIcon: ({ focused }) => (
-                  <View style={styles.hmm}>
+                  <View style={styles.btnContainer}>
                     <NavigationButton
                       labelText='Profile'
                       iconName='user'
@@ -55,30 +55,27 @@ export default function RootLayout() {
   );
 }
 
+const windowWidth = Dimensions.get('window').width;
+const isSmallScreen = windowWidth < 450;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     backgroundColor: Colors.gray,
-    // borderWidth: Spacing.borderThick,
-    // borderColor: Colors.grayPrime,
   },
   tabBar: {
     width: '100%',
     justifyContent: 'center',
     backgroundColor: 'transparent',
     borderTopWidth: 0,
-    marginBottom: -Spacing.unit + -Spacing.unit1o10,
+    marginBottom: isSmallScreen ? -Spacing.unit1o10 * 11 : -Spacing.unit1o10 * 3,
   },
-  hmm: {
+  btnContainer: {
     flex: 1,
     width: Spacing.unit5,
     justifyContent: 'flex-end',
     marginLeft: 20
-  },
-  tabBarText: {
-    fontFamily: Fonts.monospace,
-    fontSize: FontSizes.large,
   }
 });
 

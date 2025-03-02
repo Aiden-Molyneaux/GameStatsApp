@@ -21,6 +21,9 @@ function Layout() {
       await Font.loadAsync({
         'MonomaniacOne-Regular': require('../assets/fonts/MonomaniacOne-Regular.ttf'),
       });
+      await Font.loadAsync({
+        'Jersey20-Regular': require('../assets/fonts/Jersey20-Regular.ttf'),
+      });
       setFontsLoaded(true);
     }
     loadFonts();

@@ -1,12 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Animated } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import {  GameListItem, PartialGameListItem, addGameAction } from '@/store/gameReducer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Colors, FontSizes, Spacing } from '@/constants/Constants';
-import { RootState } from '../../store/store';
-import { requestCreateGame } from '@/api/gameRequests';
-import { Game, PartialGame } from '../../../backend/models/gameModel';
+import { Colors, FontSizes, Spacing, Fonts } from '@/constants/Constants';
 import { Text } from '../Customs';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -37,7 +32,7 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
           <LinearGradient
             colors={isPressed 
               ? [Colors.orange, Colors.orangePrime]
-              : [Colors.grayPrime, Colors.grayEdge]}
+              : [Colors.gray, Colors.grayPrime]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={styles.topGradient}
@@ -60,7 +55,7 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
           <LinearGradient
             colors={isPressed 
               ? [Colors.orange, Colors.orangePrime]
-              : [Colors.grayPrime, Colors.grayEdge]}
+              : [Colors.gray, Colors.grayPrime]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={styles.bottomGradient}
@@ -79,11 +74,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navButtonText: {
-    fontWeight: 'bold',
+    fontSize: FontSizes.large,
     textTransform: 'uppercase',
     letterSpacing: 2,
   },
-
   addGameButton: {
     alignItems: 'center',
     justifyContent: 'center',

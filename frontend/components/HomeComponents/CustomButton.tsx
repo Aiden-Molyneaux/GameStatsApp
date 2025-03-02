@@ -54,8 +54,8 @@ function SmallCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
         }}>
           <LinearGradient
             colors={isPressed 
-              ? [Colors.gameCubeGreen, Colors.greenEdge] 
-              : [Colors.grayPrime, Colors.grayEdge]}
+              ? [Colors.green, Colors.greenPrime] 
+              : [Colors.gray, Colors.grayPrime]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={styles.topGradient}
@@ -71,8 +71,8 @@ function SmallCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
         }}>
           <LinearGradient
             colors={isPressed 
-              ? [Colors.gameCubeGreen, Colors.greenEdge]
-              : [Colors.grayPrime, Colors.grayEdge]}
+              ? [Colors.green, Colors.greenPrime]
+              : [Colors.gray, Colors.grayPrime]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={styles.bottomGradient}
@@ -109,7 +109,7 @@ function LargeCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
           <LinearGradient
             colors={isPressed 
               ? [Colors.orange, Colors.orange]
-              : [Colors.grayPrime, Colors.grayEdge]}
+              : [Colors.gray, Colors.grayPrime]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={styles.topGradient}
@@ -126,7 +126,7 @@ function LargeCustomButton({ iconName, isDisabled, isPressed, pressFunction }: A
           <LinearGradient
             colors={isPressed 
               ? [Colors.orange, Colors.orange]
-              : [Colors.grayPrime, Colors.grayEdge]}
+              : [Colors.gray, Colors.grayPrime]}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
             style={styles.bottomGradient}
