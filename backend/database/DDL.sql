@@ -13,6 +13,7 @@ CREATE TABLE games (
 	user_id		INT,
 	name		VARCHAR(60) NOT NULL,
   hours   INT,
+  percent_complete INT,
 	date_purchased 	DATE,
 	title_colour VARCHAR(16),
 	header_colour VARCHAR(16),

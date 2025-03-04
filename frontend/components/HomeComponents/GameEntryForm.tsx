@@ -105,6 +105,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
       id: gameData.id,
       name: formData.name,
       hours: formData.hours,
+      percentComplete: formData.percentComplete,
       datePurchased: formData.datePurchased,
       titleColour: tempTitleColour,
       headerColour: tempHeaderColour,
@@ -117,7 +118,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
         console.error(response.error);
         return;
       }
-      setGameData(updatedGame);
+      setGameData({...updatedGame});
       dispatch(updateGameAction({ game: updatedGame }));
       closeModal();
     } catch(err) {
@@ -156,36 +157,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
         
         <View>
           <View style={styles.expandedGame}>
+            
             <View style={styles.gameStats}>
-              <View style={styles.statContainer}>
-                <Text style={styles.statTitle}>Hours Played: </Text>
-                <TextInput 
-                  placeholder='0'
-                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
-                  value={ formData.hours ? String(formData.hours) : '' } 
-                  onChangeText={ (value) => handleTextInputChange('hours', value) }
-                  keyboardType='numeric'
-                />
-              </View>
-              <View style={styles.statContainer}>
-                <Text style={styles.statTitle}>Date Purchased: </Text>
-                <TextInput 
-                  placeholder='YYYY-MM-DD'
-                  maxLength={10}
-                  style={{ 
-                    ...styles.statsInput, 
-                    width: Spacing.unit * 2.5,
-                    borderBottomColor: isDateValid(formData.datePurchased) ? Colors.orange : Colors.red, 
-                  }}
-                  value={ formData.datePurchased ? String(formData.datePurchased).split('T')[0] : '' }
-                  onChangeText={(value) => {
-                    const formattedDate = formatDateInput(value);
-                    handleTextInputChange('datePurchased', formattedDate);
-                  }}
-                  keyboardType='number-pad'
-                />
-              </View>
-              
               <View style={styles.colorPickerSection}>
                 <View style={styles.colorPickerControls}>
                   <View style={styles.colorPickerControl}>
@@ -206,6 +179,47 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                   { showHeaderColourPicker && <CustomColourPicker colour={tempHeaderColour} setColour={setTempHeaderColour}/> }
                 </View>
               </View>
+              <View style={styles.statContainer}>
+                <Text style={styles.statTitle}>Hours Played: </Text>
+                <TextInput 
+                  placeholder='0'
+                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
+                  value={ formData.hours ? String(formData.hours) : '' } 
+                  onChangeText={ (value) => handleTextInputChange('hours', value) }
+                  keyboardType='numeric'
+                />
+              </View>
+              <View style={styles.statContainer}>
+                <Text style={styles.statTitle}>Percent Complete: </Text>
+                <TextInput 
+                  placeholder='0%'
+                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
+                  value={ formData.percentComplete ? String(formData.percentComplete) : '' } 
+                  onChangeText={ (value) => handleTextInputChange('percentComplete', value) }
+                  keyboardType='numeric'
+                  maxLength={3}
+                />
+              </View>
+              <View style={styles.statContainer}>
+                <Text style={styles.statTitle}>Date Purchased: </Text>
+                <TextInput 
+                  placeholder='YYYY-MM-DD'
+                  maxLength={10}
+                  style={{ 
+                    ...styles.statsInput, 
+                    width: Spacing.unit * 2.5,
+                    borderBottomColor: isDateValid(formData.datePurchased) ? Colors.orange : Colors.red, 
+                  }}
+                  value={ formData.datePurchased ? String(formData.datePurchased).split('T')[0] : '' }
+                  onChangeText={(value) => {
+                    const formattedDate = formatDateInput(value);
+                    handleTextInputChange('datePurchased', formattedDate);
+                  }}
+                  keyboardType='number-pad'
+                />
+              </View>
+            
+
             </View>
           </View>
         </View>
@@ -263,7 +277,6 @@ const styles = StyleSheet.create({
   gameIndex: {
     marginHorizontal: Spacing.unit1o3,
     color: Colors.black,
-    fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',
     textAlign: 'center',
   },
@@ -275,16 +288,15 @@ const styles = StyleSheet.create({
   statContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: Spacing.unit1o5,
-    paddingTop: Spacing.unit1o5,
+
   },
   gameStats: {
     flex: 1,
+    gap: Spacing.unit1o3,
+    margin: Spacing.unit1o5,
   },
   statTitle: {
     color: Colors.black,
-    fontSize: FontSizes.mediumLess,
-    fontWeight: 'bold',
     whiteSpace: 'nowrap'
   },
   editBtnContainer: {
@@ -300,15 +312,13 @@ const styles = StyleSheet.create({
   datePurchasedContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    fontSize: FontSizes.mediumLess,
   },
   datePurchasedText: {
-    fontSize: FontSizes.mediumLess,
     marginHorizontal: Spacing.unit1o10,
   },
   titleInput: {
     width: '80%',
-    fontSize: FontSizes.large,
+    fontSize: FontSizes.larger,
     fontWeight: 'bold',
     letterSpacing: 3,
     textAlign: 'center',
@@ -316,12 +326,10 @@ const styles = StyleSheet.create({
   statsInput: {
     marginHorizontal: Spacing.unit1o10,
     color: Colors.black,
-    fontSize: FontSizes.mediumLess,
   },
   colorPickerSection: {
-    justifyContent: 'space-between',
-    margin: Spacing.unit1o2,
-    marginBottom: 0
+    marginHorizontal: Spacing.unit1o5,
+    marginBottom: -Spacing.unit1o3
   },
   colorPickerControls: {
     flexDirection: 'row',

@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   navButtonText: {
-    fontSize: FontSizes.large,
+    fontSize: FontSizes.larger,
     textTransform: 'uppercase',
     letterSpacing: 2,
   },

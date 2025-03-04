@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { Colors, Spacing, FontSizes } from '@/constants/Constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSuccess } from '../store/authReducer';
@@ -14,6 +14,8 @@ import SortBar from '@/components/HomeComponents/SortBar';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import Header from '@/components/Header';
 import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
+import NavigationButton from '@/components/HomeComponents/NavigationButton';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 export default function Auth() {
   const [username, setUsername] = useState('');
@@ -99,32 +101,58 @@ export default function Auth() {
         <View style={styles.screen}>
           <View style={styles.authPage}>
             <View style={styles.authForm}>
-              <Text style={styles.welcomeText}>{authMode === 'Sign In' ? 'Sign-In' : 'Join-Up' }</Text>
+              <View style={styles.authHeader}>
+                <Pressable style={styles.modeBtn} onPress={() => setAuthMode('Sign In')}>
+                  <FontAwesome 
+                    size={FontSizes.large} 
+                    name={'caret-right'} 
+                    color={authMode === 'Sign In' ? Colors.black : Colors.screenGray}
+                  /> 
+                  <Text style={styles.modeBtnText}>Sign-In</Text>
+                </Pressable>
+                <Pressable style={styles.modeBtn} onPress={() => setAuthMode('Register')}>
+                  <FontAwesome 
+                    size={FontSizes.large} 
+                    name={'caret-right'} 
+                    color={authMode === 'Register' ? Colors.black : Colors.screenGray}
+                  /> 
+                  <Text style={styles.modeBtnText}>Join-Up</Text>
+                </Pressable>
+              </View>
 
               { authFail
                 ? <Text>Login failed</Text>
                 : null
               }
-              <TextInput
-                style={styles.input}
-                placeholder='Username'
-                value={username}
-                onChangeText={setUsername}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder='Password'
-                value={password}
-                onChangeText={setPassword}
-                // secureTextEntry
-              />
+              <View style={styles.authInputContainer}>
+                <Text style={styles.inputLabel}>Username:</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder='happyboy'
+                  value={username}
+                  onChangeText={setUsername}
+                />
+              </View>
+              <View style={styles.authInputContainer}>
+                <Text style={styles.inputLabel}>Password:</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder='Password'
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                />
+              </View>
+
               <View style={styles.authBtns}>
-                <Pressable style={styles.modeBtn} onPress={() => setAuthMode(authMode === 'Sign In' ? 'Register' : 'Sign In')}>
-                  <Text>or {authMode === 'Sign In' ? 'Join In' : 'Sign In'}</Text>
-                </Pressable>
+
         
                 <Pressable style={styles.authBtn} onPress={attemptAuth}>
-                  <Text>-&gt;</Text>
+                  <FontAwesome 
+                    size={FontSizes.large} 
+                    name={'long-arrow-right'} 
+                    color={Colors.black}
+                  /> 
                 </Pressable>
               </View>
 
@@ -143,15 +171,30 @@ export default function Auth() {
         />
         <OpenCloseBar currentSortMode={''} setSortMode={() => {}}/>
       </View>
+        <View style={styles.btnContainer}>
+          <NavigationButton
+            labelText='Games'
+            iconName='home'
+            isPressed={false}
+          />
+          <NavigationButton
+            labelText='Profile'
+            iconName='user'
+            isPressed={false}
+          />
+      </View>
     </View>
 
   );
 }
 
+const windowWidth = Dimensions.get('window').width;
+const isSmallScreen = windowWidth < 450;
+
 const styles = StyleSheet.create({
   authPage: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     alignItems: 'center',
     // padding: Spacing.unit * 2,
     backgroundColor: Colors.screenGray,
@@ -160,10 +203,22 @@ const styles = StyleSheet.create({
     gap: Spacing.unit1o5,
     width: Spacing.unit10 - Spacing.unit,
   },
+  authInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.unit1o5,
+    marginLeft: Spacing.unit1o10 *3,
+  },
+  inputLabel: {
+    color: Colors.black,
+    fontSize: FontSizes.medium,
+  },
   input: {
-    margin: Spacing.unit1o5,
-    padding: Spacing.unit1o5,
-    fontSize: FontSizes.mediumLess,
+    flex: 1,
+    margin: Spacing.unit1o10,
+    marginLeft: 0,
+    padding: Spacing.unit1o10,
+
   },
   welcomeText: {
     alignSelf: 'flex-start',
@@ -171,29 +226,31 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.large,
     color: Colors.black
   },
+  orText: {
+    color: Colors.black,
+    textAlign: 'left',
+  },
   authBtns: {
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'flex-end',
+    marginBottom: Spacing.unit1o5
+  },
+  authHeader: {
+    justifyContent: 'center',
+    gap: Spacing.unit1o5
   },
   authBtn: {
-    margin: Spacing.unit1o5,
-    padding: Spacing.unit1o5,
-    backgroundColor: Colors.black,
-    fontSize: FontSizes.mediumLess,
-    textAlign: 'center',
-    borderColor: Colors.black,
-    borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5,
+    alignItems: 'flex-end',
   },
+
   modeBtn: {
-    margin: Spacing.unit1o5,
-    padding: Spacing.unit1o5,
-    backgroundColor: Colors.black,
-    fontSize: FontSizes.small,
+    flexDirection: 'row',
     textAlign: 'center',
-    borderColor: Colors.black,
-    borderWidth: Spacing.border,
-    borderRadius: Spacing.unit1o5,
+    alignItems: 'center',
+  },
+  modeBtnText: {
+    marginLeft: Spacing.unit1o10,
+    color: Colors.black,
+    fontSize: FontSizes.large
   },
   homePage: {
     flex: 1,
@@ -224,7 +281,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.unit,
     width: '95%',
-    marginBottom: Spacing.unit1o2 + Spacing.unit1o5
+    marginBottom: Spacing.unit1o3
   },
   usernameText: {
     padding: 5,
@@ -232,5 +289,19 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     borderBottomColor: Colors.gray,
     borderBottomWidth: Spacing.border 
-  }
+  },
+  btnContainer: {
+    flexDirection: 'row',
+    gap: Spacing.unit1o5 * 1.8,
+    width: Spacing.unit5,
+    justifyContent: 'flex-end',
+    marginLeft: Spacing.unit * 5.35,
+    marginBottom:isSmallScreen ? Spacing.unit1o10: -Spacing.unit1o10 * 3,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.unit1o5,
+  },
+
 });

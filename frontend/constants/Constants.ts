@@ -12,6 +12,7 @@ export const Fonts = {
 
 export const FontSizes = {
   header: em1,
+  larger: em1 * 3.5/5,
   large: em1 * 3/5,
   medium: em1 * 1/2,
   mediumLess: em1 * 2/5,

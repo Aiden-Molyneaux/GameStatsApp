@@ -44,7 +44,6 @@ export default function RootLayout() {
                       isPressed={focused}
                     />
                   </View>
-
                 ),
               }}
             />
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     width: Spacing.unit5,
     justifyContent: 'flex-end',
-    marginLeft: 20
+    marginLeft: Spacing.unit1o10 * 6
   }
 });
 

@@ -27,6 +27,7 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
     index: index,
     name: item.name,
     hours: item.hours,
+    percentComplete: item.percentComplete,
     datePurchased: item.datePurchased,
     titleColour: item.titleColour,
     headerColour: item.headerColour,
@@ -43,6 +44,7 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
       id: gameData.id,
       name: gameData.name,
       hours: gameData.hours,
+      percentComplete: gameData.percentComplete,
       datePurchased: gameData.datePurchased,
       titleColour: gameData.titleColour,
       headerColour: gameData.headerColour,
@@ -61,11 +63,13 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
   // UseEffect to animate the height when viewMode changes
   useEffect(() => {
     Animated.timing(animatedHeight, {
-      toValue: viewMode === 'OPEN' ? Spacing.unit2 * .85 : 0, // Adjust height for open/closed
+      toValue: viewMode === 'OPEN' ? hasBeenPlayed ? Spacing.unit2 * 1.2 : Spacing.unit2 * 0.85 : 0, // Adjust height for open/closed
       duration: 500, // Animation duration
       useNativeDriver: false, // Height requires useNativeDriver to be false
     }).start();
   }, [viewMode]);
+
+  const hasBeenPlayed = gameData.hours > 0;
 
   return (
     <>
@@ -86,8 +90,11 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
                 <View style={styles.expandedGame}>
                   <View style={styles.gameStats}>
                     <View style={styles.statContainer}>
-                      <Text style={styles.statTitle}>Hours Played: </Text><Text style={styles.statText}>{gameData.hours}</Text>
+                      <Text style={styles.statTitle}>Hours Played: </Text><Text style={styles.statText}>{gameData.hours ? gameData.hours : 'Never Played'}</Text>
                     </View>
+                    { hasBeenPlayed && <View style={styles.statContainer}>
+                      <Text style={styles.statTitle}>Percent Complete: </Text><Text style={styles.statText}>{gameData.percentComplete}</Text>
+                    </View> }
                     <View style={styles.statContainer}>
                       <Text style={styles.statTitle}>Date Purchased: </Text><Text style={styles.statText}>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
                     </View>
@@ -157,15 +164,13 @@ const styles = StyleSheet.create({
   },
   gameIndex: {
     color: Colors.black,
-    fontSize: FontSizes.mediumLess,
     fontWeight: 'bold',
     textAlign: 'center'
   },
   titleText: {
     flex: 1,
     color: Colors.white,
-    fontSize: FontSizes.large,
-
+    fontSize: FontSizes.larger,
     textAlign: 'center',
     fontWeight: 'bold',
     letterSpacing: 3
@@ -189,10 +194,10 @@ const styles = StyleSheet.create({
   },
   statTitle: {
     color: Colors.black,
-    fontSize: FontSizes.mediumLess
+
   },
   statText: {
     color: Colors.black,
-    fontSize: FontSizes.mediumLess
-  },
+  }
+
 });

@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.unit,
     width: '95%',
-    marginBottom: isSmallScreen ? Spacing.unit1o5 * 3 : Spacing.unit1o5 * 5
+    marginBottom: isSmallScreen ? Spacing.unit1o5 * 3.5 : Spacing.unit1o5 * 5
   },
   usernameText: {
     padding: 5,

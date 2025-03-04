@@ -27,7 +27,7 @@ export async function handleFetchGamesByUser(req: AuthRequest, res: Response) {
 
 export async function handleCreateGame(req: AuthRequest, res: Response) {
   console.log('Handling request to create game...', req);
-  const { name, hours, datePurchased, titleColour, headerColour } = req.body.newGame;
+  const { name, hours, percentComplete, datePurchased, titleColour, headerColour } = req.body.newGame;
 
   if (!req.user || !req.user.id) {
     res.status(401).json({ error: 'User authorization error' });
@@ -36,7 +36,7 @@ export async function handleCreateGame(req: AuthRequest, res: Response) {
   const userId = req.user.id;
 
   try {
-    const response = await postGame({ userId, name, hours, datePurchased, titleColour, headerColour });
+    const response = await postGame({ userId, name, hours, percentComplete, datePurchased, titleColour, headerColour });
 
     if (response.success) {
       return res.status(200).json({ game: response.game });
@@ -50,7 +50,7 @@ export async function handleCreateGame(req: AuthRequest, res: Response) {
 
 export async function handleUpdateGame(req: AuthRequest, res: Response) {
   console.log('Handling request to update game...');
-  const { id, name, hours, datePurchased, titleColour, headerColour } = req.body.updatedGame;
+  const { id, name, hours, percentComplete, datePurchased, titleColour, headerColour } = req.body.updatedGame;
 
   if (!req.user || !req.user.id) {
     res.status(401).json({ error: 'User authorization error' });
@@ -58,7 +58,7 @@ export async function handleUpdateGame(req: AuthRequest, res: Response) {
   }
 
   try {
-    const response = await patchGame({ id, name, hours, datePurchased, titleColour, headerColour});
+    const response = await patchGame({ id, name, hours, percentComplete, datePurchased, titleColour, headerColour});
 
     if (response.success) {
       return res.status(200).json({ game: response.game });

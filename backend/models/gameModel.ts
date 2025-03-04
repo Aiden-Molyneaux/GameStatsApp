@@ -5,6 +5,7 @@ export interface Game {
   userId: number;
   name: string;
   hours: number;
+  percentComplete: number;
   datePurchased: Date | null;
   titleColour: string;
   headerColour: string;
@@ -14,6 +15,7 @@ export interface PartialGame {
   userId: number;
   name: string;
   hours: number;
+  percentComplete: number;
   datePurchased: Date | null;
   titleColour: string;
   headerColour: string;
@@ -23,6 +25,7 @@ export interface UpdatedGame {
   id: number;
   name: string;
   hours: number;
+  percentComplete: number;
   datePurchased: Date | null;
   titleColour: string;
   headerColour: string;
@@ -36,6 +39,7 @@ function mapGameToCamelCase(game: any): Game {
     userId: game.user_id,
     name: game.name,
     hours: game.hours,
+    percentComplete: game.percent_complete,
     datePurchased: game.date_purchased,
     titleColour: game.title_colour,
     headerColour: game.header_colour
@@ -49,8 +53,8 @@ export async function postGame(game: PartialGame): Promise<CreateGameQueryReturn
   
   try {
     const result = await pool.query(
-      'INSERT INTO games (user_id, name, hours, date_purchased, title_colour, header_colour) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [game.userId, game.name, game.hours, game.datePurchased, game.titleColour, game.headerColour]
+      'INSERT INTO games (user_id, name, hours, percent_complete, date_purchased, title_colour, header_colour) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [game.userId, game.name, game.hours, game.percentComplete, game.datePurchased, game.titleColour, game.headerColour]
     );
 
     if (result.rows.length > 0) {
@@ -75,8 +79,8 @@ export async function patchGame(updatedGame: UpdatedGame): Promise<UpdateGameQue
   console.log({updatedGame})
   try {
     const result = await pool.query(
-      'UPDATE games SET name=$1, hours=$2, date_purchased=$3, title_colour=$4, header_colour=$5 WHERE id=$6 RETURNING *',
-      [updatedGame.name, updatedGame.hours, updatedGame.datePurchased, updatedGame.titleColour, updatedGame.headerColour, updatedGame.id]
+      'UPDATE games SET name=$1, hours=$2, percent_complete=$3, date_purchased=$4, title_colour=$5, header_colour=$6 WHERE id=$7 RETURNING *',
+      [updatedGame.name, updatedGame.hours, updatedGame.percentComplete, updatedGame.datePurchased, updatedGame.titleColour, updatedGame.headerColour, updatedGame.id]
     );
 
     if (result.rows.length > 0) {
