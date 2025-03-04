@@ -81,7 +81,6 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
           </View>
           <View style={{...styles.gameEntry}}>
             <View style={{...styles.gameHeader, backgroundColor: gameData.headerColour }}>
-          
               <Text style={{...styles.titleText, color: gameData.titleColour}}>{gameData.name}</Text>
             </View> 
       
@@ -90,34 +89,31 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
                 <View style={styles.expandedGame}>
                   <View style={styles.gameStats}>
                     <View style={styles.statContainer}>
-                      <Text style={styles.statTitle}>Hours Played: </Text><Text style={styles.statText}>{gameData.hours ? gameData.hours : 'Never Played'}</Text>
+                      <Text>Hours Played:</Text><Text>{gameData.hours ? gameData.hours : 'Never Played'}</Text>
                     </View>
                     { hasBeenPlayed && <View style={styles.statContainer}>
-                      <Text style={styles.statTitle}>Percent Complete: </Text><Text style={styles.statText}>{gameData.percentComplete}</Text>
+                      <Text>Percent Complete:</Text><Text>{gameData.percentComplete}</Text>
                     </View> }
                     <View style={styles.statContainer}>
-                      <Text style={styles.statTitle}>Date Purchased: </Text><Text style={styles.statText}>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
+                      <Text>Date Purchased:</Text><Text>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
                     </View>
                   </View>
                 </View>
               </Animated.View>)}
           </View>
       
-          <View style={styles.button}>
+          <View style={styles.buttonContainer}>
             <ToggleModeBtn
               type='editGame'
-              iconName='book' 
-              isDisabled={false} 
-              pressFunction={changeViewMode} 
+              iconName='book'
+              isDisabled={false}
+              pressFunction={changeViewMode}
             />
-          </View>
-
-          <View style={styles.button}>
             <ToggleModeBtn
               type='editGame'
-              iconName='edit' 
-              isDisabled={false} 
-              pressFunction={setModeEdit} 
+              iconName='edit'
+              isDisabled={false}
+              pressFunction={setModeEdit}
             />
           </View>
         </View>
@@ -134,9 +130,12 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
   );};
 
 const styles = StyleSheet.create({
-  button: {
-    alignSelf: 'center',
-    padding: Spacing.unit1o5
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: Spacing.unit2,
+    paddingHorizontal: Spacing.unit1o5
   },
   gameEntryContainer: {
     flexDirection: 'row',
@@ -156,15 +155,12 @@ const styles = StyleSheet.create({
     borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: 10,
-    overflow: 'hidden'
   },
   gameIndexContainer: {
     alignItems: 'center',
     width: Spacing.unit,
   },
   gameIndex: {
-    color: Colors.black,
-    fontWeight: 'bold',
     textAlign: 'center'
   },
   titleText: {
@@ -185,19 +181,13 @@ const styles = StyleSheet.create({
   },
   statContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: Spacing.unit1o5,
-    paddingTop: Spacing.unit1o5
+    justifyContent: 'space-between',
+    alignItems: 'center'
   },
   gameStats: {
-    flex: 1
+    flex: 1,
+    gap: Spacing.unit1o5,
+    paddingTop: Spacing.unit1o5,
+    paddingHorizontal: Spacing.unit1o5
   },
-  statTitle: {
-    color: Colors.black,
-
-  },
-  statText: {
-    color: Colors.black,
-  }
-
 });

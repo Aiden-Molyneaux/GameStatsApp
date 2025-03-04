@@ -25,7 +25,6 @@ export const TextInput: React.FC<CustomTextInputProps> = ({ style, ...props }) =
 
 const styles = StyleSheet.create({
   defaultTextStyle: {
-    color: Colors.white,
     fontFamily: Fonts.pixel,
     fontSize: FontSizes.medium,
     textAlign: 'center'
@@ -33,6 +32,7 @@ const styles = StyleSheet.create({
   defaultTextInputStyle: {
     fontFamily: Fonts.pixel,
     fontSize: FontSizes.medium,
+    textAlign: 'right',
     borderBottomColor: Colors.orange,
     borderBottomWidth: Spacing.border
   } as TextStyle

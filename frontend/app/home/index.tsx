@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     padding: 5,
-    color: Colors.black,
     textAlign: 'left',
   },
   logoutBtn: {
@@ -149,7 +148,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logoutText: {
-    color: Colors.black,
     alignSelf: 'center',
   },
   usernameContainer: {

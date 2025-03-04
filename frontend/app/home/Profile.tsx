@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
   },
   profileText: {
     marginVertical: Spacing.unit1o3,
-    color: Colors.black,
     fontSize: FontSizes.large,
   }
 });

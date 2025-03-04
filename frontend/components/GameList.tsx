@@ -111,8 +111,7 @@ export default function GameList() {
 
 const styles = StyleSheet.create({
   filterByText: {
-    paddingBottom: 3, 
-    color: Colors.black,
+    paddingBottom: 3,
     fontSize: FontSizes.small,
     borderBottomWidth: Spacing.border / 2,
     borderColor: Colors.black
@@ -126,7 +125,6 @@ const styles = StyleSheet.create({
   },
   gameListText: {
     marginBottom: Spacing.unit1o5,
-    color: Colors.black,
     fontSize: FontSizes.large,
   },
   sortBtn: {

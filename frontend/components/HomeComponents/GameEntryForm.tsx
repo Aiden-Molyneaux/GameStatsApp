@@ -8,6 +8,7 @@ import { GameListItem, updateGameAction, deleteGameAction } from '@/store/gameRe
 import DeleteGameEntryBtn from './DeleteGameEntryBtn';
 import { Game, requestDeleteGame, requestUpdateGame } from '@/api/gameRequests';
 import { CustomColourPicker } from './CustomColourPicker';
+import LabeledInput from './LabeledInput';
 
 const VIEW = 'VIEW';
 const EDIT = 'EDIT';
@@ -136,7 +137,9 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
 
   return (
     <View style={styles.gameEntryContainer}>
-      <Text style={styles.gameIndex}>{index + 1}</Text>
+      <View style={styles.gameIndexContainer}>
+        <Text style={styles.gameIndex}>{index + 1}</Text>
+      </View>
       <View style={styles.gameEntry}>
         <View style={{...styles.gameHeader, backgroundColor: tempHeaderColour}}>
           <TextInput
@@ -162,14 +165,14 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
               <View style={styles.colorPickerSection}>
                 <View style={styles.colorPickerControls}>
                   <View style={styles.colorPickerControl}>
-                    <Text style={styles.statTitle}>Title Colour: </Text>
+                    <Text>Title Colour: </Text>
                     <View style={styles.colorPickerPreview}>
                       <Pressable style={{...styles.openPickerButton, backgroundColor: tempTitleColour}} onPress={() => setTitleColourPickerWrapper(!showTitleColourPicker)}></Pressable>
                     </View>
                   </View>
 
                   <View style={styles.colorPickerControl}>
-                    <Text style={styles.statTitle}>Header Colour: </Text>
+                    <Text>Header Colour: </Text>
                     <Pressable style={{...styles.openPickerButton, backgroundColor: tempHeaderColour}} onPress={() => setHeaderColourPickerWrapper(!showHeaderColourPicker)}></Pressable>
                   </View>
                 </View>
@@ -179,53 +182,40 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                   { showHeaderColourPicker && <CustomColourPicker colour={tempHeaderColour} setColour={setTempHeaderColour}/> }
                 </View>
               </View>
-              <View style={styles.statContainer}>
-                <Text style={styles.statTitle}>Hours Played: </Text>
-                <TextInput 
-                  placeholder='0'
-                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
-                  value={ formData.hours ? String(formData.hours) : '' } 
-                  onChangeText={ (value) => handleTextInputChange('hours', value) }
-                  keyboardType='numeric'
-                />
-              </View>
-              <View style={styles.statContainer}>
-                <Text style={styles.statTitle}>Percent Complete: </Text>
-                <TextInput 
-                  placeholder='0%'
-                  style={{ ...styles.statsInput, width: Spacing.unit * 2.5 }}
-                  value={ formData.percentComplete ? String(formData.percentComplete) : '' } 
-                  onChangeText={ (value) => handleTextInputChange('percentComplete', value) }
-                  keyboardType='numeric'
-                  maxLength={3}
-                />
-              </View>
-              <View style={styles.statContainer}>
-                <Text style={styles.statTitle}>Date Purchased: </Text>
-                <TextInput 
-                  placeholder='YYYY-MM-DD'
-                  maxLength={10}
-                  style={{ 
-                    ...styles.statsInput, 
-                    width: Spacing.unit * 2.5,
-                    borderBottomColor: isDateValid(formData.datePurchased) ? Colors.orange : Colors.red, 
-                  }}
-                  value={ formData.datePurchased ? String(formData.datePurchased).split('T')[0] : '' }
-                  onChangeText={(value) => {
-                    const formattedDate = formatDateInput(value);
-                    handleTextInputChange('datePurchased', formattedDate);
-                  }}
-                  keyboardType='number-pad'
-                />
-              </View>
-            
 
+              <LabeledInput
+                label='Hours Played'
+                placeholder='0'
+                value={formData.hours ? String(formData.hours) : ''}
+                onChangeText={(value) => handleTextInputChange('hours', value)}
+                keyboardType='number-pad'
+                maxLength={6}
+              />
+              <LabeledInput
+                label='Percent Complete'
+                placeholder='0%'
+                value={formData.percentComplete ? String(formData.percentComplete) : ''}
+                onChangeText={(value) => handleTextInputChange('percentComplete', value)}
+                keyboardType='number-pad'
+                maxLength={3}
+              />
+              <LabeledInput
+                label='Date Purchased'
+                placeholder='YYYY-MM-DD'
+                value={formData.datePurchased ? String(formData.datePurchased).split('T')[0] : ''}
+                onChangeText={(value) => {
+                  const formattedDate = formatDateInput(value);
+                  handleTextInputChange('datePurchased', formattedDate);
+                }}
+                keyboardType='number-pad'
+                maxLength={10}
+              />
             </View>
           </View>
         </View>
       </View>
 
-      <View>
+      <View style={styles.buttonContainer}>
         <View style={styles.button}>
           <ToggleModeBtn
             type='editGame'
@@ -251,6 +241,11 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    alignItems: 'center',
+    width: Spacing.unit2,
+    paddingHorizontal: Spacing.unit1o5
+  },
   button: {
     alignSelf: 'center',
     margin: Spacing.unit1o5,
@@ -274,10 +269,12 @@ const styles = StyleSheet.create({
     borderWidth: Spacing.border,
     borderRadius: 10,
   },
+  gameIndexContainer: {
+    alignItems: 'center',
+    width: Spacing.unit,
+  },
   gameIndex: {
     marginHorizontal: Spacing.unit1o3,
-    color: Colors.black,
-    fontWeight: 'bold',
     textAlign: 'center',
   },
   expandedGame: {
@@ -288,33 +285,12 @@ const styles = StyleSheet.create({
   statContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-
   },
   gameStats: {
     flex: 1,
-    gap: Spacing.unit1o3,
-    margin: Spacing.unit1o5,
-  },
-  statTitle: {
-    color: Colors.black,
-    whiteSpace: 'nowrap'
-  },
-  editBtnContainer: {
-    flexDirection: 'row',
-    padding: Spacing.unit1o5,
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  editBtnsRight: {
-    flexDirection: 'row',
-    gap: Spacing.unit1o5
-  },
-  datePurchasedContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  datePurchasedText: {
-    marginHorizontal: Spacing.unit1o10,
+    gap: Spacing.unit1o10,
+    paddingTop: Spacing.unit1o5,
+    paddingHorizontal: Spacing.unit1o5
   },
   titleInput: {
     width: '80%',
@@ -323,17 +299,12 @@ const styles = StyleSheet.create({
     letterSpacing: 3,
     textAlign: 'center',
   },
-  statsInput: {
-    marginHorizontal: Spacing.unit1o10,
-    color: Colors.black,
-  },
   colorPickerSection: {
-    marginHorizontal: Spacing.unit1o5,
     marginBottom: -Spacing.unit1o3
   },
   colorPickerControls: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   colorPickerControl: {
     alignItems: 'center',

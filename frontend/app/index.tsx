@@ -16,16 +16,16 @@ import Header from '@/components/Header';
 import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
 import NavigationButton from '@/components/HomeComponents/NavigationButton';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-
+import LabeledInput from '@/components/HomeComponents/LabeledInput';
 export default function Auth() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [authMode, setAuthMode] = useState('Sign In');
+  const [authMode, setAuthMode] = useState('signIn');
   const [authFail, setAuthFail] = useState(false);
   const dispatch = useDispatch();
 
   async function attemptAuth() {
-    if (authMode === 'Sign In') {
+    if (authMode === 'signIn') {
       try {
         const response = await requestLoginUser(username, password);
 
@@ -46,7 +46,7 @@ export default function Auth() {
         console.error(err);
         setAuthFail(true);
       }
-    } else if (authMode === 'Register') {
+    } else if (authMode === 'joinUp') {
       try {
         const response = await requestRegisterUser(username, password);
         if ('error' in response) {
@@ -100,53 +100,49 @@ export default function Auth() {
       <View style={styles.screenContainer}>
         <View style={styles.screen}>
           <View style={styles.authPage}>
+            <Text style={styles.welcomeText}>Welcome</Text>
             <View style={styles.authForm}>
-              <View style={styles.authHeader}>
-                <Pressable style={styles.modeBtn} onPress={() => setAuthMode('Sign In')}>
-                  <FontAwesome 
-                    size={FontSizes.large} 
-                    name={'caret-right'} 
-                    color={authMode === 'Sign In' ? Colors.black : Colors.screenGray}
-                  /> 
-                  <Text style={styles.modeBtnText}>Sign-In</Text>
-                </Pressable>
-                <Pressable style={styles.modeBtn} onPress={() => setAuthMode('Register')}>
-                  <FontAwesome 
-                    size={FontSizes.large} 
-                    name={'caret-right'} 
-                    color={authMode === 'Register' ? Colors.black : Colors.screenGray}
-                  /> 
-                  <Text style={styles.modeBtnText}>Join-Up</Text>
-                </Pressable>
-              </View>
+              <Pressable style={styles.modeBtn} onPress={() => setAuthMode('signIn')}>
+                <FontAwesome 
+                  size={FontSizes.large} 
+                  name={'caret-right'} 
+                  color={authMode === 'signIn' ? Colors.black : Colors.screenGray}
+                /> 
+                <Text style={styles.modeBtnText}>Sign in</Text>
+              </Pressable>
+              <Pressable style={styles.modeBtn} onPress={() => setAuthMode('joinUp')}>
+                <FontAwesome 
+                  size={FontSizes.large} 
+                  name={'caret-right'} 
+                  color={authMode === 'joinUp' ? Colors.black : Colors.screenGray}
+                /> 
+                <Text style={styles.modeBtnText}>Join up</Text>
+              </Pressable>
+
 
               { authFail
                 ? <Text>Login failed</Text>
                 : null
               }
-              <View style={styles.authInputContainer}>
-                <Text style={styles.inputLabel}>Username:</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder='happyboy'
-                  value={username}
-                  onChangeText={setUsername}
-                />
-              </View>
-              <View style={styles.authInputContainer}>
-                <Text style={styles.inputLabel}>Password:</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder='Password'
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                />
-              </View>
-
+              <LabeledInput
+                label='Username'
+                placeholder='happyboy'
+                value={username}
+                onChangeText={setUsername}
+                keyboardType='default'
+                maxLength={16}
+              />
+              
+              <LabeledInput
+                label='Password'
+                placeholder='Password'
+                value={password}
+                onChangeText={setPassword}
+                maxLength={16}
+                keyboardType='default'
+                secureTextEntry
+              />
               <View style={styles.authBtns}>
-
-        
                 <Pressable style={styles.authBtn} onPress={attemptAuth}>
                   <FontAwesome 
                     size={FontSizes.large} 
@@ -184,7 +180,6 @@ export default function Auth() {
           />
       </View>
     </View>
-
   );
 }
 
@@ -203,53 +198,27 @@ const styles = StyleSheet.create({
     gap: Spacing.unit1o5,
     width: Spacing.unit10 - Spacing.unit,
   },
-  authInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.unit1o5,
-    marginLeft: Spacing.unit1o10 *3,
-  },
-  inputLabel: {
-    color: Colors.black,
-    fontSize: FontSizes.medium,
-  },
-  input: {
-    flex: 1,
-    margin: Spacing.unit1o10,
-    marginLeft: 0,
-    padding: Spacing.unit1o10,
-
-  },
   welcomeText: {
-    alignSelf: 'flex-start',
-    paddingLeft: Spacing.unit1o5,
-    fontSize: FontSizes.large,
-    color: Colors.black
+    fontSize: FontSizes.larger,
   },
   orText: {
-    color: Colors.black,
     textAlign: 'left',
   },
   authBtns: {
     justifyContent: 'flex-end',
     marginBottom: Spacing.unit1o5
   },
-  authHeader: {
-    justifyContent: 'center',
-    gap: Spacing.unit1o5
-  },
+
   authBtn: {
     alignItems: 'flex-end',
   },
 
   modeBtn: {
     flexDirection: 'row',
-    textAlign: 'center',
-    alignItems: 'center',
+    alignSelf: 'center',
+    gap: Spacing.unit1o10
   },
   modeBtnText: {
-    marginLeft: Spacing.unit1o10,
-    color: Colors.black,
     fontSize: FontSizes.large
   },
   homePage: {
@@ -285,7 +254,6 @@ const styles = StyleSheet.create({
   },
   usernameText: {
     padding: 5,
-    color: Colors.black,
     textAlign: 'left',
     borderBottomColor: Colors.gray,
     borderBottomWidth: Spacing.border 
