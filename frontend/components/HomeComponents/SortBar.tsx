@@ -13,22 +13,22 @@ export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
   return (
     <View style={styles.sortBtnContainer}>
       <SortBtn
-        filterMode={'hours'}
-        iconName={'hourglass'}
+        filterMode='hours'
+        iconName='hourglass'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
 
       <SortBtn
-        filterMode={'datePurchased'}
-        iconName={'calendar'}
+        filterMode='datePurchased'
+        iconName='calendar'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
   
       <SortBtn
-        filterMode={'entered'}
-        iconName={'hashtag'}
+        filterMode='entered'
+        iconName='hashtag'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />

@@ -13,15 +13,15 @@ export default function OpenCloseBar({currentSortMode, setSortMode} : SortBarPro
   return (
     <View style={styles.sortBtnContainer}>
       <SortBtn
-        filterMode={'hours'}
-        iconName={'open'}
+        filterMode='hours'
+        iconName='book'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />
 
       <SortBtn
-        filterMode={'datePurchased'}
-        iconName={'close'}
+        filterMode='datePurchased'
+        iconName='close'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
       />

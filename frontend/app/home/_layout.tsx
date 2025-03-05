@@ -24,7 +24,7 @@ export default function RootLayout() {
                   <View style={styles.btnContainer}>
                     <NavigationButton
                       labelText='Games'
-                      iconName='home'
+                      iconName='list-ul'
                       isPressed={focused}
                     />
                   </View>
@@ -40,8 +40,9 @@ export default function RootLayout() {
                   <View style={styles.btnContainer}>
                     <NavigationButton
                       labelText='Profile'
-                      iconName='user'
+                      iconName='child'
                       isPressed={focused}
+                      reverse={true}
                     />
                   </View>
                 ),

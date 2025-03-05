@@ -9,9 +9,10 @@ interface NavigationButtonProps {
   labelText: string,
   iconName: string,
   isPressed: boolean,
+  reverse?: boolean
 }
 
-export default function NavigationButton({labelText, iconName, isPressed}: NavigationButtonProps) {
+export default function NavigationButton({labelText, iconName, isPressed, reverse = false}: NavigationButtonProps) {
   const animatedHeight = useRef(new Animated.Value(isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2)).current;
 
   useEffect(() => {
@@ -38,13 +39,25 @@ export default function NavigationButton({labelText, iconName, isPressed}: Navig
             style={styles.topGradient}
           >
             <View style={styles.iconContainer}>  
-              <FontAwesome 
-                size={FontSizes.large} 
-                name={iconName} 
-                color={Colors.white}
-                style={styles.icon}
-              />
-              <Text style={styles.navButtonText}>{labelText}</Text>
+              { reverse ? 
+                <Text style={styles.navButtonText}>{labelText}</Text>
+              : <FontAwesome 
+                  size={FontSizes.large} 
+                  name={iconName} 
+                  color={Colors.white}
+                  style={styles.icon}
+                />
+              }
+
+              { reverse ? 
+                <FontAwesome 
+                  size={FontSizes.large} 
+                  name={iconName} 
+                  color={Colors.white}
+                  style={styles.icon}
+                />
+              : <Text style={styles.navButtonText}>{labelText}</Text>
+              }
             </View>
           </LinearGradient>
         </View>
@@ -77,6 +90,7 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.larger,
     textTransform: 'uppercase',
     letterSpacing: 2,
+    color: Colors.white
   },
   addGameButton: {
     alignItems: 'center',
