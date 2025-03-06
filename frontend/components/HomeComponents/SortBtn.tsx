@@ -7,10 +7,11 @@ interface SortBtnProps {
   filterMode: string,
   iconName: string,
   currentSortMode: string,
-  setSortMode: (data: string) => void
+  setSortMode: (data: string) => void,
+  isDisabled: boolean
 }
 
-export default function SortBtn({filterMode, iconName, currentSortMode, setSortMode}: SortBtnProps) {
+export default function SortBtn({filterMode, iconName, currentSortMode, setSortMode, isDisabled}: SortBtnProps) {
   const dispatch = useDispatch();
 
   function handleSortPress() {
@@ -22,7 +23,7 @@ export default function SortBtn({filterMode, iconName, currentSortMode, setSortM
     <CustomButton
       size={'small'}
       iconName={iconName}
-      isDisabled={false}
+      isDisabled={isDisabled}
       isPressed={filterMode === currentSortMode}
       pressFunction={handleSortPress}
     />

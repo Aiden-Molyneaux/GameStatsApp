@@ -6,10 +6,11 @@ import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 interface SortBarProps {
   currentSortMode: string,
-  setSortMode: (sortMode: string) => void
+  setSortMode: (sortMode: string) => void,
+  isDisabled: boolean
 }
 
-export default function OpenCloseBar({currentSortMode, setSortMode} : SortBarProps) {
+export default function OpenCloseBar({currentSortMode, setSortMode, isDisabled} : SortBarProps) {
   return (
     <View style={styles.sortBtnContainer}>
       <SortBtn
@@ -17,6 +18,7 @@ export default function OpenCloseBar({currentSortMode, setSortMode} : SortBarPro
         iconName='book'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
+        isDisabled={isDisabled}
       />
 
       <SortBtn
@@ -24,6 +26,7 @@ export default function OpenCloseBar({currentSortMode, setSortMode} : SortBarPro
         iconName='close'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
+        isDisabled={isDisabled}
       />
     </View>
   );

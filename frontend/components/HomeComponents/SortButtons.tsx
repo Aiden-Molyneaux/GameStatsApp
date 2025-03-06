@@ -6,10 +6,11 @@ import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 
 interface SortBarProps {
   currentSortMode: string,
-  setSortMode: (sortMode: string) => void
+  setSortMode: (sortMode: string) => void,
+  isDisabled: boolean
 }
 
-export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
+export default function SortButtons({currentSortMode, setSortMode, isDisabled} : SortBarProps) {
   return (
     <View style={styles.sortBtnContainer}>
       <SortBtn
@@ -17,6 +18,7 @@ export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
         iconName='hourglass'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
+        isDisabled={isDisabled}
       />
 
       <SortBtn
@@ -24,6 +26,7 @@ export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
         iconName='calendar'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
+        isDisabled={isDisabled}
       />
   
       <SortBtn
@@ -31,6 +34,7 @@ export default function SortBar({currentSortMode, setSortMode} : SortBarProps) {
         iconName='hashtag'
         currentSortMode={currentSortMode}
         setSortMode={setSortMode}
+        isDisabled={isDisabled}
       />
     </View>
   );

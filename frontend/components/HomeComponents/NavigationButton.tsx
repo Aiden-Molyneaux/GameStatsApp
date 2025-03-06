@@ -41,7 +41,7 @@ export default function NavigationButton({labelText, iconName, isPressed, revers
             <View style={styles.iconContainer}>  
               { reverse ? 
                 <Text style={styles.navButtonText}>{labelText}</Text>
-              : <FontAwesome 
+                : <FontAwesome 
                   size={FontSizes.large} 
                   name={iconName} 
                   color={Colors.white}
@@ -56,7 +56,7 @@ export default function NavigationButton({labelText, iconName, isPressed, revers
                   color={Colors.white}
                   style={styles.icon}
                 />
-              : <Text style={styles.navButtonText}>{labelText}</Text>
+                : <Text style={styles.navButtonText}>{labelText}</Text>
               }
             </View>
           </LinearGradient>
@@ -88,8 +88,7 @@ const styles = StyleSheet.create({
   },
   navButtonText: {
     fontSize: FontSizes.larger,
-    textTransform: 'uppercase',
-    letterSpacing: 2,
+    letterSpacing: 1,
     color: Colors.white
   },
   addGameButton: {
@@ -120,11 +119,13 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: Spacing.unit1o5,
   },
   icon: {
-    marginBottom: 2,
+    marginBottom: Spacing.unit1o10,
   },
+  
   largeIndentation: {
     position: 'absolute',
     bottom: -Spacing.unit1o10,

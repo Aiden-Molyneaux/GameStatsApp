@@ -11,14 +11,15 @@ import CustomButton from './CustomButton';
 interface AddGameBtnProps {
   onAddGame: () => void,
   isPressed: boolean,
-  setIsPressed: (data: boolean) => void
+  setIsPressed: (data: boolean) => void,
+  isDisabled: boolean,
 }
 
 const timeout = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-export default function AddGameBtn({ onAddGame, isPressed, setIsPressed }: AddGameBtnProps) {
+export default function AddGameBtn({ onAddGame, isPressed, setIsPressed, isDisabled }: AddGameBtnProps) {
   const userId = useSelector((state: RootState) => state.userData.id);
   const dispatch = useDispatch();
 
@@ -57,7 +58,7 @@ export default function AddGameBtn({ onAddGame, isPressed, setIsPressed }: AddGa
     <CustomButton
       size={'big'}
       iconName='plus'
-      isDisabled={false}
+      isDisabled={isDisabled}
       isPressed={isPressed}
       pressFunction={handlePlusPress}
     />

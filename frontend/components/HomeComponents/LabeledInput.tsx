@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, KeyboardTypeOptions } from 'react-native';
 import { Text, TextInput } from '../Customs';
-import { Colors, Spacing, FontSizes } from '../../constants/Constants';
+import { Spacing, FontSizes } from '../../constants/Constants';
 
 interface LabeledInputProps {
   label: string;
@@ -13,7 +13,7 @@ interface LabeledInputProps {
   maxLength?: number;
 }
 
-export default function LabeledInput({ label, placeholder, value, onChangeText, keyboardType = 'default', maxLength = 100, secureTextEntry = false }: LabeledInputProps) {
+export default function LabeledInput({ label, placeholder, value, onChangeText, keyboardType = 'default', maxLength = 16, secureTextEntry = false }: LabeledInputProps) {
   return (  
     <View style={styles.container}>
       <Text style={styles.inputLabel}>{label}:</Text>
@@ -26,7 +26,7 @@ export default function LabeledInput({ label, placeholder, value, onChangeText, 
         maxLength={maxLength}
         secureTextEntry={secureTextEntry}
       />
-  </View>
+    </View>
   );
 };
 

@@ -5,7 +5,7 @@ import { RootState } from '../../store/store';
 import { GameListItem } from '@/store/gameReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
-import SortBar from '@/components/HomeComponents/SortBar';
+import SortBar from '@/components/HomeComponents/SortButtons';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import { Colors, Spacing } from '@/constants/Constants';
 import Header from '@/components/Header';
@@ -156,13 +156,5 @@ const styles = StyleSheet.create({
     padding: Spacing.unit1o5,
     borderBottomColor: Colors.gray,
     borderBottomWidth: Spacing.border 
-  },
-  pixelationOverlay: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    opacity: 0.7,
   },
 });

@@ -10,7 +10,7 @@ import { Text, TextInput } from '@/components/Customs';
 import { changeUserAction } from '@/store/userReducer';
 import { requestFetchGamerTagsByUser } from '@/api/gamerTagRequests';
 import { fetchGamerTagsSuccess } from '@/store/gamerTagReducer';
-import SortBar from '@/components/HomeComponents/SortBar';
+import SortBar from '@/components/HomeComponents/SortButtons';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import Header from '@/components/Header';
 import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
@@ -119,7 +119,6 @@ export default function Auth() {
                 <Text style={styles.modeBtnText}>Join up</Text>
               </Pressable>
 
-
               { authFail
                 ? <Text>Login failed</Text>
                 : null
@@ -167,17 +166,18 @@ export default function Auth() {
         />
         <OpenCloseBar currentSortMode={''} setSortMode={() => {}}/>
       </View>
-        <View style={styles.btnContainer}>
-          <NavigationButton
-            labelText='Games'
-            iconName='home'
-            isPressed={false}
-          />
-          <NavigationButton
-            labelText='Profile'
-            iconName='user'
-            isPressed={false}
-          />
+      <View style={styles.btnContainer}>
+        <NavigationButton
+          labelText='Games'
+          iconName='gamepad'
+          isPressed={false}
+        />
+        <NavigationButton
+          labelText='Profile'
+          iconName='child'
+          isPressed={false}
+          reverse
+        />
       </View>
     </View>
   );
