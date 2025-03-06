@@ -59,15 +59,17 @@ export default function AuthForm() {
 
   return (
     <View style={styles.authForm}>
-      <AuthModeButton type={'signIn'} authMode={authMode} setAuthMode={setAuthMode}/>
-      <AuthModeButton type={'joinUp'} authMode={authMode} setAuthMode={setAuthMode}/>
+      <View style={styles.authModeContainer}>
+        <AuthModeButton type={'signIn'} authMode={authMode} setAuthMode={setAuthMode}/>
+        <AuthModeButton type={'joinUp'} authMode={authMode} setAuthMode={setAuthMode}/>
+      </View>
 
       { authFail ? <Text>Login failed</Text> : null }
 
       <LabeledInput label='Username' placeholder='happyboy' value={username} onChangeText={setUsername} />
-      <LabeledInput label='Password' placeholder='Password' value={password} onChangeText={setPassword} secureTextEntry />
+      <LabeledInput label='Password' placeholder='∗∗∗∗∗∗∗∗' value={password} onChangeText={setPassword} secureTextEntry />
 
-      <AuthSubmitButton attemptAuth={attemptAuth}/>
+      <AuthSubmitButton authMode={authMode} attemptAuth={attemptAuth}/>
     </View>
   );
 }
@@ -75,6 +77,9 @@ export default function AuthForm() {
 const styles = StyleSheet.create({
   authForm: {
     gap: Spacing.unit1o5,
-    width: Spacing.unit10 - Spacing.unit,
+    width: '85%',
+  },
+  authModeContainer: {
+    padding: Spacing.unit
   },
 });

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { sortGamesAction } from '@/store/gameReducer';
 import CustomButton from './CustomButton';
 
-interface SortBtnProps {
+interface SortButtonProps {
   filterMode: string,
   iconName: string,
   currentSortMode: string,
@@ -11,7 +11,7 @@ interface SortBtnProps {
   isDisabled: boolean
 }
 
-export default function SortBtn({filterMode, iconName, currentSortMode, setSortMode, isDisabled}: SortBtnProps) {
+export default function SortButton({filterMode, iconName, currentSortMode, setSortMode, isDisabled}: SortButtonProps) {
   const dispatch = useDispatch();
 
   function handleSortPress() {

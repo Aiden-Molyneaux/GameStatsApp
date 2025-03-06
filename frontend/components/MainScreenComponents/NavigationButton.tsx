@@ -121,11 +121,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: Spacing.unit1o5,
-  },
-  icon: {
-    marginBottom: Spacing.unit1o10,
-  },
-  
+  },  
   largeIndentation: {
     position: 'absolute',
     bottom: -Spacing.unit1o10,

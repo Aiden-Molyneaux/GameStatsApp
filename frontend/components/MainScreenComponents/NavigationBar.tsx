@@ -1,16 +1,9 @@
-import React, { useRef, useState } from 'react';
-import { View, StyleSheet, Dimensions, FlatList } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-import { Colors, Spacing } from '@/constants/Constants';
-import Header from '@/components/Header';
-import NavigationButton from '@/components/HomeComponents/NavigationButton';
-import AuthScreen from '@/components/AuthComponents/AuthScreen';  // We'll move the auth form here
-import GameScreen from '@/components/HomeComponents/GameScreen';
-import ProfileDetails from '@/components/ProfileComponents/ProfileDetails';
-import SortBar from '@/components/HomeComponents/SortButtons';
-import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
-import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
+import { RootState } from '../../store/store';
+import { Spacing } from '@/constants/Constants';
+import NavigationButton from './NavigationButton';
 
 interface NavigationBarProps {
   currentScreen: string;
@@ -31,7 +24,7 @@ export default function NavigationBar({ currentScreen, setCurrentScreen }: Navig
       />
       <NavigationButton
         labelText='Profile'
-        iconName='child'
+        iconName='user'
         isPressed={currentScreen === 'profile'}
         onPress={() => setCurrentScreen('profile')}
         disabled={!isAuthenticated}
@@ -49,6 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: Spacing.unit1o5 * 1.8,
     width: Spacing.unit5,
+    alignItems: 'flex-end',
     justifyContent: 'flex-end',
     marginLeft: Spacing.unit * 5.35,
     marginBottom: isSmallScreen ? Spacing.unit1o10 : -Spacing.unit1o10 * 3,

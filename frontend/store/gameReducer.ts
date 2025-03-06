@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Game, PartialGame } from '../../backend/models/gameModel';
 
 export interface GameListItem extends Game {
-  mode: string;
+  mode?: string;
 }
 
 export interface PartialGameListItem extends PartialGame {
@@ -23,21 +23,13 @@ export const gameListSlice = createSlice({
   initialState: initialGameState,
   reducers: {
     fetchGamesSuccess: (state, action: PayloadAction<{ games: Game[] }>) => {
-      const newGames = action.payload.games.map((game) => {
-        const shouldEdit = Object.values(game).some(value => value === '' || value === null);
-        return {
-          ...game,
-          mode: shouldEdit ? 'EDIT' : 'VIEW'
-        };
-      });
-      
-      console.log({newGames});
-
-      state.games = newGames;
+      state.games = action.payload.games;
     },
 
     addGameAction: (state, action: PayloadAction<{ game: GameListItem }>) => {
-      state.games.push(action.payload.game);
+      const newGame = { ...action.payload.game, mode: 'EDIT' };
+
+      state.games.push(newGame);
     },
 
     updateGameAction: (state, action: PayloadAction<{ game: GameListItem }>) => {
@@ -68,10 +60,25 @@ export const gameListSlice = createSlice({
     setIdToPositionAction: (state) => {
       state.games = state.games.map((item, index) => ({ ...item, id: index }));
     },
+
+    setOpenCloseStatusAction: (state, action: PayloadAction<{ mode: string }>) => {
+      state.games = state.games.map(game => ({
+        ...game,
+        mode: action.payload.mode
+      }));
+    }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { fetchGamesSuccess, addGameAction, updateGameAction, sortGamesAction, deleteGameAction, setIdToPositionAction} = gameListSlice.actions;
+export const {
+  fetchGamesSuccess,
+  addGameAction,
+  updateGameAction,
+  sortGamesAction,
+  deleteGameAction,
+  setIdToPositionAction,
+  setOpenCloseStatusAction
+} = gameListSlice.actions;
 
 export default gameListSlice.reducer;

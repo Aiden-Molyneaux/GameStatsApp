@@ -1,11 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { View, StyleSheet, Dimensions, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
+import { RootState } from '../../store/store';
 import { Spacing } from '@/constants/Constants';
-import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
-import OpenCloseBar from '@/components/HomeComponents/OpenCloseBar';
-import SortButtons from '@/components/HomeComponents/SortButtons';
+import AddGameButton from './AddGameButton';
+import OpenCloseButtons from './OpenCloseButtons';
+import SortButtons from './SortButtons';
 
 interface FunctionButtonsProps {
   gameListRef: React.RefObject<FlatList>;
@@ -14,13 +14,6 @@ interface FunctionButtonsProps {
 export default function FunctionButtons({ gameListRef }: FunctionButtonsProps) {
   const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
   const [sortMode, setSortMode] = useState('entered');
-  const [isAddBtnPressed, setIsAddBtnPressed] = useState(false);
-
-  function handleAddGame() {
-    setTimeout(() => {
-      gameListRef.current?.scrollToEnd({ animated: true }); // Scroll to the end when a new game is added
-    }, 500);
-  };
 
   return (
     <View style={styles.functionButtons}>
@@ -29,15 +22,11 @@ export default function FunctionButtons({ gameListRef }: FunctionButtonsProps) {
         setSortMode={setSortMode}
         isDisabled={!isAuthenticated}
       />
-      <AddGameBtn
-        onAddGame={handleAddGame}
-        isPressed={isAddBtnPressed}
-        setIsPressed={setIsAddBtnPressed}
+      <AddGameButton
+        gameListRef={gameListRef}
         isDisabled={!isAuthenticated}
       />
-      <OpenCloseBar 
-        currentSortMode={''} 
-        setSortMode={() => {}}
+      <OpenCloseButtons 
         isDisabled={!isAuthenticated}
       />
     </View>

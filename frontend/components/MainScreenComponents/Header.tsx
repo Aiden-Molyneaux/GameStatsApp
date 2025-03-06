@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Image, Dimensions } from 'react-native';
-import { Text } from './Customs'; 
-import { Colors, Spacing, Fonts } from '@/constants/Constants';
+import { Text } from '../Customs'; 
+import { Colors, Spacing } from '@/constants/Constants';
+import headerTextImage from '../../assets/images/headerText.png';
+import speakerGrillImage from '../../assets/images/speakerGrill.png';
 
 export default function Header() {
   return (
@@ -9,13 +11,13 @@ export default function Header() {
       <View style={styles.imgContainer}>
         <View style={styles.headerImgContainer}>
           <Image 
-            source={require('../assets/images/headerText.png')}
+            source={headerTextImage}
             style={styles.headerImg}
           />
         </View>
         <View style={styles.speakerGrillImgContainer}>
           <Image 
-            source={require('../assets/images/speakerGrill.png')}
+            source={speakerGrillImage}
             style={styles.speakerGrillImg}
           />
         </View>

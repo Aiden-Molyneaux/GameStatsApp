@@ -3,12 +3,12 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { Colors, Spacing } from '@/constants/Constants';
-import Header from '@/components/Header';
-import AuthScreen from '@/components/AuthComponents/AuthScreen';  // We'll move the auth form here
+import Header from '@/components/MainScreenComponents/Header';
+import AuthScreen from '@/components/AuthComponents/AuthScreen';
 import GameScreen from '@/components/HomeComponents/GameScreen';
 import ProfileDetails from '@/components/ProfileComponents/ProfileDetails';
-import NavigationBar from '@/components/NavigationBar';
-import FunctionButtons from '@/components/FunctionButtons';
+import NavigationBar from '@/components/MainScreenComponents/NavigationBar';
+import FunctionButtons from '@/components/MainScreenComponents/FunctionButtons';
 
 export default function MainScreen() {
   const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);

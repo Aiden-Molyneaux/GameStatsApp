@@ -21,6 +21,5 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: FontSizes.larger,
-    marginBottom: Spacing.unit,
   },
 });

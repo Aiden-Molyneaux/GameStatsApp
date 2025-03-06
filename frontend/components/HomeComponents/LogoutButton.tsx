@@ -5,7 +5,7 @@ import { RootState } from '../../store/store';
 import { GameListItem } from '@/store/gameReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
-import SortBar from '@/components/HomeComponents/SortButtons';
+import SortBar from '@/components/SortButtons';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import { logout } from '@/store/authReducer';

@@ -9,35 +9,35 @@ import DeleteGameEntryBtn from './DeleteGameEntryBtn';
 import { Game, requestDeleteGame, requestUpdateGame } from '@/api/gameRequests';
 import { CustomColourPicker } from './CustomColourPicker';
 import LabeledInput from './LabeledInput';
-
-const VIEW = 'VIEW';
-const EDIT = 'EDIT';
+import Index from './GameEntryComponents/Index';
 
 interface GameEntryFormProps {
-  index: string,
+  index: number,
   gameData: GameListItem,
   setGameData: (data: Game) => void,
-  closeModal: () => void,
+  closeEditForm: () => void,
   setIsPressed: (data: boolean) => void
 }
 
-export default function GameEntryForm({ index, gameData, setGameData, closeModal, setIsPressed }: GameEntryFormProps) {
+export default function GameEntryForm({ index, gameData, setGameData, closeEditForm, setIsPressed }: GameEntryFormProps) {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState(gameData);
+  const [formData, setFormData] = useState({ 
+    ...gameData, 
+    tempTitleColour: gameData.titleColour, 
+    tempHeaderColour: gameData.headerColour 
+  });
   const [disableSaveBtn, setDisableSaveBtn] = useState(formData.name === '' || !isDateValid(String(formData.datePurchased)));
   
   // Color state management
-  const [tempTitleColour, setTempTitleColour] = useState(formData.titleColour);
-  const [tempHeaderColour, setTempHeaderColour] = useState(formData.headerColour);
   const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
   const [showHeaderColourPicker, setShowHeaderColourPicker] = useState(false);
-  const setTitleColourPickerWrapper = (value: boolean) => {
+  const setShowTitleColourPickerWrapper = (value: boolean) => {
     if (value && showHeaderColourPicker) {
       setShowHeaderColourPicker(false);
     }
     setShowTitleColourPicker(value);
   };
-  const setHeaderColourPickerWrapper = (value: boolean) => {
+  const setShowHeaderColourPickerWrapper = (value: boolean) => {
     if (value && showTitleColourPicker) {
       setShowTitleColourPicker(false);
     }
@@ -103,14 +103,9 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   
   async function handleUpdateGamePress() {
     const updatedGame: GameListItem = {
-      id: gameData.id,
-      name: formData.name,
-      hours: formData.hours,
-      percentComplete: formData.percentComplete,
-      datePurchased: formData.datePurchased,
-      titleColour: tempTitleColour,
-      headerColour: tempHeaderColour,
-      mode: VIEW
+      ...formData,
+      titleColour: formData.tempTitleColour,
+      headerColour: formData.tempHeaderColour
     };
 
     try {
@@ -121,7 +116,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
       }
       setGameData({...updatedGame});
       dispatch(updateGameAction({ game: updatedGame }));
-      closeModal();
+      closeEditForm();
     } catch(err) {
       console.error(err);
     }
@@ -129,25 +124,21 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
   }
 
   function handleCloseGamePress() {
-    setGameData({...gameData, mode: VIEW});
-    
-    closeModal();
+    closeEditForm();
     setIsPressed(false);
   }
 
   return (
     <View style={styles.gameEntryContainer}>
-      <View style={styles.gameIndexContainer}>
-        <Text style={styles.gameIndex}>{index + 1}</Text>
-      </View>
+      <Index index={index}/>
       <View style={styles.gameEntry}>
-        <View style={{...styles.gameHeader, backgroundColor: tempHeaderColour}}>
+        <View style={{...styles.gameHeader, backgroundColor: formData.tempHeaderColour}}>
           <TextInput
             placeholder='Title'
             style={{
               ...styles.titleInput, 
-              color: tempTitleColour, 
-              backgroundColor: tempHeaderColour,
+              color: formData.tempTitleColour, 
+              backgroundColor: formData.tempHeaderColour,
               borderBottomColor: formData.name === '' ? Colors.red : Colors.orange,
             }}
             value={formData.name || ''}
@@ -167,19 +158,19 @@ export default function GameEntryForm({ index, gameData, setGameData, closeModal
                   <View style={styles.colorPickerControl}>
                     <Text>Title Colour: </Text>
                     <View style={styles.colorPickerPreview}>
-                      <Pressable style={{...styles.openPickerButton, backgroundColor: tempTitleColour}} onPress={() => setTitleColourPickerWrapper(!showTitleColourPicker)}></Pressable>
+                      <Pressable style={{...styles.openPickerButton, backgroundColor: formData.tempTitleColour}} onPress={() => setShowTitleColourPickerWrapper(!showTitleColourPicker)}></Pressable>
                     </View>
                   </View>
 
                   <View style={styles.colorPickerControl}>
                     <Text>Header Colour: </Text>
-                    <Pressable style={{...styles.openPickerButton, backgroundColor: tempHeaderColour}} onPress={() => setHeaderColourPickerWrapper(!showHeaderColourPicker)}></Pressable>
+                    <Pressable style={{...styles.openPickerButton, backgroundColor: formData.tempHeaderColour}} onPress={() => setShowHeaderColourPickerWrapper(!showHeaderColourPicker)}></Pressable>
                   </View>
                 </View>
 
                 <View style={styles.colorPickerContainer}>
-                  { showTitleColourPicker && <CustomColourPicker colour={tempTitleColour} setColour={setTempTitleColour}/> }
-                  { showHeaderColourPicker && <CustomColourPicker colour={tempHeaderColour} setColour={setTempHeaderColour}/> }
+                  { showTitleColourPicker && <CustomColourPicker colour={formData.tempTitleColour} setColour={(colour) => setFormData({...formData, tempTitleColour: colour})}/> }
+                  { showHeaderColourPicker && <CustomColourPicker colour={formData.tempHeaderColour} setColour={(colour) => setFormData({...formData, tempHeaderColour: colour})}/> }
                 </View>
               </View>
 
@@ -268,14 +259,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.black,
     borderWidth: Spacing.border,
     borderRadius: 10,
-  },
-  gameIndexContainer: {
-    alignItems: 'center',
-    width: Spacing.unit,
-  },
-  gameIndex: {
-    marginHorizontal: Spacing.unit1o3,
-    textAlign: 'center',
   },
   expandedGame: {
     flexDirection: 'row',

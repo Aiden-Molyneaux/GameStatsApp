@@ -5,7 +5,7 @@ import { RootState } from '../../store/store';
 import { GameListItem } from '@/store/gameReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
-import SortBar from '@/components/HomeComponents/SortButtons';
+import SortBar from '@/components/SortButtons';
 import AddGameBtn from '@/components/HomeComponents/AddGameBtn';
 import { Colors, Spacing } from '@/constants/Constants';
 import { logout } from '@/store/authReducer';
@@ -19,16 +19,8 @@ interface GameScreenProps {
 }
 
 export default function GameScreen({ sortMode, gameListRef }: GameScreenProps) {
-  const { games } = useSelector((state: RootState) => state.gameData);
   const { username } = useSelector((state: RootState) => state.authData.user);
-  const [gameCount, setGameCount] = useState(games.length);
-
   const [isPressed, setIsPressed] = useState(false);
-
-  // keep track of if we have a game open for edit (or new)
-  useEffect(() => {
-    setGameCount(games.length);
-  }, [games]);
 
   return (
     <View style={styles.gameScreen}>
@@ -37,7 +29,6 @@ export default function GameScreen({ sortMode, gameListRef }: GameScreenProps) {
         <LogoutButton/> 
       </View>
       <GameList
-        games={games} 
         sortMode={sortMode}
         ref={gameListRef}
         setIsPressed={setIsPressed}

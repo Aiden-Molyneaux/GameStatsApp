@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {  addGameAction } from '@/store/gameReducer';
 import { Colors, Spacing } from '@/constants/Constants';
@@ -8,10 +8,8 @@ import { requestCreateGame } from '@/api/gameRequests';
 import { PartialGame } from '../../../backend/models/gameModel';
 import CustomButton from './CustomButton';
 
-interface AddGameBtnProps {
-  onAddGame: () => void,
-  isPressed: boolean,
-  setIsPressed: (data: boolean) => void,
+interface AddGameButtonProps {
+  gameListRef: React.RefObject<FlatList>,
   isDisabled: boolean,
 }
 
@@ -19,9 +17,18 @@ const timeout = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-export default function AddGameBtn({ onAddGame, isPressed, setIsPressed, isDisabled }: AddGameBtnProps) {
-  const userId = useSelector((state: RootState) => state.userData.id);
+export default function AddGameButton({ gameListRef, isDisabled }: AddGameButtonProps) {
   const dispatch = useDispatch();
+  const userId = useSelector((state: RootState) => state.userData.id);
+
+  const [isPressed, setIsPressed] = useState(false);
+
+  function handleAddGame() {
+    setTimeout(() => {
+      gameListRef.current?.scrollToEnd({ animated: true }); // Scroll to the end when a new game is added
+    }, 500);
+  };
+
 
   async function handlePlusPress() {
     const newGame: PartialGame = { 
@@ -43,9 +50,9 @@ export default function AddGameBtn({ onAddGame, isPressed, setIsPressed, isDisab
           return;
         }
         
-        const defaultGameListItem = { ...response.game, mode: 'NEW' };
+        const defaultGameListItem = { ...response.game, mode: 'EDIT' };
         dispatch(addGameAction({ game: defaultGameListItem }));
-        onAddGame();
+        handleAddGame();
       });
     } catch(err) {
       console.error(err);
