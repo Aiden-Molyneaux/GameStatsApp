@@ -4,31 +4,19 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import { Spacing } from '@/constants/Constants';
 import AddGameButton from './AddGameButton';
-import OpenCloseButtons from './OpenCloseButtons';
-import SortButtons from './SortButtons';
+import OpenCloseBar from './OpenCloseBar';
+import SortBar from './SortBar';
 
 interface FunctionButtonsProps {
   gameListRef: React.RefObject<FlatList>;
 }
 
 export default function FunctionButtons({ gameListRef }: FunctionButtonsProps) {
-  const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
-  const [sortMode, setSortMode] = useState('entered');
-
   return (
     <View style={styles.functionButtons}>
-      <SortButtons 
-        currentSortMode={sortMode} 
-        setSortMode={setSortMode}
-        isDisabled={!isAuthenticated}
-      />
-      <AddGameButton
-        gameListRef={gameListRef}
-        isDisabled={!isAuthenticated}
-      />
-      <OpenCloseButtons 
-        isDisabled={!isAuthenticated}
-      />
+      <SortBar />
+      <AddGameButton gameListRef={gameListRef}/>
+      <OpenCloseBar />
     </View>
   );
 }

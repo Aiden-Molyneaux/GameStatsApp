@@ -1,0 +1,64 @@
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Colors, Spacing } from '@/constants/Constants';
+import { Text } from '@/components/Customs';
+import { CustomColourPicker } from './CustomColourPicker';
+import ColourPreviewButton from './ColourPreviewButton';
+
+interface ColourInputsProps {
+  tempHeaderColour: string,
+  tempTitleColour: string,
+  setColourData: (headerColour: string, titleColour: string) => void
+}
+
+export default function ColourInputs({ tempHeaderColour, tempTitleColour, setColourData }: ColourInputsProps) {
+  const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
+  const [showHeaderColourPicker, setShowHeaderColourPicker] = useState(false);
+  const setShowTitleColourPickerWrapper = (value: boolean) => {
+    if (value && showHeaderColourPicker) {
+      setShowHeaderColourPicker(false);
+    }
+    setShowTitleColourPicker(value);
+  };
+
+  const setShowHeaderColourPickerWrapper = (value: boolean) => {
+    if (value && showTitleColourPicker) {
+      setShowTitleColourPicker(false);
+    }
+    setShowHeaderColourPicker(value);
+  };
+
+  return (
+    <>
+      <View style={styles.colorPickerControls}>
+        <View style={styles.colorPickerControl}>
+          <Text>Title Colour: </Text>
+          <ColourPreviewButton colour={tempTitleColour} showColourPicker={showTitleColourPicker} setShowColourPicker={setShowTitleColourPickerWrapper}/>
+        </View>
+
+        <View style={styles.colorPickerControl}>
+          <Text>Header Colour: </Text>
+          <ColourPreviewButton colour={tempHeaderColour} showColourPicker={showHeaderColourPicker} setShowColourPicker={setShowHeaderColourPickerWrapper}/>
+        </View>
+      </View>
+
+      <View style={styles.colorPickerContainer}>
+        { showTitleColourPicker && <CustomColourPicker colour={tempTitleColour} setColour={(colour) => setColourData(tempHeaderColour, colour)}/> }
+        { showHeaderColourPicker && <CustomColourPicker colour={tempHeaderColour} setColour={(colour) => setColourData(colour, tempTitleColour)}/> }
+      </View>
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  colorPickerControls: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  colorPickerControl: {
+    alignItems: 'center',
+  },
+  colorPickerContainer: {
+    margin: Spacing.unit1o5,
+  }
+});

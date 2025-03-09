@@ -10,16 +10,16 @@ import CustomButton from './CustomButton';
 
 interface AddGameButtonProps {
   gameListRef: React.RefObject<FlatList>,
-  isDisabled: boolean,
 }
 
 const timeout = (ms: number) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-export default function AddGameButton({ gameListRef, isDisabled }: AddGameButtonProps) {
+export default function AddGameButton({ gameListRef }: AddGameButtonProps) {
   const dispatch = useDispatch();
   const userId = useSelector((state: RootState) => state.userData.id);
+  const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
 
   const [isPressed, setIsPressed] = useState(false);
 
@@ -65,7 +65,7 @@ export default function AddGameButton({ gameListRef, isDisabled }: AddGameButton
     <CustomButton
       size={'big'}
       iconName='plus'
-      isDisabled={isDisabled}
+      isDisabled={!isAuthenticated}
       isPressed={isPressed}
       pressFunction={handlePlusPress}
     />

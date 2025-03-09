@@ -3,6 +3,7 @@ import { View, StyleSheet, Animated } from 'react-native';
 import { Colors, FontSizes, Spacing } from '@/constants/Constants';
 import { Text } from '@/components/Customs';
 import { GameListItem } from '@/store/gameReducer';
+import StaticStatistic from './StaticStatistic';
 
 interface StaticDetailsProps {
   gameData: GameListItem,
@@ -27,15 +28,20 @@ export default function StaticDetails({ gameData, viewMode }: StaticDetailsProps
     <Animated.View style={{ height: animatedHeight, overflow: 'hidden' }}>  
       <View style={styles.expandedGame}>
         <View style={styles.gameStats}>
-          <View style={styles.statContainer}>
-            <Text>Hours Played:</Text><Text>{gameData.hours ? gameData.hours : 'Never Played'}</Text>
-          </View>
-            { hasBeenPlayed && <View style={styles.statContainer}>
-              <Text>Percent Complete:</Text><Text>{gameData.percentComplete}</Text>
-            </View> }
-          <View style={styles.statContainer}>
-            <Text>Date Purchased:</Text><Text>{gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'}</Text>
-          </View>
+          <StaticStatistic 
+            label='Hours Played:' 
+            value={gameData.hours ? gameData.hours.toString() : 'Never Played'} 
+          />
+          { hasBeenPlayed && 
+            <StaticStatistic
+              label='Percent Complete:' 
+              value={gameData.percentComplete.toString() + '%'} 
+            />
+          }
+          <StaticStatistic 
+            label='Date Purchased:' 
+            value={gameData.datePurchased ? String(gameData.datePurchased).split('T')[0] : 'N/A'} 
+          />
         </View>
       </View>
     </Animated.View>
@@ -49,11 +55,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '110%',
     backgroundColor: Colors.screenGray
-  },
-  statContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
   },
   gameStats: {
     flex: 1,

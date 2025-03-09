@@ -3,11 +3,11 @@ import { StyleSheet, Pressable } from 'react-native';
 import { Colors, FontSizes } from '@/constants/Constants';
 import FontAwesome  from '@expo/vector-icons/FontAwesome';
 
-interface DeleteGameEntryBtnProps {
+interface DeleteGameEntryButtonProps {
   pressFunction: (data: unknown) => void
 }
 
-export default function DeleteGameEntryBtn({pressFunction}: DeleteGameEntryBtnProps) {
+export default function DeleteGameEntryButton({pressFunction}: DeleteGameEntryButtonProps) {
   return (
     <Pressable 
       style={ styles.deleteBtn }

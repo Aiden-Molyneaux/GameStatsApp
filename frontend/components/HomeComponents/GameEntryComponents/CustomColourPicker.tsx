@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: Spacing.unit1o5,
+    paddingBottom: 0,
   },
   picker: {
     width: '100%',

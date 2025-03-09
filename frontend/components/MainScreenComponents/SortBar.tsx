@@ -1,39 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import SortButton from './SortButton';
 import { Spacing } from '@/constants/Constants';
+import { RootState } from '@/store/store';
+import { useSelector } from 'react-redux';
 
-interface SortButtonsProps {
-  currentSortMode: string,
-  setSortMode: (sortMode: string) => void,
-  isDisabled: boolean
-}
-
-export default function SortButtons({currentSortMode, setSortMode, isDisabled} : SortButtonsProps) {
+export default function SortBar() {
+  const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
+  const [sortMode, setSortMode] = useState('entered');
+  
   return (
     <View style={styles.sortBtnContainer}>
       <SortButton
         filterMode='hours'
         iconName='hourglass'
-        currentSortMode={currentSortMode}
+        currentSortMode={sortMode}
         setSortMode={setSortMode}
-        isDisabled={isDisabled}
+        isDisabled={!isAuthenticated}
       />
 
       <SortButton
         filterMode='datePurchased'
         iconName='calendar'
-        currentSortMode={currentSortMode}
+        currentSortMode={sortMode}
         setSortMode={setSortMode}
-        isDisabled={isDisabled}
+        isDisabled={!isAuthenticated}
       />
   
       <SortButton
         filterMode='entered'
         iconName='hashtag'
-        currentSortMode={currentSortMode}
+        currentSortMode={sortMode}
         setSortMode={setSortMode}
-        isDisabled={isDisabled}
+        isDisabled={!isAuthenticated}
       />
     </View>
   );

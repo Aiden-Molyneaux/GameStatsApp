@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
 import { GameListItem } from '@/store/gameReducer';
 import { Colors, Spacing } from '@/constants/Constants';
-import GameEntryForm from '../GameEntryForm';
+import GameEntryForm from './GameEntryForm';
 import Index from './Index';
 import TitleCard from './TitleCard';
 import StaticDetails from './StaticDetails';
@@ -45,7 +44,7 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
               headerColour={gameData.headerColour}
               titleColour={gameData.titleColour}
             />
-            {viewMode === 'OPEN' && (
+            { viewMode === 'OPEN' && (
               <StaticDetails 
                 gameData={gameData}
                 viewMode={viewMode}
