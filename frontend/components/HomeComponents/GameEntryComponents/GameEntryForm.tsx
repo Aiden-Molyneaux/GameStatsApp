@@ -13,6 +13,7 @@ import Index from './Index';
 import TitleInput from './TitleInput';
 import StatisticInputs from './StatisticInputs';
 import ColourInputs from './ColourInputs';
+import FormButtons from './FormButtons';
 
 interface GameEntryFormProps {
   index: number,
@@ -23,93 +24,17 @@ interface GameEntryFormProps {
 }
 
 export default function GameEntryForm({ index, gameData, setGameData, closeEditForm, setIsPressed }: GameEntryFormProps) {
-  const dispatch = useDispatch();
   const [formData, setFormData] = useState({ 
     ...gameData, 
     tempTitleColour: gameData.titleColour, 
     tempHeaderColour: gameData.headerColour 
   });
-  const [disableSaveBtn, setDisableSaveBtn] = useState(formData.name === '' || !isDateValid(String(formData.datePurchased)));
-  
-  // Color state management
-  const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
-  const [showHeaderColourPicker, setShowHeaderColourPicker] = useState(false);
-  const setShowTitleColourPickerWrapper = (value: boolean) => {
-    if (value && showHeaderColourPicker) {
-      setShowHeaderColourPicker(false);
-    }
-    setShowTitleColourPicker(value);
-  };
-  const setShowHeaderColourPickerWrapper = (value: boolean) => {
-    if (value && showTitleColourPicker) {
-      setShowTitleColourPicker(false);
-    }
-    setShowHeaderColourPicker(value);
-  };
-
-  useEffect(() => {
-    setDisableSaveBtn(!(formData.name && isDateValid(formData.datePurchased)));
-  }, [formData]);
 
   function handleTextInputChange(field: string, value: string) {
     setFormData({
       ...formData, 
       [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value 
     });
-  }
-
-  function isDateValid(date: Date | null): boolean {
-    // null date is valid
-    if (!date) return true;
-
-    // a valid date must be 10 characters long
-    if (String(date).length !== 10) return false;
-
-    // a valid date must be a valid date
-    const dateObj = new Date(date);
-    return dateObj instanceof Date && !isNaN(dateObj.getTime());
-  }
-
-  async function handleDeleteGamePress() {
-    setIsPressed(false);
-    try {
-      const response = await requestDeleteGame(gameData.id);
-      if ('error' in response) {
-        console.error(response.error);
-        return;
-      }
-      dispatch(deleteGameAction({ deletedGameId: response.deletedGameId }));
-    } catch(err) {
-      console.error(err);
-      // Handle error in UI
-    }
-  }
-  
-  async function handleUpdateGamePress() {
-    const updatedGame: GameListItem = {
-      ...formData,
-      titleColour: formData.tempTitleColour,
-      headerColour: formData.tempHeaderColour
-    };
-
-    try {
-      const response = await requestUpdateGame(updatedGame);
-      if ('error' in response) {
-        console.error(response.error);
-        return;
-      }
-      setGameData({...updatedGame});
-      dispatch(updateGameAction({ game: updatedGame }));
-      closeEditForm();
-    } catch(err) {
-      console.error(err);
-    }
-    setIsPressed(false);
-  }
-
-  function handleCloseGamePress() {
-    closeEditForm();
-    setIsPressed(false);
   }
 
   function setColourData(headerColour: string, titleColour: string) {
@@ -147,42 +72,17 @@ export default function GameEntryForm({ index, gameData, setGameData, closeEditF
         </View>
       </View>
 
-
-      <View style={styles.buttonContainer}>
-        <View style={styles.button}>
-          <ToggleModeBtn
-            type='editGame'
-            iconName='save' 
-            isDisabled={disableSaveBtn} 
-            pressFunction={handleUpdateGamePress} 
-          />
-        </View>
-        <View style={styles.button}>
-          <ToggleModeBtn
-            type='editGame'
-            iconName='thumbs-down' 
-            isDisabled={false} 
-            pressFunction={handleCloseGamePress}
-          />
-        </View>
-        <View style={styles.button}>
-          <DeleteGameEntryBtn pressFunction={handleDeleteGamePress}/>
-        </View>
-      </View>
+      <FormButtons
+        formData={formData}
+        setGameData={setGameData}
+        closeEditForm={closeEditForm}
+        setIsPressed={setIsPressed}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    alignItems: 'center',
-    width: Spacing.unit2,
-    paddingHorizontal: Spacing.unit1o5
-  },
-  button: {
-    alignSelf: 'center',
-    margin: Spacing.unit1o5,
-  },
   gameEntryContainer: {
     flexDirection: 'row',
     justifyContent: 'center',

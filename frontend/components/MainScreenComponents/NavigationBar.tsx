@@ -18,7 +18,7 @@ export default function NavigationBar({ currentScreen, setCurrentScreen }: Navig
       <NavigationButton
         labelText='Games'
         iconName='gamepad'
-        isPressed={currentScreen === 'games'}
+        isPressed={isAuthenticated && currentScreen === 'games'}
         onPress={() => setCurrentScreen('games')}
         disabled={!isAuthenticated}
       />

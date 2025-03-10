@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import SortButton from './SortButton';
 import { Spacing } from '@/constants/Constants';
-import { RootState } from '@/store/store';
-import { useSelector } from 'react-redux';
 
 export default function SortBar() {
-  const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
   const [sortMode, setSortMode] = useState('entered');
   
   return (
@@ -16,7 +13,6 @@ export default function SortBar() {
         iconName='hourglass'
         currentSortMode={sortMode}
         setSortMode={setSortMode}
-        isDisabled={!isAuthenticated}
       />
 
       <SortButton
@@ -24,7 +20,6 @@ export default function SortBar() {
         iconName='calendar'
         currentSortMode={sortMode}
         setSortMode={setSortMode}
-        isDisabled={!isAuthenticated}
       />
   
       <SortButton
@@ -32,7 +27,6 @@ export default function SortBar() {
         iconName='hashtag'
         currentSortMode={sortMode}
         setSortMode={setSortMode}
-        isDisabled={!isAuthenticated}
       />
     </View>
   );

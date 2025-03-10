@@ -4,6 +4,7 @@ import { Colors, Spacing } from '@/constants/Constants';
 import ColorPicker, { Panel1, HueSlider } from 'reanimated-color-picker';
 import type { returnedResults } from 'reanimated-color-picker';
 import { useSharedValue } from 'react-native-reanimated';
+import LabeledInput from '../LabeledInput';
 
 interface ColourPickerProps {
   colour: string;
@@ -20,6 +21,12 @@ export function CustomColourPicker({ colour, setColour }: ColourPickerProps) {
 
   return (
     <View style={styles.pickerContainer}>
+      <LabeledInput
+        label='Colour Hex'
+        placeholder='111111'
+        value={colour}
+        onChangeText={setColour}
+      />
       <ColorPicker
         value={colour}
         onComplete={onColorSelect}

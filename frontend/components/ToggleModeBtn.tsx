@@ -6,7 +6,7 @@ import FontAwesome  from '@expo/vector-icons/FontAwesome';
 interface ToggleModeBtnProps {
   type: string;
   iconName: string;
-  isDisabled: boolean;
+  isDisabled?: boolean;
   pressFunction: (data: unknown) => void;
 }
 
@@ -17,6 +17,8 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
       return styles.edit;
     case 'save':
       return styles.edit;
+    case 'delete':
+      return styles.editGame;
     case 'editGame':
       return styles.editGame;
     case 'saveGame':
@@ -34,7 +36,7 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
     <Pressable 
       style={[
         getStyleByType(type),
-        { opacity: isDisabled ? 0.5 : 1 }, // Reduce opacity if disabled
+        { opacity: isDisabled ? 0.5 : 1 }
       ]}
       disabled={isDisabled}
       onPress={pressFunction}
@@ -42,7 +44,7 @@ export default function ToggleModeBtn({type, iconName, isDisabled = false, press
       <FontAwesome 
         size={FontSizes.large}
         name={iconName}
-        color={(isDisabled) ? Colors.grayEdge : Colors.black} 
+        color={isDisabled ? Colors.grayEdge : type === 'delete' ? Colors.red : Colors.black} 
       />
     </Pressable>
   );

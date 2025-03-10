@@ -11,22 +11,27 @@ interface StatisticInputsProps {
 export default function StatisticInputs({ formData, handleTextInputChange  }: StatisticInputsProps) {
 
   function formatDateInput(value: string): string | null {
-    // Remove any non-digit characters from input
-    const numbers = value.replace(/\D/g, '');
+    // Remove all non-digits and hyphens
+    const cleanValue = value.replace(/[^\d-]/g, '');
     
-    // Handle empty input
-    if (numbers.length === 0) { return null; }
-    
-    // Format the date with hyphens
-    let formattedDate = numbers;
-    if (numbers.length >= 4) {
-      formattedDate = numbers.slice(0, 4) + '-' + numbers.slice(4);
+    // If empty or just hyphens, return null
+    if (!cleanValue || cleanValue.replace(/-/g, '').length === 0) {
+      return null;
     }
-    if (numbers.length >= 6) {
-      formattedDate = formattedDate.slice(0, 7) + '-' + formattedDate.slice(7);
+
+    // Remove all hyphens and get just numbers
+    const numbers = cleanValue.replace(/-/g, '');
+    
+    // Build the date string
+    let result = '';
+    for (let i = 0; i < numbers.length; i++) {
+      if (i === 4 || i === 6) {
+        result += '-';
+      }
+      result += numbers[i];
     }
     
-    return formattedDate;
+    return result;
   }
 
   return (
@@ -43,7 +48,15 @@ export default function StatisticInputs({ formData, handleTextInputChange  }: St
         label='Percent Complete'
         placeholder='0%'
         value={formData.percentComplete ? String(formData.percentComplete) : ''}
-        onChangeText={(value) => handleTextInputChange('percentComplete', value)}
+        onChangeText={(value) => {
+          const numValue = parseInt(value);
+          if (isNaN(numValue)) {
+            handleTextInputChange('percentComplete', 0);
+          } else {
+            const clampedValue = Math.min(100, Math.max(0, numValue));
+            handleTextInputChange('percentComplete', String(clampedValue));
+          }
+        }}
         keyboardType='number-pad'
         maxLength={3}
       />

@@ -43,6 +43,5 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: Spacing.unit1o10,
     marginLeft: 0,
-    padding: Spacing.unit1o10,
   },
 });
