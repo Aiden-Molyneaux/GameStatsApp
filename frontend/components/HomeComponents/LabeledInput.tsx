@@ -16,7 +16,7 @@ interface LabeledInputProps {
 export default function LabeledInput({ label, placeholder, value, onChangeText, keyboardType = 'default', maxLength = 16, secureTextEntry = false }: LabeledInputProps) {
   return (  
     <View style={styles.container}>
-      <Text style={styles.inputLabel}>{label}:</Text>
+      <Text>{label}:</Text>
       <TextInput
         style={styles.input}
         placeholder={placeholder}
@@ -35,9 +35,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.unit1o5,
-  },
-  inputLabel: {
-    fontSize: FontSizes.medium,
   },
   input: {
     flex: 1,

@@ -17,23 +17,13 @@ interface FormButtonsProps {
 
 export default function FormButtons({ formData, setGameData,closeEditForm, setIsPressed }: FormButtonsProps) {
   const dispatch = useDispatch();
-  const [disableSaveBtn, setDisableSaveBtn] = useState(formData.name === '' || !isDateValid(String(formData.datePurchased)));
+  const [disableSaveBtn, setDisableSaveBtn] = useState(formData.name === '');
 
   useEffect(() => {
-    setDisableSaveBtn(!(formData.name && isDateValid(formData.datePurchased)));
+    setDisableSaveBtn(!(formData.name));
   }, [formData]);
 
-  function isDateValid(date: Date | null): boolean {
-    // null date is valid
-    if (!date) return true;
 
-    // a valid date must be 10 characters long
-    if (String(date).length !== 10) return false;
-
-    // a valid date must be a valid date
-    const dateObj = new Date(date);
-    return dateObj instanceof Date && !isNaN(dateObj.getTime());
-  }
 
   async function handleDeleteGamePress() {
     setIsPressed(false);
