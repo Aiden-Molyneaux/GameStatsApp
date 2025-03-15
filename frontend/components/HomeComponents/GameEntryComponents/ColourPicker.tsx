@@ -18,10 +18,14 @@ export function ColourPicker({ colour, setColour }: ColourPickerProps) {
   const [invalidInput, setInvalidInput] = useState(!(/^#[0-9A-Fa-f]{1,6}$/.test(colour)));
 
   function handleColourChange(input: string) {
-    console.log(input);
-    setInvalidInput(!(/^[0-9A-Fa-f]{7,7}$/.test(input)));
-
-    setColour(input);
+    // Add # if not present
+    const colorString = input.startsWith('#') ? input : '#' + input;
+    
+    // Check if string is 7 chars long and remaining chars are valid hex
+    const isValid = colorString.length === 7 && /^#[0-9A-Fa-f]{6}$/.test(colorString);
+    setInvalidInput(!isValid);
+    
+    setColour(colorString);
   }
 
   return (
@@ -29,7 +33,7 @@ export function ColourPicker({ colour, setColour }: ColourPickerProps) {
       <LabeledInput
         label='Colour Hex'
         placeholder='#111111'
-        value={'#' + colour.toUpperCase()}
+        value={colour.toUpperCase()}
         onChangeText={handleColourChange}
         maxLength={7}
         invalidInput={invalidInput}

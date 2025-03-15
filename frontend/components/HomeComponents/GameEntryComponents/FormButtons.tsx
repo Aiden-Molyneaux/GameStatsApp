@@ -23,8 +23,6 @@ export default function FormButtons({ formData, setGameData,closeEditForm, setIs
     setDisableSaveBtn(!(formData.name));
   }, [formData]);
 
-
-
   async function handleDeleteGamePress() {
     setIsPressed(false);
     try {
