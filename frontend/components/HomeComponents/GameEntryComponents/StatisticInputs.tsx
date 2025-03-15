@@ -14,30 +14,6 @@ interface StatisticInputsProps {
 export default function StatisticInputs({ formData, handleTextInputChange  }: StatisticInputsProps) {
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
-  function formatDateInput(value: string): string | null {
-    // Remove all non-digits and hyphens
-    const cleanValue = value.replace(/[^\d-]/g, '');
-    
-    // If empty or just hyphens, return null
-    if (!cleanValue || cleanValue.replace(/-/g, '').length === 0) {
-      return null;
-    }
-
-    // Remove all hyphens and get just numbers
-    const numbers = cleanValue.replace(/-/g, '');
-    
-    // Build the date string
-    let result = '';
-    for (let i = 0; i < numbers.length; i++) {
-      if (i === 4 || i === 6) {
-        result += '-';
-      }
-      result += numbers[i];
-    }
-    
-    return result;
-  }
-
   return (
     <>
       <LabeledInput

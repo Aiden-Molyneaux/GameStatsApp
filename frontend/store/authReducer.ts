@@ -50,7 +50,7 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.token = null;
-      // state.user = null
+      state.user = null
       state.isAuthenticated = false;
       state.loading = false;
       state.error = null;

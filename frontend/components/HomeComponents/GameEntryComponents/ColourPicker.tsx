@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Colors, Spacing } from '@/constants/Constants';
 import ColorPicker, { Panel1, HueSlider } from 'reanimated-color-picker';
@@ -10,21 +10,18 @@ interface ColourPickerProps {
   setColour: (color: string) => void;
 }
 
-export function CustomColourPicker({ colour, setColour }: ColourPickerProps) {
+export function ColourPicker({ colour, setColour }: ColourPickerProps) {
   const onColorSelect = (color: returnedResults) => {
     setColour(color.hex);
   };
-  
-  function validateHex(hex: string) {
-    if (hex.startsWith('#') && hex.length === 7) {
-      return hex;
-    }
-    return `#${hex}`;
-  }
 
-  function handleColourChange(hex: string) {
-    const validatedHex = validateHex(hex);
-    setColour(validatedHex);
+  const [invalidInput, setInvalidInput] = useState(!(/^#[0-9A-Fa-f]{1,6}$/.test(colour)));
+
+  function handleColourChange(input: string) {
+    console.log(input);
+    setInvalidInput(!(/^[0-9A-Fa-f]{7,7}$/.test(input)));
+
+    setColour(input);
   }
 
   return (
@@ -32,8 +29,10 @@ export function CustomColourPicker({ colour, setColour }: ColourPickerProps) {
       <LabeledInput
         label='Colour Hex'
         placeholder='#111111'
-        value={colour}
+        value={'#' + colour.toUpperCase()}
         onChangeText={handleColourChange}
+        maxLength={7}
+        invalidInput={invalidInput}
       />
       <ColorPicker
         value={colour}
@@ -51,12 +50,12 @@ const styles = StyleSheet.create({
   pickerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: Spacing.unit1o5,
-    paddingBottom: 0,
+    paddingVertical: Spacing.unit1o5,
   },
   picker: {
     width: '100%',
     gap: Spacing.unit1o5,
+    paddingHorizontal: Spacing.unit1o5,
   },
   panelStyle: {
     height: 120,
@@ -65,9 +64,11 @@ const styles = StyleSheet.create({
     borderColor: Colors.black,
   },
   sliderStyle: {
+    width: '100%',
     height: 30,
     borderRadius: Spacing.unit1o5,
     borderWidth: 1,
     borderColor: Colors.black,
+
   }
 });

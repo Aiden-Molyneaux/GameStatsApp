@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Colors, Spacing } from '@/constants/Constants';
 import { Text } from '@/components/Customs';
-import { CustomColourPicker } from './CustomColourPicker';
+import { ColourPicker } from './ColourPicker';
 import ColourPreviewButton from './ColourPreviewButton';
 
 interface ColourInputsProps {
@@ -42,23 +42,22 @@ export default function ColourInputs({ tempHeaderColour, tempTitleColour, setCol
         </View>
       </View>
 
-      <View style={styles.colorPickerContainer}>
-        { showTitleColourPicker && <CustomColourPicker colour={tempTitleColour} setColour={(colour) => setColourData(tempHeaderColour, colour)}/> }
-        { showHeaderColourPicker && <CustomColourPicker colour={tempHeaderColour} setColour={(colour) => setColourData(colour, tempTitleColour)}/> }
-      </View>
+
+      { showTitleColourPicker && <ColourPicker colour={tempTitleColour} setColour={(colour) => setColourData(tempHeaderColour, colour)}/> }
+      { showHeaderColourPicker && <ColourPicker colour={tempHeaderColour} setColour={(colour) => setColourData(colour, tempTitleColour)}/> }
     </>
   );
 }
 
 const styles = StyleSheet.create({
   colorPickerControls: {
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
   colorPickerControl: {
-    alignItems: 'center',
+    flex: 1,
+
   },
-  colorPickerContainer: {
-    margin: Spacing.unit1o5,
-  }
+
 });

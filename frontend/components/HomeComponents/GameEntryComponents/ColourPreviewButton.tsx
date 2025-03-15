@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Modal } from 'react-native';
 import { Colors, Spacing } from '@/constants/Constants';
 import { Text, TextInput} from '@/components/Customs';
-import { CustomColourPicker } from './CustomColourPicker';
+import { CustomColourPicker } from './ColourPicker';
 
 interface ColourInputsProps {
   colour: string,

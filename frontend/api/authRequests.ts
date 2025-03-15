@@ -40,14 +40,14 @@ export async function requestRegisterUser(username: string, password: string): P
   try {
     const response = await api.post<requestRegisterUserResponse>('api/auth/register', { username, password });
 
-    if (response.status !== 200) {
+    if (response.status !== 201) {
       return { error: `Register User Request FAILURE: ${'error' in response.data ? response.data.error : 'Unknown error'}` };
     }
 
     if ('user' in response.data && 'token' in response.data) {
       return { token: response.data.token, user: response.data.user };
     }
-    
+
     return { error: 'Register User Request FAILURE: unexpected response format' };
   } catch (err) {
     return { error: `Register User Request ERROR: ${err}` };

@@ -50,6 +50,7 @@ export default function AuthForm() {
         }
         
         dispatch(loginSuccess({ token: response.token, user: response.user }));
+        dispatch(changeUserAction({ user: response.user }));   
       } catch(err) {
         console.error(err);
         setAuthFail(true);

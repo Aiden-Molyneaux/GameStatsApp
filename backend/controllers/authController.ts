@@ -36,7 +36,7 @@ export async function handleRegistration(req: Request, res: Response) {
     const user = postResponse.user;
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
 
-    return res.status(201).json({ token });
+    return res.status(201).json({ token, user});
   } catch (err) {
     return res.status(500).json({ error: `Backend server error while registering new user: ${err}` });
   }

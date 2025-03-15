@@ -7,7 +7,7 @@ import ToggleModeBtn from '../../ToggleModeBtn';
 import { GameListItem, updateGameAction, deleteGameAction } from '@/store/gameReducer';
 import DeleteGameEntryBtn from './DeleteGameEntryButton';
 import { Game, requestDeleteGame, requestUpdateGame } from '@/api/gameRequests';
-import { CustomColourPicker } from './CustomColourPicker';
+import { CustomColourPicker } from './ColourPicker';
 import LabeledInput from '../LabeledInput';
 import Index from './Index';
 import TitleInput from './TitleInput';
