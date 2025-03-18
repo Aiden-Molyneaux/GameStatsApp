@@ -39,6 +39,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeEditF
     });
   }
 
+  const [isColorValid, setIsColorValid] = useState(true);
+
   return (
     <View style={styles.gameEntryContainer}>
       <Index index={index}/>
@@ -56,6 +58,8 @@ export default function GameEntryForm({ index, gameData, setGameData, closeEditF
               tempHeaderColour={formData.tempHeaderColour}
               tempTitleColour={formData.tempTitleColour}
               setColourData={setColourData}
+              isColorValid={isColorValid}
+              setIsColorValid={setIsColorValid}
             />
 
             <StatisticInputs
@@ -71,6 +75,7 @@ export default function GameEntryForm({ index, gameData, setGameData, closeEditF
         setGameData={setGameData}
         closeEditForm={closeEditForm}
         setIsPressed={setIsPressed}
+        isColorValid={isColorValid}
       />
     </View>
   );

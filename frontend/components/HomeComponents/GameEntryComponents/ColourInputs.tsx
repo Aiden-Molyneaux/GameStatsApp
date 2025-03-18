@@ -8,10 +8,12 @@ import ColourPreviewButton from './ColourPreviewButton';
 interface ColourInputsProps {
   tempHeaderColour: string,
   tempTitleColour: string,
-  setColourData: (headerColour: string, titleColour: string) => void
+  setColourData: (headerColour: string, titleColour: string) => void,
+  isColorValid: boolean,
+  setIsColorValid: (isValid: boolean) => void
 }
 
-export default function ColourInputs({ tempHeaderColour, tempTitleColour, setColourData }: ColourInputsProps) {
+export default function ColourInputs({ tempHeaderColour, tempTitleColour, setColourData, isColorValid, setIsColorValid }: ColourInputsProps) {
   const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
   const [showHeaderColourPicker, setShowHeaderColourPicker] = useState(false);
   const setShowTitleColourPickerWrapper = (value: boolean) => {
@@ -43,8 +45,8 @@ export default function ColourInputs({ tempHeaderColour, tempTitleColour, setCol
       </View>
 
 
-      { showTitleColourPicker && <ColourPicker colour={tempTitleColour} setColour={(colour) => setColourData(tempHeaderColour, colour)}/> }
-      { showHeaderColourPicker && <ColourPicker colour={tempHeaderColour} setColour={(colour) => setColourData(colour, tempTitleColour)}/> }
+      { showTitleColourPicker && <ColourPicker colour={tempTitleColour} setColour={(colour) => setColourData(tempHeaderColour, colour)} isColorValid={isColorValid} setIsColorValid={setIsColorValid}/> }
+      { showHeaderColourPicker && <ColourPicker colour={tempHeaderColour} setColour={(colour) => setColourData(colour, tempTitleColour)} isColorValid={isColorValid} setIsColorValid={setIsColorValid}/> }
     </>
   );
 }

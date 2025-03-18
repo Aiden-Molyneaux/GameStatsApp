@@ -49,28 +49,52 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
   try {
     const response = await findUserByUsername(username);
 
-    if (!('existingUser' in response)) {
-      res.status(401).json({ error: '-> User Authorization ERROR:' });
+    if ('error' in response) {
+      // Map specific database errors to appropriate HTTP responses
+      if (response.error.code === 'USER_NOT_FOUND') {
+        res.status(404).json({ 
+          code: 'AUTH_FAILED',
+          message: 'Invalid credentials.' // Generic message for security
+        });
+        return;
+      }
+      
+      if (response.error.code === 'DATABASE_ERROR') {
+        res.status(500).json({ 
+          code: 'SERVER_ERROR',
+          message: 'Authentication service unavailable.' 
+        });
+        return;
+      }
+      
+      // Handle any other errors
+      res.status(400).json({ 
+        code: 'AUTH_ERROR',
+        message: 'Authentication failed.'
+      });
       return;
     }
 
     const user = response.existingUser;
 
-    if (!response.success) {
-      res.status(400).json({ error: 'Invalid credentials.' });
-      return;
-    }
-
+    // Password check
     const isMatch = await bcrypt.compare(password, user.passwordDigest);
     if (!isMatch) {
-      res.status(400).json({ error: 'Invalid credentials.' });
+      res.status(404).json({ 
+        code: 'AUTH_FAILED',
+        message: 'Invalid credentials.'  // Generic message for security
+      });
       return;
     }
   
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
     res.status(200).json({ token, user });
   } catch (err) {
-    res.status(500).json({ error: `Backend server error while logging in user: ${err}` });
+    console.error('Unexpected error during login:', err);
+    res.status(500).json({ 
+      code: 'SERVER_ERROR',
+      message: 'An unexpected error occurred.'
+    });
   }
 };
 

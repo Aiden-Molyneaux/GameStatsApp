@@ -17,7 +17,13 @@ export interface UpdatedUser {
   favouriteGame: string | null;
 }
 
-type PostUserQueryReturn = { success: true; user: User } | { success: false; error: string };
+export type ModelError = {
+  code: string;
+  message: string;
+  details?: any;
+};
+
+type PostUserQueryReturn = { user: User } | { error: ModelError };
 
 function mapUserToCamelCase(user: any): User {
   return {
@@ -43,14 +49,26 @@ export async function postUser(username: string, hashedPassword: string): Promis
     if (result.rows.length > 0) {
       const user = mapUserToCamelCase(result.rows[0]);
       console.log(`-> Query SUCCESS: created user with id ${user.id}.`);
-      return { success: true, user } 
+      return { user } 
     } else {
       console.log(`-> Query FAILURE: could not create user.`)
-      return { success: false, error: `Could not create user.`}
+      return { 
+        error: {
+          code: 'USER_CREATION_FAILED',
+          message: 'Could not create user'
+        }
+      }
     }
-  } catch (err) {
+  } catch (err: any) {
     console.error("-> Query ERROR:", err);
-    return { success: false, error: `Database error from postUser query: ${err}` };
+    
+    return {
+      error: {
+        code: 'DATABASE_ERROR',
+        message: 'Database error during user creation',
+        details: err
+      }
+    };
   }
 };
 
@@ -79,7 +97,9 @@ export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQue
   }
 };
 
-type FindUserByUsernameQueryReturn = { success: true; existingUser: User } | { success: false; error: string };
+type FindUserByUsernameQueryReturn = 
+  { existingUser: User } | 
+  { error: ModelError };
 
 export async function findUserByUsername(username: string): Promise<FindUserByUsernameQueryReturn> {
   console.log("Executing findUserByUsername query...");
@@ -91,15 +111,25 @@ export async function findUserByUsername(username: string): Promise<FindUserByUs
     );
 
     if (result.rows.length > 0) {
-      console.log(`-> Query SUCCESS: found user with given username.`);
+      console.log(`-> Query SUCCESS: found user with given username (${username}).`);
       const existingUser = mapUserToCamelCase(result.rows[0]);  
-      return { success: true, existingUser }
+      return { existingUser }
     } else {
-      console.log(`-> Query FAILURE: no user found with given username '${username}'.`)
-      return { success: false, error: `No user found with given username '${username}'.`}
+      console.log(`-> Query SUCCESS: no user found with given username (${username}).`);
+      return { 
+        error: {
+          code: 'USER_NOT_FOUND',
+          message: `No user found with given username (${username}).`
+        }
+      }
     }
   } catch (err) {
     console.error("-> Query ERROR:", err);
-    return { success: false, error: `Database error from findUserByUsername query with username (${username}): ${err}` };
+    return { 
+      error: {
+        code: 'DATABASE_ERROR',
+        message: `Database error during user lookup`
+      }
+    };
   }
-};
+}

@@ -12,16 +12,17 @@ interface FormButtonsProps {
   formData: GameListItem,
   setGameData: (data: Game) => void,
   closeEditForm: () => void,
-  setIsPressed: (data: boolean) => void
+  setIsPressed: (data: boolean) => void,
+  isColorValid: boolean
 }
 
-export default function FormButtons({ formData, setGameData,closeEditForm, setIsPressed }: FormButtonsProps) {
+export default function FormButtons({ formData, setGameData, closeEditForm, setIsPressed, isColorValid }: FormButtonsProps) {
   const dispatch = useDispatch();
   const [disableSaveBtn, setDisableSaveBtn] = useState(formData.name === '');
 
   useEffect(() => {
-    setDisableSaveBtn(!(formData.name));
-  }, [formData]);
+    setDisableSaveBtn(!(formData.name) || !isColorValid);
+  }, [formData, isColorValid]);
 
   async function handleDeleteGamePress() {
     setIsPressed(false);

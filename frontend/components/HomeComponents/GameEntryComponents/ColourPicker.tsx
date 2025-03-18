@@ -8,23 +8,21 @@ import LabeledInput from '../LabeledInput';
 interface ColourPickerProps {
   colour: string;
   setColour: (color: string) => void;
+  isColorValid: boolean;
+  setIsColorValid: (isValid: boolean) => void;
 }
 
-export function ColourPicker({ colour, setColour }: ColourPickerProps) {
+export function ColourPicker({ colour, setColour, isColorValid, setIsColorValid }: ColourPickerProps) {
   const onColorSelect = (color: returnedResults) => {
-    setColour(color.hex);
+    handleColourChange(color.hex);  
   };
-
-  const [invalidInput, setInvalidInput] = useState(!(/^#[0-9A-Fa-f]{1,6}$/.test(colour)));
-
+  
   function handleColourChange(input: string) {
-    // Add # if not present
     const colorString = input.startsWith('#') ? input : '#' + input;
     
-    // Check if string is 7 chars long and remaining chars are valid hex
     const isValid = colorString.length === 7 && /^#[0-9A-Fa-f]{6}$/.test(colorString);
-    setInvalidInput(!isValid);
-    
+
+    setIsColorValid(isValid);
     setColour(colorString);
   }
 
@@ -36,13 +34,9 @@ export function ColourPicker({ colour, setColour }: ColourPickerProps) {
         value={colour.toUpperCase()}
         onChangeText={handleColourChange}
         maxLength={7}
-        invalidInput={invalidInput}
+        invalidInput={!isColorValid}
       />
-      <ColorPicker
-        value={colour}
-        onComplete={onColorSelect}
-        style={styles.picker}
-      >
+      <ColorPicker value={colour} onComplete={onColorSelect} style={styles.picker}>
         <Panel1 style={styles.panelStyle} />
         <HueSlider style={styles.sliderStyle} />
       </ColorPicker>
@@ -73,6 +67,5 @@ const styles = StyleSheet.create({
     borderRadius: Spacing.unit1o5,
     borderWidth: 1,
     borderColor: Colors.black,
-
   }
 });
