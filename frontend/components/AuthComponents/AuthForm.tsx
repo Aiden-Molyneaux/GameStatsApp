@@ -12,6 +12,7 @@ import AuthModeButton from './AuthModeButton';
 import AuthSubmitButton from './AuthSubmitButton';
 import { User } from '../../../backend/models/userModel';
 import { purgeStoredState } from '../../store/store';
+import ErrorDisplay from '../ErrorDisplay';
 
 export default function AuthForm() {
   const dispatch = useDispatch();
@@ -45,7 +46,7 @@ export default function AuthForm() {
   async function attemptAuth() {
     try {
       // Clear any existing store data before authentication
-      dispatch(logout());
+      purgeStoredState();
       
       const authRequest = authMode === 'signIn' ? 
         requestLoginUser(username, password) : 
@@ -96,9 +97,9 @@ export default function AuthForm() {
         onChangeText={handleInputChange(setUsername)} 
         invalidInput={!isUsernameValid} 
       />
-      <LabeledInput 
+      <LabeledInput
         label='Password' 
-        placeholder='∗∗∗∗∗∗∗∗' 
+        placeholder='••••••••' 
         value={password} 
         onChangeText={handleInputChange(setPassword)} 
         secureTextEntry 
@@ -107,13 +108,11 @@ export default function AuthForm() {
 
       <View style={styles.errorSpacer}>
         { authFail && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorText}>{errorMessage}</Text>
-          </View>
+          <ErrorDisplay errorMessage={errorMessage} />
         )}
       </View>
 
-      <AuthSubmitButton authMode={authMode} attemptAuth={attemptAuth}/>
+      <AuthSubmitButton authMode={authMode} attemptAuth={attemptAuth} isDisabled={!isUsernameValid || !isPasswordValid || authFail} />
     </View>
   );
 }
@@ -127,19 +126,8 @@ const styles = StyleSheet.create({
     padding: Spacing.unit
   },
   errorSpacer: {
+    height: Spacing.unit,
     alignItems: 'center',
     justifyContent: 'center',
-    height: Spacing.unit3o2,
-  },
-  errorContainer: {
-    backgroundColor: '#fff0f0',
-    borderWidth: 2,
-    borderColor: Colors.red,
-    borderRadius: Spacing.unit1o5,
-  },
-  errorText: {
-    color: Colors.red,
-    fontSize: FontSizes.mediumLess,
-    textAlign: 'center',
   },
 });

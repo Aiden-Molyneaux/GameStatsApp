@@ -13,7 +13,6 @@ import FunctionButtons from '@/components/MainScreenComponents/FunctionButtons';
 export default function MainScreen() {
   const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
   const [currentScreen, setCurrentScreen] = useState('games');
-  const [sortMode, setSortMode] = useState('entered');
 
   const gameListRef = useRef<FlatList>(null);
 
@@ -23,7 +22,7 @@ export default function MainScreen() {
     }
     
     return currentScreen === 'games' 
-      ? <GameScreen gameListRef={gameListRef} sortMode={sortMode} /> 
+      ? <GameScreen gameListRef={gameListRef}/> 
       : <ProfileDetails />;
   };
 

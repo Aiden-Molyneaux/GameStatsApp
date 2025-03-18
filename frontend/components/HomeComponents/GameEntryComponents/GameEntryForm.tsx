@@ -13,11 +13,10 @@ interface GameEntryFormProps {
   index: number,
   gameData: GameListItem,
   setGameData: (data: Game) => void,
-  closeEditForm: () => void,
-  setIsPressed: (data: boolean) => void
+  closeEditForm: () => void
 }
 
-export default function GameEntryForm({ index, gameData, setGameData, closeEditForm, setIsPressed }: GameEntryFormProps) {
+export default function GameEntryForm({ index, gameData, setGameData, closeEditForm }: GameEntryFormProps) {
   const [formData, setFormData] = useState({ 
     ...gameData, 
     tempTitleColour: gameData.titleColour, 
@@ -74,7 +73,6 @@ export default function GameEntryForm({ index, gameData, setGameData, closeEditF
         formData={formData}
         setGameData={setGameData}
         closeEditForm={closeEditForm}
-        setIsPressed={setIsPressed}
         isColorValid={isColorValid}
       />
     </View>

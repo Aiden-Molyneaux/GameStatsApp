@@ -6,15 +6,14 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 
 interface GameListProps {
-  sortMode: string,
-  setIsPressed: (data: boolean) => void
+
 }
 
-function GameList({sortMode, setIsPressed}: GameListProps, ref: React.Ref<FlatList>) {
+function GameList({}: GameListProps, ref: React.Ref<FlatList>) {
   const { games } = useSelector((state: RootState) => state.gameData);
 
   const renderItem = ({ item, index} : { item: GameListItem; index: number}) => (    
-    <GameEntry item={item} index={index} setIsPressed={setIsPressed}/>
+    <GameEntry item={item} index={index}/>
   );
 
   return (

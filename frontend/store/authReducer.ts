@@ -52,11 +52,6 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.loading = false;
       state.error = null;
-      
-      // Reset all other slices
-      store.dispatch({ type: 'userData/reset' });
-      store.dispatch({ type: 'gameData/reset' });
-      store.dispatch({ type: 'gamerTagData/reset' });
     },
   },
 });

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authReducer';
+import authReducer, { logout } from './authReducer';
 import userReducer from './userReducer';
-import gameReducer from './gameReducer';
+import gameReducer, { reset } from './gameReducer';
 import gamerTagReducer from './gamerTagReducer';
 
 import { 
@@ -22,17 +22,12 @@ const persistConfig = {
   version: 1
 };
 
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
-const persistedUserReducer = persistReducer(persistConfig, userReducer);
-const persistedGameReducer = persistReducer(persistConfig, gameReducer);
-const persistedGamerTagReducer = persistReducer(persistConfig, gamerTagReducer);
-
 export const store = configureStore({
   reducer: {
-    authData: persistedAuthReducer,
-    userData: persistedUserReducer,
-    gameData: persistedGameReducer,
-    gamerTagData: persistedGamerTagReducer
+    authData: persistReducer(persistConfig, authReducer),
+    userData: persistReducer(persistConfig, userReducer),
+    gameData: persistReducer(persistConfig, gameReducer),
+    gamerTagData: persistReducer(persistConfig, gamerTagReducer)
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -43,11 +38,12 @@ export const store = configureStore({
     }),
 });
 
-export const persistor = persistStore(store);
-
 export const purgeStoredState = () => {
   persistor.purge();
+  store.dispatch(logout());
+  store.dispatch(reset());
 };
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
+export const persistor = persistStore(store);

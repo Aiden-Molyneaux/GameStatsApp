@@ -22,7 +22,7 @@ export default function StaticDetails({ gameData, viewMode }: StaticDetailsProps
     }).start();
   }, [viewMode]);
 
-  const hasBeenPlayed = gameData.hours > 0;
+  const hasBeenPlayed = gameData.hours > 0 && gameData.percentComplete;
 
   return (
     <Animated.View style={{ height: animatedHeight, overflow: 'hidden' }}>  
@@ -35,7 +35,7 @@ export default function StaticDetails({ gameData, viewMode }: StaticDetailsProps
           { hasBeenPlayed && 
             <StaticStatistic
               label='Percent Complete:' 
-              value={gameData.percentComplete.toString() + '%'} 
+              value={gameData.percentComplete ? gameData.percentComplete.toString() + '%' : 'N/A'} 
             />
           }
           <StaticStatistic 

@@ -12,10 +12,12 @@ export interface PartialGameListItem extends PartialGame {
 
 export interface GameList {
   games: GameListItem[];
+  sortMode: string;
 }
 
 const initialGameState: GameList = {
-  games: []
+  games: [],
+  sortMode: 'entered'
 };
 
 export const gameListSlice = createSlice({
@@ -35,21 +37,25 @@ export const gameListSlice = createSlice({
     updateGameAction: (state, action: PayloadAction<{ game: GameListItem }>) => {
       const { game } = action.payload;
       state.games = state.games.map(obj => obj.id === game.id ? game : obj);
+      sortGamesAction({ sort: state.sortMode });
     },
 
     sortGamesAction: (state, action: PayloadAction<{sort: string}>) => {
       switch(action.payload.sort) {
-      case 'hours':
-        state.games.sort((a, b) => parseInt(b.hours) - parseInt(a.hours));
-        break;
+        case 'hours':
+          state.sortMode = 'hours';
+          state.games.sort((a, b) => parseInt(b.hours) - parseInt(a.hours));
+          break;
 
-      case 'datePurchased':
-        state.games.sort((a, b) => new Date(a.datePurchased) - new Date(b.datePurchased));
-        break;
+        case 'datePurchased':
+          state.sortMode = 'datePurchased';
+          state.games.sort((a, b) => new Date(a.datePurchased) - new Date(b.datePurchased));
+          break;
 
-      case 'entered':
-        state.games.sort((a, b) => a.id - b.id);
-        break;
+        case 'entered':
+          state.sortMode = 'entered';
+          state.games.sort((a, b) => a.id - b.id);
+          break;
       }
     },
 
@@ -69,7 +75,7 @@ export const gameListSlice = createSlice({
     },
 
     reset: (state) => {
-      state.games = initialGameState.games;
+      state = initialGameState;
     }
   },
 });

@@ -10,11 +10,10 @@ import ModeButtons from './ModeButtons';
 
 interface GameEntryProps {
   item: GameListItem,
-  index: number,
-  setIsPressed: (data: boolean) => void
+  index: number
 }
 
-export default function GameEntry({ item, index, setIsPressed }: GameEntryProps) {
+export default function GameEntry({ item, index }: GameEntryProps) {
   const [ gameData, setGameData] = useState({
     index: index,
     ...item
@@ -33,7 +32,6 @@ export default function GameEntry({ item, index, setIsPressed }: GameEntryProps)
           gameData={gameData}
           setGameData={setGameData}
           closeEditForm={() => setViewMode('CLOSED')}
-          setIsPressed={setIsPressed}
         />
       ) : (
         <View style={styles.gameEntryContainer}>

@@ -36,7 +36,7 @@ export default function AuthModeButton({ type, authMode, setAuthMode }: AuthMode
 
   return (
     <Pressable style={styles.modeBtn} onPress={() => setAuthMode(type)}>
-      <Animated.View style={{ opacity: fadeAnim }}>
+      <Animated.View style={{ ...styles.caret, opacity: fadeAnim }}>
         <FontAwesome
           size={FontSizes.large} 
           name={'caret-right'} 
@@ -49,6 +49,10 @@ export default function AuthModeButton({ type, authMode, setAuthMode }: AuthMode
 }
 
 const styles = StyleSheet.create({
+  caret: {
+    position: 'absolute',
+    left: -Spacing.unit1o3
+  },
   modeBtn: {
     flexDirection: 'row',
     alignSelf: 'center',

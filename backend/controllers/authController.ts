@@ -19,8 +19,14 @@ export async function handleRegistration(req: Request, res: Response) {
   try {
     // Check if user already exists
     const response = await findUserByUsername(username);
-    if ('existingUser' in response) {
-      return res.status(400).json({ error: 'User already exists.' });
+    if ('user' in response) {
+      res.status(400).json({
+        error: {
+          code: 'USER_ALREADY_EXISTS',
+          message: 'Username must be unique.'
+        }
+      });
+      return;
     } 
 
     // Hash the password
