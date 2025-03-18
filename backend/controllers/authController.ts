@@ -29,16 +29,45 @@ export async function handleRegistration(req: Request, res: Response) {
     // Create new user
     const postResponse = await postUser(username, hashedPassword);
 
-    if (!postResponse.success) {
-      return res.status(400).json({ error: 'User creation failed.' });
+    if ('error' in postResponse) {
+      if (postResponse.error.code === 'USER_CREATION_FAILED') {
+        res.status(400).json({ error: postResponse.error });
+        return;
+      }
+
+      if (postResponse.error.code === 'DATABASE_ERROR') {
+        res.status(500).json({ 
+          error: {
+            code: 'SERVER_ERROR',
+            message: 'User creation service unavailable.' 
+          }
+        });
+        return;
+      }
+
+      res.status(500).json({ 
+        error: {
+          code: 'SERVER_ERROR',
+          message: 'Something on the server went wrong.'
+        }
+      });
+      return;
     }
 
     const user = postResponse.user;
+
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
 
-    return res.status(201).json({ token, user});
+    return res.status(201).json({ token, user });
   } catch (err) {
-    return res.status(500).json({ error: `Backend server error while registering new user: ${err}` });
+    console.error('Unexpected error during registration:', err);
+
+    return res.status(500).json({ 
+      error: {
+        code: 'SERVER_ERROR',
+        message: 'Something on the server went wrong.'
+      }
+    });
   }
 };
 
@@ -49,68 +78,90 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
   try {
     const response = await findUserByUsername(username);
 
+    console.log({response});
+
     if ('error' in response) {
-      // Map specific database errors to appropriate HTTP responses
       if (response.error.code === 'USER_NOT_FOUND') {
-        res.status(404).json({ 
-          code: 'AUTH_FAILED',
-          message: 'Invalid credentials.' // Generic message for security
+        res.status(404).json({
+          error: {
+            code: 'AUTH_FAILED',
+            message: 'Invalid credentials.'
+          }
         });
-        return;
+        return
       }
       
       if (response.error.code === 'DATABASE_ERROR') {
         res.status(500).json({ 
-          code: 'SERVER_ERROR',
-          message: 'Authentication service unavailable.' 
+          error: {
+            code: 'SERVER_ERROR',
+            message: 'Authentication service unavailable.' 
+          }
         });
         return;
       }
       
       // Handle any other errors
-      res.status(400).json({ 
-        code: 'AUTH_ERROR',
-        message: 'Authentication failed.'
+      res.status(500).json({ 
+        error: {
+          code: 'SERVER_ERROR',
+          message: 'Something on the server went wrong.'
+        }
       });
       return;
     }
 
-    const user = response.existingUser;
+    const user = response.user;
 
-    // Password check
     const isMatch = await bcrypt.compare(password, user.passwordDigest);
     if (!isMatch) {
       res.status(404).json({ 
-        code: 'AUTH_FAILED',
-        message: 'Invalid credentials.'  // Generic message for security
+        error: {
+          code: 'AUTH_FAILED',
+          message: 'Invalid credentials.'
+        }
       });
       return;
     }
   
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, { expiresIn: '1h' });
+
     res.status(200).json({ token, user });
   } catch (err) {
     console.error('Unexpected error during login:', err);
+
     res.status(500).json({ 
-      code: 'SERVER_ERROR',
-      message: 'An unexpected error occurred.'
+      error: { 
+        code: 'SERVER_ERROR',
+        message: 'Something on the server went wrong.'
+      }
     });
   }
 };
 
 export async function handleValidation(req: Request, res: Response): Promise<void> {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    res.status(401).json({ error: 'No token provided' });
+    res.status(401).json({ 
+      error: {
+        code: 'UNAUTHORIZED',
+        message: 'No token provided'
+      }
+    });
     return;
   }
 
   try {
     jwt.verify(token, process.env.JWT_SECRET as string);
-    res.status(200).json({ message: 'Token is valid' });
+    res.status(200).send();
   } catch (err) {
-    res.status(403).json({ error: 'Invalid token' });
+    res.status(401).json({ error: {
+        code: 'UNAUTHORIZED',
+        message: 'Invalid token'
+      }
+    });
+    return;
   }
 }

@@ -3,6 +3,7 @@ import { store } from '../store/store';
 
 const api = axios.create({
   baseURL: 'http://192.168.68.59:5000',
+  validateStatus: () => true
 });
 
 api.interceptors.request.use(async (config: AxiosRequestConfig) => {

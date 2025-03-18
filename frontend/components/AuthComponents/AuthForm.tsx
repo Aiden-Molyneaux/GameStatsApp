@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../store/authReducer';
+import { loginSuccess, logout } from '../../store/authReducer';
 import { requestLoginUser, requestRegisterUser } from '../../api/authRequests';
 import { Text } from '../Customs';
 import { Colors, FontSizes, Spacing } from '../../constants/Constants';
@@ -10,83 +10,76 @@ import { changeUserAction } from '@/store/userReducer';
 import { fetchUserGames, fetchUserGamerTags } from '@/services/userDataService';
 import AuthModeButton from './AuthModeButton';
 import AuthSubmitButton from './AuthSubmitButton';
+import { User } from '../../../backend/models/userModel';
+import { purgeStoredState } from '../../store/store';
 
 export default function AuthForm() {
+  const dispatch = useDispatch();
+  
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [authMode, setAuthMode] = useState('signIn');
   const [authFail, setAuthFail] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const dispatch = useDispatch();
-
-  async function attemptAuth() {
-    // Reset error states
-    setAuthFail(false);
-    setErrorMessage('');
-    
-    if (authMode === 'signIn') {
-      try {
-        const response = await requestLoginUser(username, password);
-
-        if ('error' in response) {
-          console.error(response.error);
-          setAuthFail(true);
-          setErrorMessage(response.error || 'Login failed. Please check your credentials.');
-          return;
-        }
-        
-        dispatch(loginSuccess({ token: response.token, user: response.user }));
-        dispatch(changeUserAction({ user: response.user }));        
-        
-        // First fetch the data
-        await fetchUserGames(dispatch);
-        await fetchUserGamerTags(dispatch);        
-      } catch(err) {
-        console.error('Login exception:', err);
-        setAuthFail(true);
-        setErrorMessage('An unexpected error occurred. Please try again later.');
-      }
-    } else if (authMode === 'joinUp') {
-      try {
-        const response = await requestRegisterUser(username, password);
-        if ('error' in response) {
-          console.error('Registration error:', response.error);
-          setAuthFail(true);
-          setErrorMessage(response.error || 'Registration failed. Please try a different username.'); 
-          return; 
-        }
-        
-        dispatch(loginSuccess({ token: response.token, user: response.user }));
-        dispatch(changeUserAction({ user: response.user }));   
-      } catch(err) {
-        console.error('Registration exception:', err);
-        setAuthFail(true);
-        setErrorMessage('An unexpected error occurred. Please try again later.');
-      }
-    }
-  }
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   useEffect(() => {
     setIsUsernameValid(username.length > 0 && !authFail);
     setIsPasswordValid(password.length > 0 && !authFail);
   }, [username, password, authFail]);
 
-  const [isUsernameValid, setIsUsernameValid] = useState(username.length > 0 && !authFail);
-  const [isPasswordValid, setIsPasswordValid] = useState(password.length > 0 && !authFail);
+  // Handle successful authentication
+  function handleAuthSuccess(response: { token: string; user: User }) {
+    dispatch(loginSuccess({ token: response.token, user: response.user }));
+    dispatch(changeUserAction({ user: response.user }));
+  }
+  
+  // Handle authentication failures
+  function handleAuthError(errorMessage: string) {
+    console.error(errorMessage);
+    setAuthFail(true);
+    setErrorMessage(errorMessage);
+  }
+
+  async function attemptAuth() {
+    try {
+      // Clear any existing store data before authentication
+      dispatch(logout());
+      
+      const authRequest = authMode === 'signIn' ? 
+        requestLoginUser(username, password) : 
+        requestRegisterUser(username, password);
+      
+      const response = await authRequest;
+      
+      if ('error' in response) {
+        handleAuthError(response.error.message);
+        return;
+      }
+      
+      handleAuthSuccess(response);
+      
+      if (authMode === 'signIn') {
+        await fetchUserGames(dispatch);
+        await fetchUserGamerTags(dispatch);
+      }
+    } catch(err) {
+      console.error('Auth Request ERROR:', err);
+      handleAuthError('An unexpected error occurred. Please try again later.');
+    }
+  }
 
   function resetAuthFail() {
     setAuthFail(false);
     setErrorMessage('');
   }
 
-  function handleUsernameChange(value: string) {
-    setUsername(value);
-    resetAuthFail();
-  }
-
-  function handlePasswordChange(value: string) {
-    setPassword(value);
-    resetAuthFail();
+  function handleInputChange(setter: (value: string) => void) {
+    return (value: string) => {
+      setter(value);
+      resetAuthFail();
+    };
   }
 
   return (
@@ -96,8 +89,21 @@ export default function AuthForm() {
         <AuthModeButton type={'joinUp'} authMode={authMode} setAuthMode={setAuthMode}/>
       </View>
 
-      <LabeledInput label='Username' placeholder='happyboy' value={username} onChangeText={handleUsernameChange} invalidInput={!isUsernameValid} />
-      <LabeledInput label='Password' placeholder='∗∗∗∗∗∗∗∗' value={password} onChangeText={handlePasswordChange} secureTextEntry invalidInput={!isPasswordValid} />
+      <LabeledInput 
+        label='Username' 
+        placeholder='happyboy' 
+        value={username} 
+        onChangeText={handleInputChange(setUsername)} 
+        invalidInput={!isUsernameValid} 
+      />
+      <LabeledInput 
+        label='Password' 
+        placeholder='∗∗∗∗∗∗∗∗' 
+        value={password} 
+        onChangeText={handleInputChange(setPassword)} 
+        secureTextEntry 
+        invalidInput={!isPasswordValid} 
+      />
 
       <View style={styles.errorSpacer}>
         { authFail && (

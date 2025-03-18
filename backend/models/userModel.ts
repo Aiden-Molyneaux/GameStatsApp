@@ -48,10 +48,13 @@ export async function postUser(username: string, hashedPassword: string): Promis
 
     if (result.rows.length > 0) {
       const user = mapUserToCamelCase(result.rows[0]);
+
       console.log(`-> Query SUCCESS: created user with id ${user.id}.`);
-      return { user } 
+
+      return { user }
     } else {
       console.log(`-> Query FAILURE: could not create user.`)
+
       return { 
         error: {
           code: 'USER_CREATION_FAILED',
@@ -59,14 +62,13 @@ export async function postUser(username: string, hashedPassword: string): Promis
         }
       }
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error("-> Query ERROR:", err);
     
     return {
       error: {
         code: 'DATABASE_ERROR',
-        message: 'Database error during user creation',
-        details: err
+        message: 'Database error during user creation'
       }
     };
   }
@@ -97,9 +99,7 @@ export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQue
   }
 };
 
-type FindUserByUsernameQueryReturn = 
-  { existingUser: User } | 
-  { error: ModelError };
+type FindUserByUsernameQueryReturn = { user: User } | { error: ModelError };
 
 export async function findUserByUsername(username: string): Promise<FindUserByUsernameQueryReturn> {
   console.log("Executing findUserByUsername query...");
@@ -112,10 +112,12 @@ export async function findUserByUsername(username: string): Promise<FindUserByUs
 
     if (result.rows.length > 0) {
       console.log(`-> Query SUCCESS: found user with given username (${username}).`);
-      const existingUser = mapUserToCamelCase(result.rows[0]);  
-      return { existingUser }
+
+      const user = mapUserToCamelCase(result.rows[0]);
+      return { user }
     } else {
       console.log(`-> Query SUCCESS: no user found with given username (${username}).`);
+
       return { 
         error: {
           code: 'USER_NOT_FOUND',

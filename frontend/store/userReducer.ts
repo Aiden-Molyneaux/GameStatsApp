@@ -59,11 +59,15 @@ export const userSlice = createSlice({
 
     changeUserAction: (state, action: PayloadAction<{user: User}>) => {
       state.user = { ...action.payload.user };
+    },
+    
+    reset: (state) => {
+      state.user = initialUserState.user;
     }
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { changeNameAction, changeFavouriteGameAction, changeUserAction } = userSlice.actions;
+export const { changeNameAction, changeFavouriteGameAction, changeUserAction, reset } = userSlice.actions;
 
 export default userSlice.reducer;

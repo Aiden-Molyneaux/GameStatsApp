@@ -66,6 +66,10 @@ export const gameListSlice = createSlice({
         ...game,
         mode: action.payload.mode
       }));
+    },
+
+    reset: (state) => {
+      state.games = initialGameState.games;
     }
   },
 });
@@ -78,7 +82,8 @@ export const {
   sortGamesAction,
   deleteGameAction,
   setIdToPositionAction,
-  setOpenCloseStatusAction
+  setOpenCloseStatusAction,
+  reset
 } = gameListSlice.actions;
 
 export default gameListSlice.reducer;

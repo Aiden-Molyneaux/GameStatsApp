@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ThunkAction } from 'redux-thunk';
-import { Action } from 'redux';
-import { RootState } from './store';
-import { requestLoginUserResponse } from '../api/authRequests';
 import { User } from '../../backend/models/userModel';
+import { purgeStoredState } from './store';
+import { store } from './store';
 
 interface AuthState {
   token: string | null;
@@ -17,8 +15,8 @@ const initialAuthState: AuthState = {
   token: null,
   user: {
     id: -1,
-    username: 'Dev',
-    password: '',
+    username: '',
+    passwordDigest: '',
     email: null,
     favouriteGame: null,
     preferredPlatform: null,
@@ -50,10 +48,15 @@ const authSlice = createSlice({
     },
     logout: (state) => {
       state.token = null;
-      state.user = null
+      state.user = initialAuthState.user;
       state.isAuthenticated = false;
       state.loading = false;
       state.error = null;
+      
+      // Reset all other slices
+      store.dispatch({ type: 'userData/reset' });
+      store.dispatch({ type: 'gameData/reset' });
+      store.dispatch({ type: 'gamerTagData/reset' });
     },
   },
 });

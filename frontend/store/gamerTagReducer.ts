@@ -42,9 +42,19 @@ export const gamerTagListSlice = createSlice({
     deleteGamerTagAction: (state, action: PayloadAction<{ deletedGamerTagId: number }>) => {
       state.gamerTags = state.gamerTags.filter(item => item.id !== action.payload.deletedGamerTagId);
     },
+
+    reset: (state) => {
+      state.gamerTags = initialGamerTagState.gamerTags;
+    }
   }
 });
 
-export const { fetchGamerTagsSuccess, addGamerTagAction, updateGamerTagAction, deleteGamerTagAction } = gamerTagListSlice.actions;
+export const { 
+  fetchGamerTagsSuccess, 
+  addGamerTagAction, 
+  updateGamerTagAction, 
+  deleteGamerTagAction,
+  reset 
+} = gamerTagListSlice.actions;
 
 export default gamerTagListSlice.reducer;
