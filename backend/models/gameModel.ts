@@ -31,7 +31,13 @@ export interface UpdatedGame {
   headerColour: string;
 }
 
-type CreateGameQueryReturn = { success: true; game: Game } | { success: false; error: string };
+export type ModelError = {
+  code: string;
+  message: string;
+  details?: any;
+};
+
+type CreateGameQueryReturn = { game: Game } | { error: ModelError };
 
 function mapGameToCamelCase(game: any): Game {
   return {
@@ -48,8 +54,6 @@ function mapGameToCamelCase(game: any): Game {
 
 export async function postGame(game: PartialGame): Promise<CreateGameQueryReturn> {
   console.log("Executing postGame query...");
-
-  console.log({game})
   
   try {
     const result = await pool.query(
@@ -59,19 +63,33 @@ export async function postGame(game: PartialGame): Promise<CreateGameQueryReturn
 
     if (result.rows.length > 0) {
       const game = mapGameToCamelCase(result.rows[0]);
+
       console.log(`-> Query SUCCESS: created entity with ID (${game.id}).`);
-      return { success: true, game };
+
+      return { game };
     } else {
       console.error(`-> Query FAIL: could not create game.`);
-      return { success: false, error: `Could not create game.` };
+
+      return { 
+        error: {
+          code: 'GAME_CREATION_FAILED',
+          message: 'Could not create game'
+        }
+      }
     }
   } catch(err) {
     console.error(`-> Query ERROR:`, err);
-    return { success: false, error: `Database error from create query: ${err}` };
+
+    return {
+      error: {
+        code: 'DATABASE_ERROR',
+        message: 'Database error during game creation'
+      }
+    };
   }
 };
 
-type UpdateGameQueryReturn = { success: true; game: Game } | { success: false; error: string };
+type UpdateGameQueryReturn = { game: Game } | { error: ModelError };
 
 export async function patchGame(updatedGame: UpdatedGame): Promise<UpdateGameQueryReturn> {
   console.log("Executing patchGame query...");
@@ -85,19 +103,33 @@ export async function patchGame(updatedGame: UpdatedGame): Promise<UpdateGameQue
 
     if (result.rows.length > 0) {
       const game = mapGameToCamelCase(result.rows[0]);
+
       console.log(`-> Query SUCCESS: updated entity with ID (${game.id}).`);
-      return { success: true, game };
+
+      return { game };
     } else {
       console.error(`-> Query FAIL: could not update game.`);
-      return { success: false, error: `Could not update game.` };
+
+      return {
+        error: {
+          code: 'GAME_UPDATE_FAILED',
+          message: 'Could not update game'
+        }
+      }
     }
   } catch(err) {
     console.error(`-> Query ERROR:`, err);
-    return { success: false, error: `Database error from update query: ${err}` };
+
+    return {
+      error: {
+        code: 'DATABASE_ERROR',
+        message: 'Database error during game update'
+      }
+    };
   }
 };
 
-type DeleteGameQueryReturn = { success: true; deletedGameId: number } | { success: false; error: string };
+type DeleteGameQueryReturn = { deletedGameId: number } | { error: ModelError };
 
 export async function deleteGame(gameId: number): Promise<DeleteGameQueryReturn> {
   console.log(`Executing deleteGame query on entity with ID (${gameId})...`);
@@ -110,19 +142,33 @@ export async function deleteGame(gameId: number): Promise<DeleteGameQueryReturn>
 
     if (result.rows.length > 0) {
       const deletedGameId = result.rows[0].id;
+
       console.log(`-> Query SUCCESS: deleted entity with ID (${deletedGameId}).`);
-      return { success: true, deletedGameId };
+
+      return { deletedGameId };
     } else {
       console.log(`-> Query FAIL: no game found with the given ID (${gameId}).`);
-      return { success: false, error: `No game found with the given ID (${gameId}).` };
+
+      return {
+        error: {
+          code: 'GAME_DELETE_FAILED',
+          message: 'Could not delete game'
+        }
+      }
     }
   } catch (err) {
     console.error("-> Query ERROR:", err);
-    return { success: false, error: `Database error from delete query with game with ID (${gameId}): ${err}` };
+
+    return {
+      error: {
+        code: 'DATABASE_ERROR',
+        message: 'Database error during game deletion'
+      }
+    };
   }
 };
 
-type GetGamesByUserQueryReturn = { success: true; games: Game[] } | { success: false; error: string };
+type GetGamesByUserQueryReturn = { games: Game[] } | { error: ModelError };
 
 export async function getGamesByUser(userId: number): Promise<GetGamesByUserQueryReturn> {
   console.log("Executing getUsersGames query...");
@@ -135,14 +181,23 @@ export async function getGamesByUser(userId: number): Promise<GetGamesByUserQuer
 
     if (result.rows.length > 0) {
       const games = result.rows.map(mapGameToCamelCase);
+
       console.log(`-> Query SUCCESS: fetched games for user with given ID ${userId}`);
-      return { success: true, games };
+
+      return { games };
     } else {
       console.log(`-> Query SUCCESS: no games found for the user with given ID (${userId}).`);
-      return { success: true, games: [] };
+
+      return { games: [] };
     }
   } catch (err) {
     console.error("-> Query ERROR:", err);
-    return { success: false, error: `Database error from get games by user query with user ID (${userId}): ${err}` };
+
+    return {
+      error: {
+        code: 'DATABASE_ERROR',
+        message: 'Database error during game retrieval'
+      }
+    };
   }
 };

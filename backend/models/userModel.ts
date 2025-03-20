@@ -49,7 +49,7 @@ export async function postUser(username: string, hashedPassword: string): Promis
     if (result.rows.length > 0) {
       const user = mapUserToCamelCase(result.rows[0]);
 
-      console.log(`-> Query SUCCESS: created user with id ${user.id}.`);
+      console.log(`-> Query SUCCESS: created user with ID (${user.id}).`);
 
       return { user }
     } else {
@@ -74,7 +74,7 @@ export async function postUser(username: string, hashedPassword: string): Promis
   }
 };
 
-type UpdateUserQueryReturn = { success: true; user: User } | { success: false; error: string };
+type UpdateUserQueryReturn = { user: User } | { error: ModelError };
 
 export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQueryReturn> {
   console.log("Executing patchUser query...");
@@ -87,15 +87,29 @@ export async function patchUser(updatedUser: UpdatedUser): Promise<UpdateUserQue
 
     if (result.rows.length > 0) {
       const user = mapUserToCamelCase(result.rows[0]);
+
       console.log(`-> Query SUCCESS: updated entity with ID (${user.id}).`);
-      return { success: true, user };
+
+      return { user };
     } else {
       console.error(`-> Query FAIL: could not update iser.`);
-      return { success: false, error: `Could not update user.` };
+
+      return {
+        error: {
+          code: 'USER_UPDATE_FAILED',
+          message: 'Could not update user'
+        }
+      }
     }
   } catch(err) {
     console.error(`-> Query ERROR:`, err);
-    return { success: false, error: `Database error from update user query: ${err}` };
+
+    return {
+      error: {
+        code: 'DATABASE_ERROR',
+        message: 'Database error during user update'
+      }
+    };
   }
 };
 

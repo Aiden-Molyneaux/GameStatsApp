@@ -18,6 +18,7 @@ export default function TitleCard({ name, headerColour, titleColour }: TitleCard
 
 const styles = StyleSheet.create({
   gameHeader: {
+    flex: 1,
     alignItems: 'center',
     padding: Spacing.unit1o5,
     borderColor: Colors.black,

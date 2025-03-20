@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import { Colors, Spacing } from '@/constants/Constants';
 import ColorPicker, { Panel1, HueSlider } from 'reanimated-color-picker';
 import type { returnedResults } from 'reanimated-color-picker';
@@ -27,7 +27,7 @@ export function ColourPicker({ colour, setColour, isColorValid, setIsColorValid 
   }
 
   return (
-    <View style={styles.pickerContainer}>
+    <>
       <LabeledInput
         label='Colour Hex'
         placeholder='#111111'
@@ -40,7 +40,7 @@ export function ColourPicker({ colour, setColour, isColorValid, setIsColorValid 
         <Panel1 style={styles.panelStyle} />
         <HueSlider style={styles.sliderStyle} />
       </ColorPicker>
-    </View>
+    </>
   );
 }
 
@@ -49,6 +49,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: Spacing.unit1o5,
+    height: 200,
+    width: '100%',
   },
   picker: {
     width: '100%',

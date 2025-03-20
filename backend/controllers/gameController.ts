@@ -1,27 +1,44 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/authMiddleware'; 
-import jwt from 'jsonwebtoken';
-import { postGame, patchGame, deleteGame, getGamesByUser } from '../models/gameModel';
+import { postGame, patchGame, deleteGame, getGamesByUser, ModelError } from '../models/gameModel';
+import { serverError, databaseError, unexpectedError } from './errors';
 
 export async function handleFetchGamesByUser(req: AuthRequest, res: Response) {
   console.log('Handling request to fetch games by user...');
 
   if (!req.user || !req.user.id) {
-    res.status(401).json({ error: 'User authorization error' });
+    res.status(401).json({ 
+      error: {
+        code: 'AUTH_ERROR',
+        message: 'User authorization error'
+      }
+    });
     return;
   }
+
   const userId = req.user.id;
 
   try {
     const response = await getGamesByUser(userId);
 
-    if (response.success) {
-      const games = response.games;
-      return res.status(200).json({ games });
+    if ('error' in response) {
+      const error = response.error;
+
+      if (error.code === 'DATABASE_ERROR') {
+        res.status(500).json({ error: databaseError });
+        return;
+      }
+
+      res.status(500).json({ error: serverError });
+      return;
     }
-      
+
+    const games = response.games;
+    return res.status(200).json({ games });
   } catch (err) {
-    return res.status(500).json({ error: `Backend server error while fetching games by user: ${err}` });
+    console.error('Unexpected error during fetching games by user:', err);
+    
+    return res.status(500).json({ error: unexpectedError });
   }
 };
 

@@ -7,6 +7,7 @@ import Index from './Index';
 import TitleCard from './TitleCard';
 import StaticDetails from './StaticDetails';
 import ModeButtons from './ModeButtons';
+import TitleInput from './TitleInput';
 
 interface GameEntryProps {
   item: GameListItem,
@@ -14,50 +15,106 @@ interface GameEntryProps {
 }
 
 export default function GameEntry({ item, index }: GameEntryProps) {
-  const [ gameData, setGameData] = useState({
-    index: index,
-    ...item
+  // Single source of truth for all form data
+  const [formData, setFormData] = useState({
+    // index: index
+    ...item,
+    tempTitle: item.name,
+    tempTitleColour: item.titleColour,
+    tempHeaderColour: item.headerColour
   });
+
+  // Reset form data when item changes
+  useEffect(() => {
+    setFormData({
+      ...item,
+      tempTitle: item.name,
+      tempTitleColour: item.titleColour,
+      tempHeaderColour: item.headerColour
+    });
+  }, [item]);
 
   useEffect(() => {
     setViewMode(item.mode || 'CLOSED');
   }, [item.mode]);
 
-  const [ viewMode, setViewMode ] = useState(item.mode || 'CLOSED');
+  const [viewMode, setViewMode] = useState(item.mode || 'CLOSED');
+  
+  // Handle form field changes
+  const handleFormChange = (field: string, value: any) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    });
+  };
+  
+  // Handle color changes from color picker
+  const handleColorChange = (headerColour: string, titleColour: string) => {
+    setFormData({
+      ...formData,
+      tempHeaderColour: headerColour,
+      tempTitleColour: titleColour
+    });
+  };
+  
+  // Reset form data when closing form
+  const handleCloseForm = () => {
+    setFormData({
+      ...formData,
+      tempTitle: formData.name,
+      tempTitleColour: formData.titleColour,
+      tempHeaderColour: formData.headerColour
+    });
+    setViewMode('CLOSED');
+  };
+
   return (
-    <>
-      { viewMode === 'EDIT' ? (
-        <GameEntryForm
-          index={index}
-          gameData={gameData}
-          setGameData={setGameData}
-          closeEditForm={() => setViewMode('CLOSED')}
-        />
-      ) : (
-        <View style={styles.gameEntryContainer}>
-          <Index index={index}/>
-          <View style={styles.gameEntry}>
-            <TitleCard 
-              name={gameData.name}
-              headerColour={gameData.headerColour}
-              titleColour={gameData.titleColour}
-            />
-            { viewMode === 'OPEN' && (
-              <StaticDetails 
-                gameData={gameData}
-                viewMode={viewMode}
-              />
-            )}
-          </View>
-          <ModeButtons 
-            viewMode={viewMode}
-            setViewMode={setViewMode}
+    <View style={styles.gameEntryContainer}>
+      <Index index={index}/>
+      <View style={styles.gameEntry}>
+        { viewMode !== 'EDIT' 
+          ? <TitleCard 
+            name={formData.name}
+            headerColour={formData.headerColour}
+            titleColour={formData.titleColour}
           />
-        </View>
-      )}
-    </>
+          : <View style={styles.gameEntryHeader}>
+            <TitleInput
+              name={formData.tempTitle || formData.name}
+              tempHeaderColour={formData.tempHeaderColour}
+              tempTitleColour={formData.tempTitleColour}
+              handleTextInputChange={(value) => handleFormChange('tempTitle', value)}
+            />
+            <View style={styles.spacer}/>
+          </View>
+        }
+
+        { viewMode !== 'EDIT' &&
+          <StaticDetails 
+            gameData={formData}
+            viewMode={viewMode}
+          />
+        }
+        
+        <GameEntryForm
+          formData={formData}
+          onFormChange={handleFormChange}
+          onColorChange={handleColorChange}
+          onFormClose={handleCloseForm}
+          viewMode={viewMode}
+        />
+      </View>
+      
+      { viewMode !== 'EDIT'
+        ? <ModeButtons 
+          viewMode={viewMode}
+          setViewMode={setViewMode}
+        />
+        : null
+      }
+    </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   gameEntryContainer: {
@@ -70,5 +127,12 @@ const styles = StyleSheet.create({
   gameEntry: {
     flex: 1,
     marginVertical: Spacing.unit1o5,
+    zIndex: 1,
   },
+  gameEntryHeader: {
+    flexDirection: 'row',
+  },
+  spacer: {
+    width: Spacing.unit2,
+  }
 });

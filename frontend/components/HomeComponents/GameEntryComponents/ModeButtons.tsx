@@ -13,13 +13,11 @@ export default function ModeButtons({ viewMode, setViewMode }: ModeButtonsProps)
       <ToggleModeBtn
         type='editGame'
         iconName='book'
-        isDisabled={false}
         pressFunction={() => setViewMode(viewMode === 'OPEN' ? 'CLOSED' : 'OPEN')}
       />
       <ToggleModeBtn
         type='editGame'
         iconName='edit'
-        isDisabled={false}
         pressFunction={() => setViewMode('EDIT')}
       />
     </View>

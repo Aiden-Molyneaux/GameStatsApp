@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {  addGameAction } from '@/store/gameReducer';
-import { Colors, Spacing } from '@/constants/Constants';
+import { Colors } from '@/constants/Constants';
 import { RootState } from '../../store/store';
 import { requestCreateGame } from '@/api/gameRequests';
 import { PartialGame } from '../../../backend/models/gameModel';
@@ -28,7 +28,6 @@ export default function AddGameButton({ gameListRef }: AddGameButtonProps) {
       gameListRef.current?.scrollToEnd({ animated: true }); // Scroll to the end when a new game is added
     }, 500);
   };
-
 
   async function handlePlusPress() {
     const newGame: PartialGame = { 

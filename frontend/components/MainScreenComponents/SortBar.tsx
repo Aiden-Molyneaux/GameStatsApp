@@ -1,32 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import SortButton from './SortButton';
 import { Spacing } from '@/constants/Constants';
 
 export default function SortBar() {
-  const [sortMode, setSortMode] = useState('entered');
-  
   return (
     <View style={styles.sortBtnContainer}>
       <SortButton
-        filterMode='hours'
+        sortType='hours'
         iconName='hourglass'
-        currentSortMode={sortMode}
-        setSortMode={setSortMode}
       />
 
       <SortButton
-        filterMode='datePurchased'
+        sortType='datePurchased'
         iconName='calendar'
-        currentSortMode={sortMode}
-        setSortMode={setSortMode}
       />
   
       <SortButton
-        filterMode='entered'
+        sortType='entered'
         iconName='hashtag'
-        currentSortMode={sortMode}
-        setSortMode={setSortMode}
       />
     </View>
   );

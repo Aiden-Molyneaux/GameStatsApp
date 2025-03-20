@@ -11,21 +11,46 @@ interface StaticDetailsProps {
 }
 
 export default function StaticDetails({ gameData, viewMode }: StaticDetailsProps) {
-  const animatedHeight = useRef(new Animated.Value(viewMode === 'OPEN' ? Spacing.unit : 0)).current;
+  const hasBeenPlayed = gameData.hours > 0 && gameData.percentComplete;
+  
+  // Calculate final expanded height based on content
+  const expandedHeight = hasBeenPlayed ? Spacing.unit2 * 1.2 : Spacing.unit2 * 0.85;
+  
+  // Create animation values for height and opacity
+  const animatedHeight = useRef(new Animated.Value(viewMode === 'OPEN' ? expandedHeight : 0)).current;
+  const animatedOpacity = useRef(new Animated.Value(viewMode === 'OPEN' ? 1 : 0)).current;
 
   // UseEffect to animate the height when viewMode changes
   useEffect(() => {
-    Animated.timing(animatedHeight, {
-      toValue: viewMode === 'OPEN' ? hasBeenPlayed ? Spacing.unit2 * 1.2 : Spacing.unit2 * 0.85 : 0, // Adjust height for open/closed
-      duration: 500, // Animation duration
-      useNativeDriver: false, // Height requires useNativeDriver to be false
-    }).start();
-  }, [viewMode]);
-
-  const hasBeenPlayed = gameData.hours > 0 && gameData.percentComplete;
+    const isOpen = viewMode === 'OPEN';
+    
+    // Create two animations: one for height and one for opacity
+    const heightAnimation = Animated.timing(animatedHeight, {
+      toValue: isOpen ? expandedHeight : 0,
+      duration: 300,
+      useNativeDriver: false,
+    });
+    
+    const opacityAnimation = Animated.timing(animatedOpacity, {
+      toValue: isOpen ? 1 : 0,
+      duration: 250,
+      useNativeDriver: false,
+    });
+    
+    // Run both animations together
+    Animated.parallel([heightAnimation, opacityAnimation]).start();
+  }, [viewMode, expandedHeight]);
 
   return (
-    <Animated.View style={{ height: animatedHeight, overflow: 'hidden' }}>  
+    <Animated.View 
+      style={{ 
+        height: animatedHeight, 
+        opacity: animatedOpacity,
+        overflow: 'hidden',
+        position: 'relative',
+        marginTop: 0
+      }}
+    >  
       <View style={styles.expandedGame}>
         <View style={styles.gameStats}>
           <StaticStatistic 
@@ -45,15 +70,18 @@ export default function StaticDetails({ gameData, viewMode }: StaticDetailsProps
         </View>
       </View>
     </Animated.View>
-  );};
+  );
+}
 
 const styles = StyleSheet.create({
   expandedGame: {
     position: 'absolute',
-    top: Spacing.unit1o10,
+    top: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     width: '100%',
-    height: '110%',
+    height: '100%',
     backgroundColor: Colors.screenGray
   },
   gameStats: {

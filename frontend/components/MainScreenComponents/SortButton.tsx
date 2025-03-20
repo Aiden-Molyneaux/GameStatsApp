@@ -1,23 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sortGamesAction } from '@/store/gameReducer';
 import CustomButton from './CustomButton';
 import { RootState } from '@/store/store';
 
 interface SortButtonProps {
-  filterMode: string,
+  sortType: string,
   iconName: string,
-  currentSortMode: string,
-  setSortMode: (data: string) => void,
 }
 
-export default function SortButton({ filterMode, iconName, currentSortMode, setSortMode }: SortButtonProps) {
+export default function SortButton({ sortType, iconName }: SortButtonProps) {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state: RootState) => state.authData.isAuthenticated);
+  const sortMode = useSelector((state: RootState) => state.gameData.sortMode);
 
   function handleSortPress() {
-    dispatch(sortGamesAction({sort: filterMode})); 
-    setSortMode(filterMode);
+    dispatch(sortGamesAction({sortMode: sortType})); 
   }
 
   return (
@@ -25,7 +23,7 @@ export default function SortButton({ filterMode, iconName, currentSortMode, setS
       size={'small'}
       iconName={iconName}
       isDisabled={!isAuthenticated}
-      isPressed={isAuthenticated && filterMode === currentSortMode}
+      isPressed={isAuthenticated && sortMode === sortType}
       pressFunction={handleSortPress}
     />
   );

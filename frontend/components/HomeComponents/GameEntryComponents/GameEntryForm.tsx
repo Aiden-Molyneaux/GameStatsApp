@@ -1,106 +1,152 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Colors, Spacing } from '@/constants/Constants';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, StyleSheet, Animated } from 'react-native';
+import { Spacing } from '@/constants/Constants';
 import { GameListItem } from '@/store/gameReducer';
-import { Game } from '@/api/gameRequests';
-import Index from './Index';
-import TitleInput from './TitleInput';
 import StatisticInputs from './StatisticInputs';
 import ColourInputs from './ColourInputs';
 import FormButtons from './FormButtons';
+import ErrorDisplay from '@/components/ErrorDisplay';
 
 interface GameEntryFormProps {
-  index: number,
-  gameData: GameListItem,
-  setGameData: (data: Game) => void,
-  closeEditForm: () => void
+  formData: GameListItem & { 
+    tempTitle?: string,
+    tempTitleColour: string, 
+    tempHeaderColour: string 
+  },
+  onFormChange: (field: string, value: any) => void,
+  onColorChange: (headerColour: string, titleColour: string) => void,
+  onFormClose: () => void,
+  viewMode: string
 }
 
-export default function GameEntryForm({ index, gameData, setGameData, closeEditForm }: GameEntryFormProps) {
-  const [formData, setFormData] = useState({ 
-    ...gameData, 
-    tempTitleColour: gameData.titleColour, 
-    tempHeaderColour: gameData.headerColour 
-  });
+export default function GameEntryForm({ 
+  formData, 
+  onFormChange, 
+  onColorChange, 
+  onFormClose,
+  viewMode 
+}: GameEntryFormProps) {
+  const [isColorValid, setIsColorValid] = useState(true);
+  const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
+  const [showHeaderColourPicker, setShowHeaderColourPicker] = useState(false);
+  
+  // Reset pickers when form closes
+  useEffect(() => {
+    if (viewMode !== 'EDIT') {
+      setShowTitleColourPicker(false);
+      setShowHeaderColourPicker(false);
+    }
+  }, [viewMode]);
+  
+  // Calculate height for animation
+  const expandedHeight = showTitleColourPicker || showHeaderColourPicker ? Spacing.unit2 * 5.5 : Spacing.unit2 * 2.8;
+  
+  // Animation values
+  const animatedHeight = useRef(new Animated.Value(viewMode === 'EDIT' ? expandedHeight : 0)).current;
+  const animatedOpacity = useRef(new Animated.Value(viewMode === 'EDIT' ? 1 : 0)).current;
+
+  // Animation effect
+  useEffect(() => {
+    const isOpen = viewMode === 'EDIT';
+    
+    const heightAnimation = Animated.timing(animatedHeight, {
+      toValue: isOpen ? expandedHeight : 0,
+      duration: 500,
+      useNativeDriver: false,
+    });
+    
+    const opacityAnimation = Animated.timing(animatedOpacity, {
+      toValue: isOpen ? 1 : 0,
+      duration: 600,
+      useNativeDriver: false,
+    });
+        
+    Animated.parallel([heightAnimation, opacityAnimation]).start();
+  }, [viewMode, expandedHeight]);
 
   function handleTextInputChange(field: string, value: string) {
-    setFormData({
-      ...formData, 
-      [field]: field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value 
-    });
+    onFormChange(field, field === 'hours' ? parseInt(value.replace(/[^0-9]/g, ''), 10) : value);
   }
 
   function setColourData(headerColour: string, titleColour: string) {
-    setFormData({
-      ...formData,
-      tempTitleColour: titleColour,
-      tempHeaderColour: headerColour
-    });
+    onColorChange(headerColour, titleColour);
   }
 
-  const [isColorValid, setIsColorValid] = useState(true);
+  const [formError, setFormError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  function handleFormError(errorMessage: string) {
+    console.error(errorMessage);
+    setFormError(true);
+    setErrorMessage(errorMessage);
+  }
+
+  function resetFormError() {
+    setFormError(false);
+    setErrorMessage('');
+  }
 
   return (
-    <View style={styles.gameEntryContainer}>
-      <Index index={index}/>
-      <View style={styles.gameEntry}>
-        <TitleInput
-          name={formData.name}
-          tempHeaderColour={formData.tempHeaderColour}
-          tempTitleColour={formData.tempTitleColour}
-          handleTextInputChange={handleTextInputChange}
-        />
-        
-        <View style={styles.expandedGame}>
-          <View style={styles.gameStats}>
-            <ColourInputs
-              tempHeaderColour={formData.tempHeaderColour}
-              tempTitleColour={formData.tempTitleColour}
-              setColourData={setColourData}
-              isColorValid={isColorValid}
-              setIsColorValid={setIsColorValid}
-            />
+    <Animated.View 
+      style={{
+        height: animatedHeight, 
+        opacity: animatedOpacity,
+        overflow: 'hidden',
+      }}
+    >  
+      <View style={styles.gameEntryContainer}>
+        <View style={styles.gameEntry}>
+          <ColourInputs
+            tempHeaderColour={formData.tempHeaderColour}
+            tempTitleColour={formData.tempTitleColour}
+            setColourData={setColourData}
+            isColorValid={isColorValid}
+            setIsColorValid={setIsColorValid}
+            showTitleColourPicker={showTitleColourPicker}
+            showHeaderColourPicker={showHeaderColourPicker}
+            setShowTitleColourPicker={setShowTitleColourPicker}
+            setShowHeaderColourPicker={setShowHeaderColourPicker}
+          />
 
-            <StatisticInputs
-              formData={formData}
-              handleTextInputChange={handleTextInputChange}
-            />
+          <StatisticInputs
+            formData={formData}
+            handleTextInputChange={handleTextInputChange}
+          />
+
+          <View style={styles.errorContainer}>
+            {formError && <ErrorDisplay errorMessage={errorMessage} />}
           </View>
         </View>
-      </View>
+        { viewMode === 'EDIT' &&
+          <FormButtons
+            formData={formData}
+            onFormClose={onFormClose}
+            isColorValid={isColorValid}
+            handleFormError={handleFormError}
+            resetFormError={resetFormError}
+          />
+        }
 
-      <FormButtons
-        formData={formData}
-        setGameData={setGameData}
-        closeEditForm={closeEditForm}
-        isColorValid={isColorValid}
-      />
-    </View>
+      </View>
+    </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   gameEntryContainer: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: Colors.gray,
-    borderTopWidth: Spacing.border
   },
   gameEntry: {
     flex: 1,
-    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: Spacing.unit1o5
   },
-  expandedGame: {
-    flexDirection: 'row',
+  errorContainer: {
+    height: Spacing.unit,
     width: '100%',
-    backgroundColor: Colors.screenGray
-  },
-  gameStats: {
-    flex: 1,
-    gap: Spacing.unit1o10,
-    paddingTop: Spacing.unit1o5,
-    paddingHorizontal: Spacing.unit1o5
-  },
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });

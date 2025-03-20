@@ -2,19 +2,11 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { postUser, findUserByUsername } from '../models/userModel';
-
-// interface AuthRequest extends Request {
-//   user?: { id: number };
-// }
+import { serverError, databaseError, authFailedError, unexpectedError } from './errors';
 
 export async function handleRegistration(req: Request, res: Response) {
   console.log('Handling request to register new user...');
   const { username, password } = req.body;
-
-  // Validate password type
-  if (typeof password !== 'string') {
-    return res.status(400).json({ error: 'Password must be a string.' });
-  }
 
   try {
     // Check if user already exists
@@ -36,27 +28,12 @@ export async function handleRegistration(req: Request, res: Response) {
     const postResponse = await postUser(username, hashedPassword);
 
     if ('error' in postResponse) {
-      if (postResponse.error.code === 'USER_CREATION_FAILED') {
-        res.status(400).json({ error: postResponse.error });
-        return;
-      }
-
       if (postResponse.error.code === 'DATABASE_ERROR') {
-        res.status(500).json({ 
-          error: {
-            code: 'SERVER_ERROR',
-            message: 'User creation service unavailable.' 
-          }
-        });
+        res.status(500).json({ error: databaseError });
         return;
       }
 
-      res.status(500).json({ 
-        error: {
-          code: 'SERVER_ERROR',
-          message: 'Something on the server went wrong.'
-        }
-      });
+      res.status(500).json({ error: serverError });
       return;
     }
 
@@ -68,12 +45,8 @@ export async function handleRegistration(req: Request, res: Response) {
   } catch (err) {
     console.error('Unexpected error during registration:', err);
 
-    return res.status(500).json({ 
-      error: {
-        code: 'SERVER_ERROR',
-        message: 'Something on the server went wrong.'
-      }
-    });
+    res.status(500).json({ error: unexpectedError });
+    return
   }
 };
 
@@ -84,36 +57,18 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
   try {
     const response = await findUserByUsername(username);
 
-    console.log({response});
-
     if ('error' in response) {
       if (response.error.code === 'USER_NOT_FOUND') {
-        res.status(404).json({
-          error: {
-            code: 'AUTH_FAILED',
-            message: 'Invalid credentials.'
-          }
-        });
+        res.status(404).json({ error: authFailedError });
         return
       }
       
       if (response.error.code === 'DATABASE_ERROR') {
-        res.status(500).json({ 
-          error: {
-            code: 'SERVER_ERROR',
-            message: 'Authentication service unavailable.' 
-          }
-        });
+        res.status(500).json({ error: databaseError });
         return;
       }
       
-      // Handle any other errors
-      res.status(500).json({ 
-        error: {
-          code: 'SERVER_ERROR',
-          message: 'Something on the server went wrong.'
-        }
-      });
+      res.status(500).json({ error: serverError });
       return;
     }
 
@@ -121,12 +76,7 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
 
     const isMatch = await bcrypt.compare(password, user.passwordDigest);
     if (!isMatch) {
-      res.status(404).json({ 
-        error: {
-          code: 'AUTH_FAILED',
-          message: 'Invalid credentials.'
-        }
-      });
+      res.status(404).json({ error: authFailedError });
       return;
     }
   
@@ -136,13 +86,14 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
   } catch (err) {
     console.error('Unexpected error during login:', err);
 
-    res.status(500).json({ 
-      error: { 
-        code: 'SERVER_ERROR',
-        message: 'Something on the server went wrong.'
-      }
-    });
+    res.status(500).json({ error: unexpectedError });
+    return;
   }
+};
+
+const unauthorizedError = {
+  code: 'UNAUTHORIZED',
+  message: 'Your session has expired. Please log in again.'
 };
 
 export async function handleValidation(req: Request, res: Response): Promise<void> {
@@ -150,12 +101,7 @@ export async function handleValidation(req: Request, res: Response): Promise<voi
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    res.status(401).json({ 
-      error: {
-        code: 'UNAUTHORIZED',
-        message: 'No token provided'
-      }
-    });
+    res.status(401).json({ error: unauthorizedError });
     return;
   }
 
@@ -163,11 +109,7 @@ export async function handleValidation(req: Request, res: Response): Promise<voi
     jwt.verify(token, process.env.JWT_SECRET as string);
     res.status(200).send();
   } catch (err) {
-    res.status(401).json({ error: {
-        code: 'UNAUTHORIZED',
-        message: 'Invalid token'
-      }
-    });
+    res.status(401).json({ error: unauthorizedError });
     return;
   }
 }

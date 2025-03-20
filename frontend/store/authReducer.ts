@@ -1,7 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { User } from '../../backend/models/userModel';
-import { purgeStoredState } from './store';
-import { store } from './store';
 
 interface AuthState {
   token: string | null;

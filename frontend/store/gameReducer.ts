@@ -4,10 +4,16 @@ import type { Game, PartialGame } from '../../backend/models/gameModel';
 
 export interface GameListItem extends Game {
   mode?: string;
+  tempTitle?: string;
+  tempTitleColour?: string;
+  tempHeaderColour?: string;
 }
 
 export interface PartialGameListItem extends PartialGame {
   mode: string;
+  tempTitle?: string;
+  tempTitleColour?: string;
+  tempHeaderColour?: string;
 }
 
 export interface GameList {
@@ -37,25 +43,53 @@ export const gameListSlice = createSlice({
     updateGameAction: (state, action: PayloadAction<{ game: GameListItem }>) => {
       const { game } = action.payload;
       state.games = state.games.map(obj => obj.id === game.id ? game : obj);
-      sortGamesAction({ sort: state.sortMode });
+      
+      // Handle placing the updated game in the correct position
+      switch(state.sortMode) {
+      case 'hours':
+        state.games.sort((a, b) => parseInt(b.hours) - parseInt(a.hours));
+        break;
+      case 'datePurchased':
+        state.games.sort((a, b) => {
+          // Handle null values - push them to the end
+          if (a.datePurchased === null && b.datePurchased === null) return 0;
+          if (a.datePurchased === null) return 1;
+          if (b.datePurchased === null) return -1;
+          
+          // Sort by date when both values exist
+          return new Date(a.datePurchased).getTime() - new Date(b.datePurchased).getTime();
+        });
+        break;
+      case 'entered':
+        state.games.sort((a, b) => a.id - b.id);
+        break;
+      }
     },
 
-    sortGamesAction: (state, action: PayloadAction<{sort: string}>) => {
-      switch(action.payload.sort) {
-        case 'hours':
-          state.sortMode = 'hours';
-          state.games.sort((a, b) => parseInt(b.hours) - parseInt(a.hours));
-          break;
+    sortGamesAction: (state, action: PayloadAction<{sortMode: string}>) => {
+      switch(action.payload.sortMode) {
+      case 'hours':
+        state.sortMode = 'hours';
+        state.games.sort((a, b) => parseInt(b.hours) - parseInt(a.hours));
+        break;
 
-        case 'datePurchased':
-          state.sortMode = 'datePurchased';
-          state.games.sort((a, b) => new Date(a.datePurchased) - new Date(b.datePurchased));
-          break;
+      case 'datePurchased':
+        state.sortMode = 'datePurchased';
+        state.games.sort((a, b) => {
+          // Handle null values - push them to the end
+          if (a.datePurchased === null && b.datePurchased === null) return 0;
+          if (a.datePurchased === null) return 1;
+          if (b.datePurchased === null) return -1;
+          
+          // Sort by date when both values exist
+          return new Date(a.datePurchased).getTime() - new Date(b.datePurchased).getTime();
+        });
+        break;
 
-        case 'entered':
-          state.sortMode = 'entered';
-          state.games.sort((a, b) => a.id - b.id);
-          break;
+      case 'entered':
+        state.sortMode = 'entered';
+        state.games.sort((a, b) => a.id - b.id);
+        break;
       }
     },
 
@@ -75,7 +109,8 @@ export const gameListSlice = createSlice({
     },
 
     reset: (state) => {
-      state = initialGameState;
+      state.games = initialGameState.games;
+      state.sortMode = initialGameState.sortMode;
     }
   },
 });
