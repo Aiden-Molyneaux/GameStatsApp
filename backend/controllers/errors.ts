@@ -13,10 +13,17 @@ export const authFailedError = {
   message: 'Invalid credentials.'
 };
 
+export const unauthorizedError = {
+  code: 'UNAUTHORIZED',
+  message: 'Your session has expired. Please log in again.'
+};
+
 export const unexpectedError = {
   code: 'UNEXPECTED_ERROR',
   message: 'An unexpected error occurred. Please try again later.'
 };
+
+
 
 
 

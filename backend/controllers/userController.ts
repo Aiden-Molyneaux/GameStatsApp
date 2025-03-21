@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { AuthRequest } from '../middleware/authMiddleware'; 
-import jwt from 'jsonwebtoken';
 import { patchUser } from '../models/userModel';
 
 export async function handleUpdateUser(req: AuthRequest, res: Response) {
@@ -15,12 +14,20 @@ export async function handleUpdateUser(req: AuthRequest, res: Response) {
   try {
     const response = await patchUser({ id, username, favouriteGame });
 
-    if (response.success) {
-      return res.status(200).json({ user: response.user });
-    } {
-      return res.status(400).json({ error: `Could not update game.`});
+    if ('error' in response) {
+      res.status(400).json({ error: response.error });
+      return;
     }
+
+    res.status(200).json({ user: response.user });
+    return;
   } catch(err) {
-    return res.status(500).json({ error: `Backend server error while updating game: ${err}` });
+    res.status(500).json({ 
+      error: {
+        code: 'SERVER_ERROR',
+        message: `Backend server error while updating game: ${err}`
+      }
+    });
+    return;
   }
 };

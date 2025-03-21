@@ -55,13 +55,21 @@ export async function handleCreateGame(req: AuthRequest, res: Response) {
   try {
     const response = await postGame({ userId, name, hours, percentComplete, datePurchased, titleColour, headerColour });
 
-    if (response.success) {
-      return res.status(200).json({ game: response.game });
-    } {
-      return res.status(400).json({ error: `Could not create game.`});
+    if ('error' in response) {
+      if (response.error.code === 'DATABASE_ERROR') {
+        res.status(500).json({ error: databaseError });
+        return;
+      }
+      return res.status(400).json({ error: serverError});
     }
+
+    res.status(200).json({ game: response.game });
+    return;
   } catch(err) {
-    return res.status(500).json({ error: `Backend server error while creating game: ${err}` });
+    console.error('Unexpected error during creating game:', err);
+
+    res.status(500).json({ error: unexpectedError });
+    return;
   }
 };
 
@@ -77,13 +85,21 @@ export async function handleUpdateGame(req: AuthRequest, res: Response) {
   try {
     const response = await patchGame({ id, name, hours, percentComplete, datePurchased, titleColour, headerColour});
 
-    if (response.success) {
-      return res.status(200).json({ game: response.game });
-    } {
-      return res.status(400).json({ error: `Could not update game.`});
+    if ('error' in response) {
+      if (response.error.code === 'DATABASE_ERROR') {
+        res.status(500).json({ error: databaseError });
+        return;
+      }
+      return res.status(400).json({ error: serverError});
     }
+
+    res.status(200).json({ game: response.game });
+    return;
   } catch(err) {
-    return res.status(500).json({ error: `Backend server error while updating game: ${err}` });
+    console.error('Unexpected error during updating game:', err);
+
+    res.status(500).json({ error: unexpectedError });
+    return;
   }
 };
 
@@ -95,12 +111,18 @@ export async function handleDeleteGame(req: Request, res: Response) {
   try {
     const response = await deleteGame(gameId);
 
-    if (response.success) {
-      return res.status(200).json({ deletedGameId: response.deletedGameId });
-    } {
-      return res.status(404).json({ error: `Game Entity with ID (${gameId}) not found.`});
+    if ('error' in response) {
+      if (response.error.code === 'DATABASE_ERROR') {
+        res.status(500).json({ error: databaseError });
+        return;
+      }
+      return res.status(404).json({ error: serverError});
     }
+
+    res.status(200).json({ deletedGameId: response.deletedGameId });
+    return;
   } catch (err) {
-    return res.status(500).json({ error: `Backend server error while deleting game: ${err}` });
+    res.status(500).json({ error: unexpectedError });
+    return;
   }
 };

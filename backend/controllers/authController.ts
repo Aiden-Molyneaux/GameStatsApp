@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { postUser, findUserByUsername } from '../models/userModel';
-import { serverError, databaseError, authFailedError, unexpectedError } from './errors';
+import { serverError, databaseError, authFailedError, unexpectedError, unauthorizedError } from './errors';
 
 export async function handleRegistration(req: Request, res: Response) {
   console.log('Handling request to register new user...');
@@ -89,11 +89,6 @@ export async function handleLogin(req: Request, res: Response): Promise<void> {
     res.status(500).json({ error: unexpectedError });
     return;
   }
-};
-
-const unauthorizedError = {
-  code: 'UNAUTHORIZED',
-  message: 'Your session has expired. Please log in again.'
 };
 
 export async function handleValidation(req: Request, res: Response): Promise<void> {

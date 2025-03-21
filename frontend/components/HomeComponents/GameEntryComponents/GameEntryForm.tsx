@@ -29,6 +29,8 @@ export default function GameEntryForm({
   const [isColorValid, setIsColorValid] = useState(true);
   const [showTitleColourPicker, setShowTitleColourPicker] = useState(false);
   const [showHeaderColourPicker, setShowHeaderColourPicker] = useState(false);
+  const [formError, setFormError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   
   // Reset pickers when form closes
   useEffect(() => {
@@ -37,13 +39,24 @@ export default function GameEntryForm({
       setShowHeaderColourPicker(false);
     }
   }, [viewMode]);
-  
-  // Calculate height for animation
-  const expandedHeight = showTitleColourPicker || showHeaderColourPicker ? Spacing.unit2 * 5.5 : Spacing.unit2 * 2.8;
+
+  const [expandedHeight, setExpandedHeight] = useState(calculateExpandedHeight());
+
+  useEffect(() => {
+    setExpandedHeight(calculateExpandedHeight());
+  }, [showTitleColourPicker, showHeaderColourPicker, formError]);
   
   // Animation values
   const animatedHeight = useRef(new Animated.Value(viewMode === 'EDIT' ? expandedHeight : 0)).current;
   const animatedOpacity = useRef(new Animated.Value(viewMode === 'EDIT' ? 1 : 0)).current;
+
+  function calculateExpandedHeight() {
+    if (showTitleColourPicker || showHeaderColourPicker) {
+      return formError ? Spacing.unit2 * 5.5 : Spacing.unit2 * 5;
+    }
+
+    return formError ? Spacing.unit2 * 2.8 : Spacing.unit2 * 2.4;
+  }
 
   // Animation effect
   useEffect(() => {
@@ -71,9 +84,6 @@ export default function GameEntryForm({
   function setColourData(headerColour: string, titleColour: string) {
     onColorChange(headerColour, titleColour);
   }
-
-  const [formError, setFormError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
 
   function handleFormError(errorMessage: string) {
     console.error(errorMessage);
@@ -113,10 +123,13 @@ export default function GameEntryForm({
             handleTextInputChange={handleTextInputChange}
           />
 
-          <View style={styles.errorContainer}>
-            {formError && <ErrorDisplay errorMessage={errorMessage} />}
-          </View>
+          { formError && 
+            <View style={styles.errorContainer}>
+              <ErrorDisplay errorMessage={errorMessage} />  
+            </View>
+          }
         </View>
+
         { viewMode === 'EDIT' &&
           <FormButtons
             formData={formData}
@@ -148,5 +161,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: Spacing.unit1o10,
+    marginBottom: -Spacing.unit1o5
   }
 });

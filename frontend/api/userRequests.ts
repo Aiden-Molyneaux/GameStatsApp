@@ -1,22 +1,32 @@
 import api from './api';
 import type { User, UpdatedUser } from '../../backend/models/userModel';
 
-type requestUpdateUserReturn = { user: User } | { error: string };
+interface UserError {
+  error: {
+    code: 'SERVER_ERROR' | 'FRONTEND_ERROR';
+    message: string;
+  }
+}
+
+const frontendError = {
+  code: 'FRONTEND_ERROR',
+  message: `User service error. Please try again later.`
+}
+
+type requestUpdateUserReturn = { user: User } | UserError;
 
 export async function requestUpdateUser(updatedUser: UpdatedUser): Promise<requestUpdateUserReturn> {  
   try {
     const response = await api.patch<requestUpdateUserReturn>(`api/users`, { updatedUser });
 
-    if (response.status !== 200) {
-      return { error: `Update User Request FAILURE: ${'error' in response.data ? response.data.error : 'unknown error'}` };
+    if ('error' in response.data) {
+      return { error: response.data.error };
     }
 
-    if ('user' in response.data) {
-      return { user: response.data.user };
-    }
- 
-    return { error: 'Update User Request FAILURE: unexpected response format' };
+    return { user: response.data.user };
   } catch (err) {
-    return { error: `Update User Request ERROR: ${err}` };
+    console.error('Update User Request ERROR:', err);
+
+    return { error: frontendError };
   }
 };

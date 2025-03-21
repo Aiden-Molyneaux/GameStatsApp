@@ -3,9 +3,14 @@ import { Game, PartialGame, UpdatedGame } from '../../backend/models/gameModel';
 
 interface GameError {
   error: {
-    code: 'GAME_FETCH_FAILED' | 'SERVER_ERROR' | 'GAME_ERROR' | 'AUTH_ERROR';
+    code: 'GAME_FETCH_FAILED' | 'SERVER_ERROR' | 'GAME_ERROR' | 'FRONTEND_ERROR';
     message: string;
   }
+}
+
+const frontendError = {
+  code: 'FRONTEND_ERROR' as const,
+  message: `Game service error. Please try again later.`
 }
 
 type requestFetchGamesByUserReturn = { games: Game[] } | GameError;
@@ -15,85 +20,67 @@ export async function requestFetchGamesByUser(): Promise<requestFetchGamesByUser
     const response = await api.get<requestFetchGamesByUserReturn>('api/games');
 
     if ('error' in response.data) {
-      const error = response.data.error;
-
-      return {
-        error: {
-          code: error.code,
-          message: error.message
-        }
-      };
+      return { error: response.data.error };
     }
+
     return { games: response.data.games };
   } catch (err) { 
     console.error('Fetch Games By User Request ERROR:', err);
 
-    return {
-      error: {
-        code: 'SERVER_ERROR',
-        message: `Game service error`
-      }
-    };
+    return { error: frontendError };
   }
 };
 
-type requestCreateGameReturn = { game: Game } | { error: string };
+type requestCreateGameReturn = { game: Game } | GameError;
 
 export async function requestCreateGame(newGame: PartialGame): Promise<requestCreateGameReturn> {  
   try {
-    console.log(newGame);
     const response = await api.post<requestCreateGameReturn>('api/games', { newGame });
 
-    if (response.status !== 200) {
-      return { error: `Create Game Request FAILURE: ${'error' in response.data ? response.data.error : 'unknown error'}` };
+    if ('error' in response.data) {
+      return { error: response.data.error };
     }
     
-    if ('game' in response.data) {
-      return { game: response.data.game };
-    }
-    
-    return { error: 'Create Game Request FAILURE: unexpected response format' };
+    return { game: response.data.game };
   } catch (err) { 
-    return { error: `Create Game Request ERROR: ${err}`};
+    console.error('Create Game Request ERROR:', err);
+
+    return { error: frontendError };
   }
 };
 
-type requestUpdateGameReturn = { game: Game } | { error: string };
+type requestUpdateGameReturn = { game: Game } | GameError;
 
 export async function requestUpdateGame(updatedGame: UpdatedGame): Promise<requestUpdateGameReturn> {  
   try {
     const response = await api.patch<requestUpdateGameReturn>('api/games', { updatedGame });
 
-    if (response.status !== 200) {
-      return { error: `Update Game Request FAILURE: ${'error' in response.data ? response.data.error : 'unknown error'}` };
+    if ('error' in response.data) {
+      return { error: response.data.error };
     }
     
-    if ('game' in response.data) {
-      return { game: response.data.game };
-    }
-    
-    return { error: 'Update Game Request FAILURE: unexpected response format' };
+    return { game: response.data.game };
   } catch (err) { 
-    return { error: `Update Game Request ERROR: ${err}`};
+    console.error('Update Game Request ERROR:', err);
+
+    return { error: frontendError };
   }
 };
 
-type requestDeleteGameReturn = { deletedGameId: number } | { error: string };
+type requestDeleteGameReturn = { deletedGameId: number } | GameError;
 
 export async function requestDeleteGame(gameId: number): Promise<requestDeleteGameReturn> {  
   try {
     const response = await api.delete<requestDeleteGameReturn>(`api/games?gameId=${gameId}`);
 
-    if (response.status !== 200) {
-      return { error: `Delete Game Request FAILURE: ${'error' in response.data ? response.data.error : 'unknown error'}` };
+    if ('error' in response.data) {
+      return { error: response.data.error };
     }
 
-    if ('deletedGameId' in response.data) {
-      return { deletedGameId: response.data.deletedGameId };
-    }
- 
-    return { error: 'Delete Game Request FAILURE: unexpected response format' };
+    return { deletedGameId: response.data.deletedGameId };
   } catch (err) {
-    return { error: `Delete Game Request ERROR: ${err}` };
+    console.error('Delete Game Request ERROR:', err);
+
+    return { error: frontendError };
   }
 };

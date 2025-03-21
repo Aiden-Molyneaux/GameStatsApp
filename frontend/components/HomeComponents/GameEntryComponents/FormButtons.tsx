@@ -27,7 +27,7 @@ export default function FormButtons({ formData, onFormClose, isColorValid, handl
     try {
       const response = await requestDeleteGame(formData.id);
       if ('error' in response) {
-        handleFormError(response.error);
+        handleFormError(response.error.message);
         return;
       }
       dispatch(deleteGameAction({ deletedGameId: response.deletedGameId }));
@@ -50,7 +50,7 @@ export default function FormButtons({ formData, onFormClose, isColorValid, handl
       const response = await requestUpdateGame(updatedGame);
       
       if ('error' in response) {
-        handleFormError(response.error);
+        handleFormError(response.error.message);
         return;
       }
 

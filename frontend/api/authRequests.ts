@@ -17,6 +17,11 @@ interface AuthError {
   }
 }
 
+const frontendError = {
+  code: 'FRONTEND_ERROR',
+  message: `Authentication service error. Please try again later.`
+}
+
 export type requestLoginUserResponse = { token: string; user: User } | AuthError;
 
 export async function requestLoginUser(username: string, password: string): Promise<requestLoginUserResponse> {  
@@ -24,26 +29,14 @@ export async function requestLoginUser(username: string, password: string): Prom
     const response = await api.post<requestLoginUserResponse>('api/auth/login', { username, password });
 
     if ('error' in response.data) {
-      const error = response.data.error;
-
-      return { 
-        error: {
-          code: error.code,
-          message: error.message
-        }
-      };
+      return { error: response.data.error };
     }
 
     return { token: response.data.token, user: response.data.user };
   } catch (err) {
     console.error('Login User Request ERROR:', err);
 
-    return { 
-      error: {
-        code: 'SERVER_ERROR',
-        message: `Authentication service error`
-      }
-    };
+    return { error: frontendError };
   }
 };
 
@@ -54,26 +47,14 @@ export async function requestRegisterUser(username: string, password: string): P
     const response = await api.post<requestRegisterUserResponse>('api/auth/register', { username, password });
 
     if ('error' in response.data) {
-      const error = response.data.error;
-
-      return { 
-        error: {
-          code: error.code,
-          message: error.message
-        }
-      };
+      return { error: response.data.error };
     }
 
     return { token: response.data.token, user: response.data.user };
   } catch (err) {
     console.error('Register User Request ERROR:', err);
 
-    return { 
-      error: {
-        code: 'SERVER_ERROR',
-        message: `Authentication service error`
-      }
-    };
+    return { error: frontendError };
   }
 };
 
@@ -82,25 +63,13 @@ export async function validateToken(): Promise<{ valid: boolean } | AuthError> {
     const response = await api.get('api/auth/validate');
     
     if ('error' in response.data) {
-      const error = response.data.error;
-
-      return { 
-        error: {
-          code: error.code,
-          message: error.message
-        }
-      };
+      return { error: response.data.error };
     }
 
     return { valid: true };
   } catch (err) {
     console.error('Token Validation Request ERROR:', err);
 
-    return { 
-      error: {
-        code: 'SERVER_ERROR',
-        message: `Authentication service error`
-      }
-    };
+    return { error: frontendError };
   }
 }
