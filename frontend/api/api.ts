@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { store } from '../store/store';
 
 const api = axios.create({
-  baseURL: 'http://192.168.68.59:5000',
+  baseURL: 'http://172.20.10.8:5000',
   validateStatus: () => true
 });
 

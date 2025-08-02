@@ -6,7 +6,7 @@ import { Colors, Spacing } from '@/constants/Constants';
 import Header from '@/components/MainScreenComponents/Header';
 import AuthScreen from '@/components/AuthComponents/AuthScreen';
 import GameScreen from '@/components/HomeComponents/GameScreen';
-import ProfileDetails from '@/components/ProfileComponents/ProfileDetails';
+import ProfileScreen from '@/components/ProfileComponents/ProfileScreen';
 import NavigationBar from '@/components/MainScreenComponents/NavigationBar';
 import FunctionButtons from '@/components/MainScreenComponents/FunctionButtons';
 
@@ -23,7 +23,7 @@ export default function MainScreen() {
     
     return currentScreen === 'games' 
       ? <GameScreen gameListRef={gameListRef}/> 
-      : <ProfileDetails />;
+      : <ProfileScreen/>;
   };
 
   return (

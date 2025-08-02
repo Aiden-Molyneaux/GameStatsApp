@@ -25,7 +25,7 @@ export default function NavigationBar({ currentScreen, setCurrentScreen }: Navig
       <NavigationButton
         labelText='Profile'
         iconName='user'
-        isPressed={currentScreen === 'profile'}
+        isPressed={isAuthenticated && currentScreen === 'profile'}
         onPress={() => setCurrentScreen('profile')}
         disabled={!isAuthenticated}
         reverse

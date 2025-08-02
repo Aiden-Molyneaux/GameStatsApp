@@ -9,10 +9,12 @@ interface NavigationButtonProps {
   labelText: string,
   iconName: string,
   isPressed: boolean,
+  onPress: () => void,
+  disabled?: boolean,
   reverse?: boolean
 }
 
-export default function NavigationButton({labelText, iconName, isPressed, reverse = false}: NavigationButtonProps) {
+export default function NavigationButton({labelText, iconName, isPressed, onPress, disabled = false, reverse = false}: NavigationButtonProps) {
   const animatedHeight = useRef(new Animated.Value(isPressed ? Spacing.unit3o2 - Spacing.unit1o5 : Spacing.unit3o2)).current;
 
   useEffect(() => {
@@ -24,63 +26,67 @@ export default function NavigationButton({labelText, iconName, isPressed, revers
   }, [ isPressed ]);
 
   return (
-    <Animated.View style={{...styles.bigButtonContainer, height: animatedHeight }}>
-      <View style={styles.addGameButton}>
-        <View style={{
-          ...styles.bigTopOfButton, 
-          borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge 
-        }}>
-          <LinearGradient
-            colors={isPressed 
-              ? [Colors.orange, Colors.orangePrime]
-              : [Colors.gray, Colors.grayPrime]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-            style={styles.topGradient}
-          >
-            <View style={styles.iconContainer}>  
-              { reverse ? 
-                <Text style={styles.navButtonText}>{labelText}</Text>
-                : <FontAwesome 
-                  size={FontSizes.large} 
-                  name={iconName} 
-                  color={Colors.white}
-                  style={styles.icon}
-                />
-              }
+    <Pressable onPress={onPress} style={styles.buttonContainer}>
+      <Animated.View style={{...styles.bigButtonContainer, height: animatedHeight }}>
+        <View style={styles.addGameButton}>
+          <View style={{
+            ...styles.bigTopOfButton, 
+            borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge 
+          }}>
+            <LinearGradient
+              colors={isPressed 
+                ? [Colors.orange, Colors.orangePrime]
+                : [Colors.gray, Colors.grayPrime]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={styles.topGradient}
+            >
+              <View style={styles.iconContainer}>  
+                { reverse ? 
+                  <Text style={styles.navButtonText}>{labelText}</Text>
+                  : <FontAwesome 
+                    size={FontSizes.large} 
+                    name={iconName} 
+                    color={Colors.white}
+                  />
+                }
 
-              { reverse ? 
-                <FontAwesome 
-                  size={FontSizes.large} 
-                  name={iconName} 
-                  color={Colors.white}
-                  style={styles.icon}
-                />
-                : <Text style={styles.navButtonText}>{labelText}</Text>
-              }
-            </View>
-          </LinearGradient>
+                { reverse ? 
+                  <FontAwesome 
+                    size={FontSizes.large} 
+                    name={iconName} 
+                    color={Colors.white}
+                  />
+                  : <Text style={styles.navButtonText}>{labelText}</Text>
+                }
+              </View>
+            </LinearGradient>
+          </View>
+          <View style={{
+            ...styles.bigBottomOfButton, 
+            borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge,
+          }}>
+            <LinearGradient
+              colors={isPressed 
+                ? [Colors.orange, Colors.orangePrime]
+                : [Colors.gray, Colors.grayPrime]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              style={styles.bottomGradient}
+            />
+          </View>
         </View>
-        <View style={{
-          ...styles.bigBottomOfButton, 
-          borderColor: isPressed ? Colors.orangeEdge : Colors.grayEdge,
-        }}>
-          <LinearGradient
-            colors={isPressed 
-              ? [Colors.orange, Colors.orangePrime]
-              : [Colors.gray, Colors.grayPrime]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-            style={styles.bottomGradient}
-          />
-        </View>
-      </View>
-      <View style={styles.largeIndentation}/>
-    </Animated.View>
+        <View style={styles.largeIndentation}/>
+      </Animated.View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  buttonContainer: {
+    height: Spacing.unit3o2,
+    justifyContent: 'flex-end',
+  },
   bigButtonContainer: {
     height: Spacing.unit3o2,
     width: Spacing.unit5,

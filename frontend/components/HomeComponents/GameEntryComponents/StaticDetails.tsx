@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
-import { Colors, FontSizes, Spacing } from '@/constants/Constants';
-import { Text } from '@/components/Customs';
+import { Colors, Spacing } from '@/constants/Constants';
 import { GameListItem } from '@/store/gameReducer';
 import StaticStatistic from './StaticStatistic';
 
@@ -14,7 +13,7 @@ export default function StaticDetails({ gameData, viewMode }: StaticDetailsProps
   const hasBeenPlayed = gameData.hours > 0 && gameData.percentComplete;
   
   // Calculate final expanded height based on content
-  const expandedHeight = hasBeenPlayed ? Spacing.unit2 * 1.2 : Spacing.unit2 * 0.85;
+  const expandedHeight = hasBeenPlayed ? Spacing.unit2 * 1.1 : Spacing.unit2 * 0.75;
   
   // Create animation values for height and opacity
   const animatedHeight = useRef(new Animated.Value(viewMode === 'OPEN' ? expandedHeight : 0)).current;

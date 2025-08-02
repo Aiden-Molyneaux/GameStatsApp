@@ -7,7 +7,6 @@ import { GamerTagListItem } from '@/store/gamerTagReducer';
 
 interface GamerTagListProps {
   gamerTags: GamerTagListItem[];
-  mode: string;
 }
 
 export default function GamerTagList({ gamerTags }: GamerTagListProps) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, FlatList, Dimensions, Pressable } from 'react-native';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { RootState } from '../store/store';
 import { GameListItem } from '@/store/gameReducer';
 import GameList from '@/components/HomeComponents/GameList';
 import { Text } from '@/components/Customs';
